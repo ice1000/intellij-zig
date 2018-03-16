@@ -1,0 +1,2 @@
+rootProject.name = "zig-intellij"
+

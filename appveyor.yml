@@ -1,0 +1,14 @@
+environment:
+  JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+#
+
+build_script:
+  - gradlew displayCommitHash
+  - gradlew isCI
+  - gradlew buildPlugin
+#
+
+artifacts:
+  - path: 'build\distributions\*.zip'
+    name: zig-intellij
+#

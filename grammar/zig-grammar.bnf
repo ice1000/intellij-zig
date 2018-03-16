@@ -1,0 +1,12 @@
+{
+  parserClass='org.ziglang.ZigParser'
+  extends='com.intellij.extapi.psi.ASTWrapperPsiElement'
+  psiClassPrefix='Zig'
+  psiImplClassSuffix='Impl'
+  psiPackage='org.ziglang.psi'
+  psiImplPackage='org.ziglang.psi.impl'
+
+  tokenTypeClass='org.ziglang.ZigTokenType'
+  elementTypeHolderClass='org.ziglang.psi.ZigTypes'
+  elementTypeClass='org.ziglang.ZigElementType'
+}
