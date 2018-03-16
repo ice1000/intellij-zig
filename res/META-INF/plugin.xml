@@ -8,6 +8,7 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="de.halirutan.mathematica.errorreporting.zig.GitHubErrorReporter"/>
+		<fileTypeFactory implementation="org.ziglang.ZigFileTypeFactory"/>
 	</extensions>
 
 	<project-components>
