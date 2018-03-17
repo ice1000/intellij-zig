@@ -5,10 +5,10 @@ import com.intellij.openapi.fileTypes.*
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
-import javax.swing.Icon
+import icons.ZigIcons
 
 object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
-	override fun getIcon(): Icon? = null
+	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
 	override fun getName() = ZIG_NAME
 	override fun getDefaultExtension() = ZIG_EXTENSION
 	override fun getDescription() = ZigBundle.message("zig.description")

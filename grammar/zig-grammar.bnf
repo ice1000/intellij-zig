@@ -15,7 +15,7 @@ zigFile ::= topLevelItem* EOF
 
 topLevelItem ::= CompTimeExpr(block) | topLevelDecl | testDecl
 testDecl ::= TEST_KEYWORD String block
-topLevelDecl ::= PUB_KEYWORD? (FnDef | externDecl | globalVarDecl | useDecl)
+topLevelDecl ::= PUB_KEYWORD? (fnDef | externDecl | globalVarDecl | useDecl)
 globalVarDecl ::= EXPORT_KEYWORD? variableDecl ";"
 localVarDecl ::= COMPTIME_KEYWORD? variableDecl
 variableDecl ::=
@@ -23,28 +23,28 @@ variableDecl ::=
  (ALIGN_KEYWORD "(" expr ")")?
  (SECTION_KEYWORD "(" expr ")")? "=" expr
 
-containerMember ::= (containerField | FnDef | globalVarDecl)
+containerMember ::= (containerField | fnDef | globalVarDecl)
 containerField ::= Symbol (":" PrefixOpExpr ("=" PrefixOpExpr)?)? ","
 
 useDecl ::= USE_KEYWORD expr ";"
 
-externDecl ::= EXTERN_KEYWORD option(String) (FnProto | variableDecl) ";"
+externDecl ::= EXTERN_KEYWORD option(String) (fnProto | variableDecl) ";"
 
-FnProto ::=
+fnProto ::=
  (
    NAKEDCC_KEYWORD
  | STDCALLCC_KEYWORD
  | EXTERN_KEYWORD
  | (ASYNC_KEYWORD ("(" expr ")")?)
  )?
- FN_KEYWORD option(Symbol) ParamDeclList option(ALIGN_KEYWORD "(" expr ")")
+ FN_KEYWORD option(Symbol) paramDeclList option(ALIGN_KEYWORD "(" expr ")")
  option(SECTION_KEYWORD "(" expr ")") option("!") (typeExpr | VAR_KEYWORD)
 
-FnDef ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? FnProto block
+fnDef ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
 
-ParamDeclList ::= "(" list(ParamDecl, ",") ")"
+paramDeclList ::= "(" list(paramDecl, ",") ")"
 
-ParamDecl ::=
+paramDecl ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?
  (Symbol ":")?
  (typeExpr | VAR_KEYWORD | "...")
@@ -61,17 +61,17 @@ private blockOrExpr ::= block | expr
 
 expr ::= TryExpr | ReturnExpr | BreakExpr | AssignmentExpr | CancelExpr | ResumeExpr
 
-AsmExpr ::= "asm" option("volatile") "(" String option(AsmOutput) ")"
+asmExpr ::= "asm" option("volatile") "(" String option(asmOutput) ")"
 
-AsmOutput ::= ":" list(AsmOutputItem, ",") option(AsmInput)
+asmOutput ::= ":" list(asmOutputItem, ",") option(asmInput)
 
-AsmInput ::= ":" list(AsmInputItem, ",") option(AsmClobbers)
+asmInput ::= ":" list(asmInputItem, ",") option(asmClobbers)
 
-AsmOutputItem ::= "[" Symbol "]" String "(" (Symbol | "->" typeExpr) ")"
+asmOutputItem ::= "[" Symbol "]" String "(" (Symbol | "->" typeExpr) ")"
 
-AsmInputItem ::= "[" Symbol "]" String "(" expr ")"
+asmInputItem ::= "[" Symbol "]" String "(" expr ")"
 
-AsmClobbers ::= ":" list(String, ",")
+asmClobbers ::= ":" list(String, ",")
 
 UnwrapExpr ::= BoolOrExpr (UnwrapNullable | UnwrapError) | BoolOrExpr
 
@@ -100,7 +100,7 @@ ForExpr(body) ::=
    body
   option(ELSE_KEYWORD BlockExpr(body))
 
-BoolOrExpr ::= BoolAndExpr OR_KEYWORD BoolOrExpr | BoolAndExpr
+BoolOrExpr ::= aoolAndExpr OR_KEYWORD BoolOrExpr | aoolAndExpr
 ReturnExpr ::= RETURN_KEYWORD expr?
 TryExpr ::= TRY_KEYWORD expr
 AwaitExpr ::= AWAIT_KEYWORD expr
@@ -120,31 +120,19 @@ TestExpr(body) ::= "if" "(" expr ")" option("|" option("*") Symbol "|") body opt
 
 WhileExpr(body) ::= option(Symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") Symbol "|") option(":" "(" expr ")") body option("else" option("|" Symbol "|") BlockExpr(body))
 
-BoolAndExpr ::= ComparisonExpr "and" BoolAndExpr | ComparisonExpr
-
-ComparisonExpr ::= BinaryOrExpr ComparisonOperator BinaryOrExpr | BinaryOrExpr
-
-ComparisonOperator ::= "==" | "!=" | "<" | ">" | "<=" | ">="
-
-BinaryOrExpr ::= BinaryXorExpr "|" BinaryOrExpr | BinaryXorExpr
-
-BinaryXorExpr ::= BinaryAndExpr "^" BinaryXorExpr | BinaryAndExpr
-
-BinaryAndExpr ::= BitShiftExpr "&" BinaryAndExpr | BitShiftExpr
-
-BitShiftExpr ::= AdditionExpr BitShiftOperator BitShiftExpr | AdditionExpr
-
-BitShiftOperator ::= "<<" | ">>"
-
-AdditionExpr ::= MultiplyExpr AdditionOperator AdditionExpr | MultiplyExpr
-
-AdditionOperator ::= "+" | "-" | "++" | "+%" | "-%"
-
-MultiplyExpr ::= CurlySuffixExpr MultiplyOperator MultiplyExpr | CurlySuffixExpr
-
-CurlySuffixExpr ::= typeExpr option(ContainerInitExpr)
-
-MultiplyOperator ::= "||" | "*" | "/" | "%" | "**" | "*%"
+aoolAndExpr ::= comparisonExpr "and" aoolAndExpr | comparisonExpr
+comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
+comparisonOperator ::= "==" | "!=" | "<" | ">" | "<=" | ">="
+binaryOrExpr ::= binaryXorExpr "|" binaryOrExpr | binaryXorExpr
+binaryXorExpr ::= binaryAndExpr "^" binaryXorExpr | binaryAndExpr
+binaryAndExpr ::= bitShiftExpr "&" binaryAndExpr | bitShiftExpr
+bitShiftExpr ::= additionExpr bitShiftOperator bitShiftExpr | additionExpr
+bitShiftOperator ::= "<<" | ">>"
+additionExpr ::= multiplyExpr additionOperator additionExpr | multiplyExpr
+additionOperator ::= "+" | "-" | "++" | "+%" | "-%"
+multiplyExpr ::= curlySuffixExpr multiplyOperator multiplyExpr | curlySuffixExpr
+curlySuffixExpr ::= typeExpr option(containerInitExpr)
+multiplyOperator ::= "||" | "*" | "/" | "%" | "**" | "*%"
 
 PrefixOpExpr ::= PrefixOp errorSetExpr | SuffixOpExpr
 
@@ -158,15 +146,15 @@ ArrayAccessExpr ::= "[" expr "]"
 
 SliceExpr ::= "[" expr ".." option(expr) "]"
 
-ContainerInitExpr ::= "{" ContainerInitBody "}"
+containerInitExpr ::= "{" containerInitBody "}"
 
-ContainerInitBody ::= list(StructLiteralField, ",") | list(Expr, ",")
+containerInitBody ::= list(structLiteralField, ",") | list(Expr, ",")
 
-StructLiteralField ::= "." Symbol "=" expr
+structLiteralField ::= "." Symbol "=" expr
 
 PrefixOp ::= "!" | "-" | "~" | "*" | ("&" option("align" "(" expr option(":" Integer ":" Integer) ")" ) option("const") option("volatile")) | "?" | "??" | "-%" | "try" | "await"
 
-PrimaryExpr ::= Integer | Float | String | CharLiteral | KeywordLiteral | GroupedExpr | BlockExpr(blockOrExpr) | Symbol | ("@" Symbol fnCallExpr) | ArrayType | FnProto | AsmExpr | ContainerDecl | ("continue" option(":" Symbol)) | ErrorSetDecl
+PrimaryExpr ::= Integer | Float | String | CharLiteral | KeywordLiteral | GroupedExpr | BlockExpr(blockOrExpr) | Symbol | ("@" Symbol fnCallExpr) | ArrayType | fnProto | asmExpr | containerDecl | ("continue" option(":" Symbol)) | ErrorSetDecl
 
 ArrayType ::= "[" option(expr) "]" option("align" "(" expr option(":" Integer ":" Integer) ")")) option("const") option("volatile") TypeExpr
 
@@ -176,7 +164,7 @@ KeywordLiteral ::= "true" | "false" | "null" | "undefined" | "error" | "this" | 
 
 ErrorSetDecl ::= "error" "{" list(Symbol, ",") "}"
 
-ContainerDecl ::= option("extern" | "packed")
+containerDecl ::= option("extern" | "packed")
   ("struct" GroupedExpr? | "union" option("enum" option(GroupedExpression) | GroupedExpression) | ("enum" option(GroupedExpression)))
   "{" containerMember* "}"
 
