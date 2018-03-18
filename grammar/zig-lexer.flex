@@ -26,6 +26,17 @@ OTHERWISE=[^]
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }
 
 , { return ZigTypes.COMMA_SYM; }
+\( { return ZigTypes.LEFT_PAREN; }
+\) { return ZigTypes.RIGHT_PAREN; }
+\{ { return ZigTypes.LEFT_BRACE; }
+\} { return ZigTypes.RIGHT_BRACE; }
+\[ { return ZigTypes.LEFT_BRACKET; }
+\] { return ZigTypes.RIGHT_BRACKET; }
+; { return ZigTypes.SEMICOLON_SYM; }
+: { return ZigTypes.COLON_SYM; }
+= { return ZigTypes.EQ_SYM; }
+\| { return ZigTypes.SEP_SYM; }
+\* { return ZigTypes.STAR_SYM; }
 
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
