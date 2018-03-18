@@ -1,11 +1,13 @@
 package org.ziglang
 
 import com.intellij.CommonBundle
+import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.*
+import com.intellij.psi.FileViewProvider
+import icons.ZigIcons
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
-import icons.ZigIcons
 
 object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
 	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
@@ -18,6 +20,10 @@ class ZigFileTypeFactory : FileTypeFactory() {
 	override fun createFileTypes(consumer: FileTypeConsumer) {
 		consumer.consume(ZigFileType, ZIG_EXTENSION)
 	}
+}
+
+class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLanguage.INSTANCE) {
+	override fun getFileType() = ZigFileType
 }
 
 object ZigBundle {
