@@ -37,6 +37,9 @@ OTHERWISE=[^]
 = { return ZigTypes.EQ_SYM; }
 \| { return ZigTypes.SEP_SYM; }
 \* { return ZigTypes.STAR_SYM; }
+\.\.\. { return ZigTypes.RANGE_SYM; }
+\.\. { return ZigTypes.SLICE_SYM; }
+\. { return ZigTypes.DOT_SYM; }
 
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
