@@ -32,3 +32,5 @@ class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INST
 		@JvmField val STRINGS = TokenSet.create()
 	}
 }
+
+class ZigElementType(debugName: String) : IElementType(debugName, ZigLanguage.INSTANCE)

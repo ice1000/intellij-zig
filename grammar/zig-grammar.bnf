@@ -11,26 +11,28 @@
   elementTypeClass='org.ziglang.ZigElementType'
 }
 
-zigFile ::= topLevelItem* EOF
+zigFile ::= topLevelItem*
 
+private endOfLine ::= SEMICOLON_SYM comment?
+private comment ::= LINE_COMMENT
 symbol ::= SYM
 string ::= STR
-topLevelItem ::= COMPTIME_KEYWORD block | topLevelDecl | testDecl
-testDecl ::= TEST_KEYWORD string block
-topLevelDecl ::= PUB_KEYWORD? (fnDef | externDecl | globalVarDecl | useDecl)
-globalVarDecl ::= EXPORT_KEYWORD? variableDecl SEMICOLON_SYM
-localVarDecl ::= COMPTIME_KEYWORD? variableDecl
-variableDecl ::=
+topLevelItem ::= COMPTIME_KEYWORD block | topLevelDeclaration | testDeclaration
+testDeclaration ::= TEST_KEYWORD string block
+topLevelDeclaration ::= PUB_KEYWORD? (fnDef | externDeclaration | globalVarDeclaration | useDeclaration)
+globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration endOfLine
+localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
+variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM typeExpr)?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? EQ_SYM expr
 
-containerMember ::= (containerField | fnDef | globalVarDecl)
+containerMember ::= (containerField | fnDef | globalVarDeclaration)
 containerField ::= symbol (COLON_SYM prefixOpExpr (EQ_SYM prefixOpExpr)?)? COMMA_SYM
 
-useDecl ::= USE_KEYWORD expr SEMICOLON_SYM
+useDeclaration ::= USE_KEYWORD expr endOfLine
 
-externDecl ::= EXTERN_KEYWORD string? (fnProto | variableDecl) SEMICOLON_SYM
+externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) endOfLine
 
 fnProto ::=
  (
@@ -39,24 +41,24 @@ fnProto ::=
  | EXTERN_KEYWORD
  | (ASYNC_KEYWORD (LEFT_PAREN expr RIGHT_PAREN)?)
  )?
- FN_KEYWORD symbol? paramDeclList (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
+ FN_KEYWORD symbol? paramDeclarationList (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? "!"? (typeExpr | VAR_KEYWORD)
 
 fnDef ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
 
-paramDeclList ::= LEFT_PAREN (paramDecl (COMMA_SYM paramDecl)*)? RIGHT_PAREN
+paramDeclarationList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
-paramDecl ::=
+paramDeclaration ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?
  (symbol COLON_SYM)?
  (typeExpr | VAR_KEYWORD | RANGE_SYM)
 
 statement ::=
-   localVarDecl SEMICOLON_SYM
+   localVarDeclaration endOfLine
  | deferBlock
- | deferExpr SEMICOLON_SYM
+ | deferExpr endOfLine
  | blockExprBlock
- | expr? SEMICOLON_SYM
+ | expr? endOfLine
 
 private typeExpr ::= errorSetExpr
 errorSetExpr ::= (prefixOpExpr NOT_SYM prefixOpExpr) | prefixOpExpr
@@ -92,6 +94,7 @@ assignOperator ::=
   | STAR_MOD_ASSIGN_SYM
   | PLUS_MOD_ASSIGN_SYM
   | MINUS_MOD_ASSIGN_SYM
+
 //BlockExpr(body) ::= Block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
 //Bnf泛型编程(雾
 blockExprBlock ::=
@@ -212,7 +215,7 @@ additionExpr ::= multiplyExpr additionOperator additionExpr | multiplyExpr
 additionOperator ::= PLUS | MINUS | "++" | PLUS_MOD_SYM | MINUS_MOD_SYM
 multiplyExpr ::= curlySuffixExpr multiplyOperator multiplyExpr | curlySuffixExpr
 curlySuffixExpr ::= typeExpr containerInitExpr?
-multiplyOperator ::= "||" | STAR_SYM | DIV_SYM | MOD_SYM | "**" | STAR_MOD_SYM
+multiplyOperator ::= SEP_SEP_SYM | STAR_SYM | DIV_SYM | MOD_SYM | STAR_STAR_SYM | STAR_MOD_SYM
 prefixOpExpr ::= prefixOp errorSetExpr | suffixOpExpr
 
 suffixOpExpr ::=
@@ -258,13 +261,13 @@ primaryExpr ::=
  | groupedExpr
  | blockExprBlockOrExpr
  | symbol
- | ANNOTATION_SYM symbol fnCallExpr     //TODO: need not 括号?
+ | ANNOTATION_SYM symbol fnCallExpr
  | arrayType
  | fnProto
  | asmExpr
- | containerDecl
+ | containerDeclaration
  | (CONTINUE_KEYWORD (COLON_SYM symbol)?)
- | errorSetDecl
+ | errorSetDeclaration
 
 arrayType ::=
  LEFT_BRACKET expr? RIGHT_BRACKET
@@ -285,9 +288,9 @@ keywordLiteral ::=
  | UNREACHABLE_KEYWORD
  | SUSPEND_KEYWORD
 
-errorSetDecl ::= ERROR_KEYWORD LEFT_BRACE (symbol (COMMA_SYM symbol)*)? RIGHT_BRACE
+errorSetDeclaration ::= ERROR_KEYWORD LEFT_BRACE (symbol (COMMA_SYM symbol)*)? RIGHT_BRACE
 
-containerDecl ::= (EXTERN_KEYWORD | PACKED_KEYWORD)?
+containerDeclaration ::= (EXTERN_KEYWORD | PACKED_KEYWORD)?
   (
     STRUCT_KEYWORD groupedExpr?
   | UNION_KEYWORD (ENUM_KEYWORD groupedExpr? | groupedExpr)?

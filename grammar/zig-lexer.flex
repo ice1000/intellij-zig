@@ -20,12 +20,16 @@ import org.ziglang.psi.ZigTypes;
 %eof}
 
 OTHERWISE=[^]
+WHITESPACE=[\s\n\f\r\t\v]
+SEMICOLON=;
+COMMENT=\/\/[^\n]*
 
 %%
 
-{OTHERWISE} { return TokenType.BAD_CHARACTER; }
+{COMMENT} { return ZigTypes.LINE_COMMENT; }
+{WHITESPACE} { return TokenType.WHITE_SPACE; }
 
-\<\<= { return ZigTypes.SHL_ASSIGN_SYM; }     //<<=
+\<\<= { return ZigTypes.SHL_ASSIGN_SYM; } // <<=
 >>= { return ZigTypes.SHR_ASSIGN_SYM; }
 => { return ZigTypes.ARROW_SYM; }
 -> { return ZigTypes.SMALL_ARROW_SYM; }
@@ -58,6 +62,7 @@ OTHERWISE=[^]
 \+\+ { return ZigTypes.INC_SYM; }
 \-\- { return ZigTypes.DEC_SYM; }
 \*\* { return ZigTypes.STAR_STAR_SYM; }
+\|\| { return ZigTypes.SEP_SEP_SYM; }
 
 \> { return ZigTypes.GRATER_THAN_SYM; }
 \< { return ZigTypes.LESS_THAN_SYM; }
@@ -68,8 +73,8 @@ OTHERWISE=[^]
 \^ { return ZigTypes.EXPONENT_SYM; }
 \| { return ZigTypes.SEP_SYM; }
 \! { return ZigTypes.NOT_SYM; }
+\?\? { return ZigTypes.VERY_QUESTION_SYM; } // 敲皮
 \? { return ZigTypes.QUESTION_SYM; }
-\?\? { return ZigTypes.VERY_QUESTION_SYM; }         //敲皮
 \~ { return ZigTypes.BITWISE_NOT_SYM; }
 & { return ZigTypes.AND_SYM; }
 % { return ZigTypes.MOD_SYM; }
@@ -77,7 +82,7 @@ OTHERWISE=[^]
 @ { return ANNOTATION_SYM; }
 
 , { return ZigTypes.COMMA_SYM; }
-; { return ZigTypes.SEMICOLON_SYM; }
+{SEMICOLON} { return ZigTypes.SEMICOLON_SYM; }
 : { return ZigTypes.COLON_SYM; }
 \( { return ZigTypes.LEFT_PAREN; }
 \) { return ZigTypes.RIGHT_PAREN; }
@@ -137,3 +142,5 @@ unreachable { return ZigTypes.UNREACHABLE_KEYWORD; }
 packed { return ZigTypes.PACKED_KEYWORD; }
 struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
+
+{OTHERWISE} { return TokenType.BAD_CHARACTER; }
