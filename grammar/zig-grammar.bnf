@@ -53,16 +53,16 @@ paramDecl ::=
 
 statement ::=
    localVarDecl ";"
- | deferBlock
+ | deferblock
  | deferExpr ";"
- | BlockExpr(block)
+ | blockExpr(block)
  | expr? ";"
 
 private typeExpr ::= errorSetExpr
 errorSetExpr ::= (prefixOpExpr "!" prefixOpExpr) | prefixOpExpr
 
 private blockOrExpr ::= block | expr
-expr ::= tryExpr | returnExpr | breakExpr | assignExpr | CancelExpr | ResumeExpr
+expr ::= tryExpr | returnExpr | breakExpr | assignExpr | cancelExpr | resumeExpr
 block ::= (symbol ":")? "{" statement* "}"
 
 asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? "(" string asmOutput? ")"
@@ -79,7 +79,7 @@ unwrapError ::= CATCH_KEYWORD ("|" symbol "|")? expr
 assignExpr ::= unwrapExpr assignOperator unwrapExpr | unwrapExpr
 assignOperator ::= "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|=" | "*%=" | "+%=" | "-%="
 
-BlockExpr(body) ::= Block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
+blockExpr(body) ::= block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
 CompTimeExpr(body) ::= "comptime" body
 
 switchExpr ::= SWITCH_KEYWORD "(" expr ")" "{" switchProng* "}"
@@ -96,27 +96,27 @@ ForExpr(body) ::=
  FOR_KEYWORD "(" expr ")"
   option("|" option("*") symbol option("," symbol) "|")
    body
-  option(ELSE_KEYWORD BlockExpr(body))
+  option(ELSE_KEYWORD blockExpr(body))
 
 boolOrExpr ::= aoolAndExpr OR_KEYWORD boolOrExpr | aoolAndExpr
 returnExpr ::= RETURN_KEYWORD expr?
 tryExpr ::= TRY_KEYWORD expr
 awaitExpr ::= AWAIT_KEYWORD expr
 breakExpr ::= BREAK_KEYWORD (":" symbol)? expr?
-CancelExpr ::= CANCEL_KEYWORD expr
-ResumeExpr ::= RESUME_KEYWORD expr
-deferBlock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
+cancelExpr ::= CANCEL_KEYWORD expr
+resumeExpr ::= RESUME_KEYWORD expr
+deferblock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
 deferExpr ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
 
-IfExpr(body) ::= "if" "(" expr ")" body option("else" BlockExpr(body))
+IfExpr(body) ::= "if" "(" expr ")" body option("else" blockExpr(body))
 
 SuspendExpr(body) ::= "suspend" option(("|" symbol "|" body))
 
-IfErrorExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body "else" "|" symbol "|" BlockExpr(body)
+IfErrorExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body "else" "|" symbol "|" blockExpr(body)
 
-TestExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body option("else" BlockExpr(body))
+TestExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body option("else" blockExpr(body))
 
-WhileExpr(body) ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") body option("else" option("|" symbol "|") BlockExpr(body))
+WhileExpr(body) ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") body option("else" option("|" symbol "|") blockExpr(body))
 
 aoolAndExpr ::= comparisonExpr "and" aoolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
@@ -149,16 +149,18 @@ containerInitBody ::=
 
 structLiteralField ::= "." symbol "=" expr
 
-prefixOp ::= "!" | "-" | "~" | "*" | ("&" option("align" "(" expr option(":" Integer ":" Integer) ")" ) option("const") option("volatile")) | "?" | "??" | "-%" | "try" | "await"
+prefixOp ::= "!" | "-" | "~" | "*" | ("&" option("align" "(" expr option(":" integer ":" integer) ")" ) option("const") option("volatile")) | "?" | "??" | "-%" | "try" | "await"
 
 primaryExpr ::=
-   Integer
- | Float
+   integer
+ | float
  | string
- | CharLiteral
- | KeywordLiteral
- | GroupedExpr
- | BlockExpr(blockOrExpr)
+ | char
+ | keywordLiteral
+ | boolean
+ | null
+ | groupedExpr
+ | blockExpr(blockOrExpr)
  | symbol
  | "@" symbol fnCallExpr
  | arrayType
@@ -168,15 +170,20 @@ primaryExpr ::=
  | ("continue" option(":" symbol))
  | errorSetDecl
 
-arrayType ::= "[" expr? "]" option("align" "(" expr option(":" Integer ":" Integer) ")")) option("const") option("volatile") TypeExpr
+arrayType ::= "[" expr? "]" option("align" "(" expr option(":" integer ":" integer) ")")) option("const") option("volatile") TypeExpr
 
-GroupedExpr ::= "(" expr ")"
+groupedExpr ::= "(" expr ")"
 
-KeywordLiteral ::= "true" | "false" | "null" | "undefined" | "error" | "this" | "unreachable" | "suspend"
+integer ::= INT_LITERAL
+float ::= FLOAT_LITERAL
+boolean ::= TRUE_KEYWORD | FALSE_KEYWORD
+null ::= NULL_KEYWORD
+char ::= CHAR_LITERAL
+keywordLiteral ::= "undefined" | "error" | "this" | "unreachable" | "suspend"
 
 errorSetDecl ::= "error" "{" (symbol (COMMA_SYM symbol)*)? "}"
 
 containerDecl ::= option("extern" | "packed")
-  ("struct" GroupedExpr? | "union" option("enum" option(GroupedExpression) | GroupedExpression) | ("enum" option(GroupedExpression)))
+  ("struct" groupedExpr? | "union" option("enum" groupedExpr? | groupedExpr) | ("enum" groupedExpr?))
   "{" containerMember* "}"
 
