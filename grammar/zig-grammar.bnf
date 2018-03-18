@@ -59,7 +59,7 @@ statement ::=
  | expr? SEMICOLON_SYM
 
 private typeExpr ::= errorSetExpr
-errorSetExpr ::= (prefixOpExpr "!" prefixOpExpr) | prefixOpExpr
+errorSetExpr ::= (prefixOpExpr NOT_SYM prefixOpExpr) | prefixOpExpr
 
 private blockOrExpr ::= block | expr
 expr ::= tryExpr | returnExpr | breakExpr | assignExpr | cancelExpr | resumeExpr
@@ -68,17 +68,30 @@ block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
 asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
 asmOutput ::= COLON_SYM (asmOutputItem (COMMA_SYM asmOutputItem)*)? asmInput?
 asmInput ::= COLON_SYM (asmInputItem (COMMA_SYM asmInputItem)*)? asmClobbers?
-asmOutputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN (symbol | "->" typeExpr) RIGHT_PAREN
+asmOutputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN (symbol | SMALL_ARROW_SYM typeExpr) RIGHT_PAREN
 asmInputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN expr RIGHT_PAREN
 asmClobbers ::= COLON_SYM (string (COMMA_SYM string)*)?
 
 unwrapExpr ::= boolOrExpr (unwrapNullable | unwrapError) | boolOrExpr
-unwrapNullable ::= "??" expr
+unwrapNullable ::= VERY_QUESTION_SYM expr
 unwrapError ::= CATCH_KEYWORD (SEP_SYM symbol SEP_SYM)? expr
 
 assignExpr ::= unwrapExpr assignOperator unwrapExpr | unwrapExpr
-assignOperator ::= EQ_SYM | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|=" | "*%=" | "+%=" | "-%="
-
+assignOperator ::=
+  EQ_SYM
+  | TIMES_ASSIGN_SYM
+  | DIV_ASSIGN_SYM
+  | MOD_ASSIGN_SYM
+  | PLUS_ASSIGN_SYM
+  | MINUS_ASSIGN_SYM
+  | SHL_ASSIGN_SYM
+  | SHR_ASSIGN_SYM
+  | AND_ASSIGN_SYM
+  | EXPONENT_ASSIGN_SYM
+  | OR_ASSIGN_SYM
+  | STAR_MOD_ASSIGN_SYM
+  | PLUS_MOD_ASSIGN_SYM
+  | MINUS_MOD_ASSIGN_SYM
 //BlockExpr(body) ::= Block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
 //Bnf泛型编程(雾
 blockExprBlock ::=
@@ -111,7 +124,7 @@ switchExpr ::= SWITCH_KEYWORD LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE switchProng
 switchItem ::= expr | (expr RANGE_SYM expr)
 switchProng ::=
  (ELSE_KEYWORD | (switchItem (COMMA_SYM switchItem)*)?)
- "=>"
+ ARROW_SYM
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
  expr COMMA_SYM
 
@@ -189,17 +202,17 @@ whileExprBlockOrExpr ::=
 
 boolAndExpr ::= comparisonExpr AND_KEYWORD boolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
-comparisonOperator ::= "==" | "!=" | "<" | ">" | "<=" | ">="
+comparisonOperator ::= EQUALS_SYM | UNEQUALS_SYM | LESS_THAN_SYM | GREATER_THAN_SYM | LESS_OR_EQUALS_SYM | GREATER_OR_EQUALS_SYM
 binaryOrExpr ::= binaryXorExpr SEP_SYM binaryOrExpr | binaryXorExpr
-binaryXorExpr ::= binaryAndExpr "^" binaryXorExpr | binaryAndExpr
-binaryAndExpr ::= bitShiftExpr "&" binaryAndExpr | bitShiftExpr
+binaryXorExpr ::= binaryAndExpr EXPONENT_SYM binaryXorExpr | binaryAndExpr
+binaryAndExpr ::= bitShiftExpr AND_SYM binaryAndExpr | bitShiftExpr
 bitShiftExpr ::= additionExpr bitShiftOperator bitShiftExpr | additionExpr
-bitShiftOperator ::= "<<" | ">>"
+bitShiftOperator ::= SHL_SYM | SHR_SYM
 additionExpr ::= multiplyExpr additionOperator additionExpr | multiplyExpr
-additionOperator ::= "+" | "-" | "++" | "+%" | "-%"
+additionOperator ::= PLUS | MINUS | "++" | PLUS_MOD_SYM | MINUS_MOD_SYM
 multiplyExpr ::= curlySuffixExpr multiplyOperator multiplyExpr | curlySuffixExpr
 curlySuffixExpr ::= typeExpr containerInitExpr?
-multiplyOperator ::= "||" | STAR_SYM | "/" | "%" | "**" | "*%"
+multiplyOperator ::= "||" | STAR_SYM | DIV_SYM | MOD_SYM | "**" | STAR_MOD_SYM
 prefixOpExpr ::= prefixOp errorSetExpr | suffixOpExpr
 
 suffixOpExpr ::=
@@ -219,18 +232,18 @@ containerInitBody ::=
 structLiteralField ::= DOT_SYM symbol EQ_SYM expr
 
 prefixOp ::=
-   "!"
- | "-"
- | "~"
+   NOT_SYM
+ | MINUS
+ | BITWISE_NOT_SYM
  | STAR_SYM
- | "&"
+ | AND_SYM
   (
    ALIGN_KEYWORD LEFT_PAREN
    expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN
   )? CONST_KEYWORD? VOLATILE_KEYWORD?
- | "?"
- | "??"
- | "-%"
+ | QUESTION_SYM
+ | VERY_QUESTION_SYM
+ | MINUS_MOD_SYM
  | TRY_KEYWORD
  | AWAIT_KEYWORD
 
@@ -245,7 +258,7 @@ primaryExpr ::=
  | groupedExpr
  | blockExprBlockOrExpr
  | symbol
- | "@" symbol fnCallExpr
+ | ANNOTATION_SYM symbol fnCallExpr     //TODO: need not 括号?
  | arrayType
  | fnProto
  | asmExpr
