@@ -53,16 +53,16 @@ paramDecl ::=
 
 statement ::=
    localVarDecl ";"
- | deferBlock
+ | deferblock
  | deferExpr ";"
- | BlockExpr(block)
+ | blockExpr(block)
  | expr? ";"
 
 private typeExpr ::= errorSetExpr
 errorSetExpr ::= (prefixOpExpr "!" prefixOpExpr) | prefixOpExpr
 
 private blockOrExpr ::= block | expr
-expr ::= tryExpr | returnExpr | breakExpr | assignExpr | CancelExpr | ResumeExpr
+expr ::= tryExpr | returnExpr | breakExpr | assignExpr | cancelExpr | resumeExpr
 block ::= (symbol ":")? "{" statement* "}"
 
 asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? "(" string asmOutput? ")"
@@ -141,9 +141,9 @@ returnExpr ::= RETURN_KEYWORD expr?
 tryExpr ::= TRY_KEYWORD expr
 awaitExpr ::= AWAIT_KEYWORD expr
 breakExpr ::= BREAK_KEYWORD (":" symbol)? expr?
-CancelExpr ::= CANCEL_KEYWORD expr
-ResumeExpr ::= RESUME_KEYWORD expr
-deferBlock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
+cancelExpr ::= CANCEL_KEYWORD expr
+resumeExpr ::= RESUME_KEYWORD expr
+deferblock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
 deferExpr ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
 
 //IfExpr(body) ::= "if" "(" expr ")" body option("else" BlockExpr(body))
@@ -167,7 +167,7 @@ TestExprBlockOrExpr ::= "if" "(" expr ")" option("|" option("*") symbol "|") blo
 WhileExprBlock ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") block option("else" option("|" symbol "|") BlockExprBlock)
 WhileExprBlockOrExpr ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") blockOrExpr option("else" option("|" symbol "|") BlockExprBlockOrExpr)
 
-aoolAndExpr ::= comparisonExpr "and" aoolAndExpr | comparisonExpr
+aoolAndExpr ::= comparisonExpr AND_KEYWORD aoolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
 comparisonOperator ::= "==" | "!=" | "<" | ">" | "<=" | ">="
 binaryOrExpr ::= binaryXorExpr "|" binaryOrExpr | binaryXorExpr
@@ -183,7 +183,7 @@ multiplyOperator ::= "||" | "*" | "/" | "%" | "**" | "*%"
 prefixOpExpr ::= prefixOp errorSetExpr | suffixOpExpr
 
 suffixOpExpr ::=
-   ("async" ("(" expr ")")? primaryExpr fnCallExpr)
+   (ASYNC_KEYWORD ("(" expr ")")? primaryExpr fnCallExpr)
  | primaryExpr (fnCallExpr | arrayAccessExpr | fieldAccessExpr | sliceExpr)?
 
 fieldAccessExpr ::= "." symbol
@@ -198,34 +198,63 @@ containerInitBody ::=
 
 structLiteralField ::= "." symbol "=" expr
 
-prefixOp ::= "!" | "-" | "~" | "*" | ("&" option("align" "(" expr option(":" Integer ":" Integer) ")" ) option("const") option("volatile")) | "?" | "??" | "-%" | "try" | "await"
+prefixOp ::=
+   "!"
+ | "-"
+ | "~"
+ | "*"
+ | "&" (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")" )? CONST_KEYWORD? VOLATILE_KEYWORD?
+ | "?"
+ | "??"
+ | "-%"
+ | TRY_KEYWORD
+ | AWAIT_KEYWORD
 
 primaryExpr ::=
-   Integer
- | Float
+   integer
+ | float
  | string
- | CharLiteral
- | KeywordLiteral
- | GroupedExpr
- | BlockExpr(blockOrExpr)
+ | char
+ | keywordLiteral
+ | boolean
+ | null
+ | groupedExpr
+ | blockExpr(blockOrExpr)
  | symbol
  | "@" symbol fnCallExpr
  | arrayType
  | fnProto
  | asmExpr
  | containerDecl
- | ("continue" option(":" symbol))
+ | (CONTINUE_KEYWORD (":" symbol)?)
  | errorSetDecl
 
-arrayType ::= "[" expr? "]" option("align" "(" expr option(":" Integer ":" Integer) ")")/*)*/ option("const") option("volatile") TypeExpr
+arrayType ::=
+ "[" expr? "]"
+ (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")")?
+ CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr
 
-GroupedExpr ::= "(" expr ")"
+groupedExpr ::= "(" expr ")"
 
-KeywordLiteral ::= "true" | "false" | "null" | "undefined" | "error" | "this" | "unreachable" | "suspend"
+integer ::= INT_LITERAL
+float ::= FLOAT_LITERAL
+boolean ::= TRUE_KEYWORD | FALSE_KEYWORD
+null ::= NULL_KEYWORD
+char ::= CHAR_LITERAL
+keywordLiteral ::=
+   UNDEFINED_KEYWORD
+ | ERROR_KEYWORD
+ | THIS_KEYWORD
+ | UNREACHABLE_KEYWORD
+ | SUSPEND_KEYWORD
 
-errorSetDecl ::= "error" "{" (symbol (COMMA_SYM symbol)*)? "}"
+errorSetDecl ::= ERROR_KEYWORD "{" (symbol (COMMA_SYM symbol)*)? "}"
 
-containerDecl ::= option("extern" | "packed")
-  ("struct" GroupedExpr? | "union" option("enum" option(GroupedExpression) | GroupedExpression) | ("enum" option(GroupedExpression)))
+containerDecl ::= (EXTERN_KEYWORD | PACKED_KEYWORD)?
+  (
+    STRUCT_KEYWORD groupedExpr?
+  | UNION_KEYWORD (ENUM_KEYWORD groupedExpr? | groupedExpr)?
+  | ENUM_KEYWORD groupedExpr?
+  )
   "{" containerMember* "}"
 
