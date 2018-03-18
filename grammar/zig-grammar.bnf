@@ -108,17 +108,17 @@ resumeExpr ::= RESUME_KEYWORD expr
 deferblock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
 deferExpr ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
 
-IfExpr(body) ::= "if" "(" expr ")" body option("else" blockExpr(body))
+IfExpr(body) ::= IF_KEYWORD "(" expr ")" body option(ELSE_KEYWORD blockExpr(body))
 
-SuspendExpr(body) ::= "suspend" option(("|" symbol "|" body))
+SuspendExpr(body) ::= SUSPEND_KEYWORD option(("|" symbol "|" body))
 
-IfErrorExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body "else" "|" symbol "|" blockExpr(body)
+IfErrorExpr(body) ::= IF_KEYWORD "(" expr ")" option("|" option("*") symbol "|") body ELSE_KEYWORD "|" symbol "|" blockExpr(body)
 
-TestExpr(body) ::= "if" "(" expr ")" option("|" option("*") symbol "|") body option("else" blockExpr(body))
+TestExpr(body) ::= IF_KEYWORD "(" expr ")" option("|" option("*") symbol "|") body option(ELSE_KEYWORD blockExpr(body))
 
-WhileExpr(body) ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") body option("else" option("|" symbol "|") blockExpr(body))
+WhileExpr(body) ::= option(symbol ":") INLINE_KEYWORD? WHILE_KEYWORD "(" expr ")" option("|" option("*") symbol "|") option(":" "(" expr ")") body option(ELSE_KEYWORD option("|" symbol "|") blockExpr(body))
 
-aoolAndExpr ::= comparisonExpr "and" aoolAndExpr | comparisonExpr
+aoolAndExpr ::= comparisonExpr AND_KEYWORD aoolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
 comparisonOperator ::= "==" | "!=" | "<" | ">" | "<=" | ">="
 binaryOrExpr ::= binaryXorExpr "|" binaryOrExpr | binaryXorExpr
@@ -134,7 +134,7 @@ multiplyOperator ::= "||" | "*" | "/" | "%" | "**" | "*%"
 prefixOpExpr ::= prefixOp errorSetExpr | suffixOpExpr
 
 suffixOpExpr ::=
-   ("async" ("(" expr ")")? primaryExpr fnCallExpr)
+   (ASYNC_KEYWORD ("(" expr ")")? primaryExpr fnCallExpr)
  | primaryExpr (fnCallExpr | arrayAccessExpr | fieldAccessExpr | sliceExpr)?
 
 fieldAccessExpr ::= "." symbol
@@ -180,7 +180,10 @@ primaryExpr ::=
  | (CONTINUE_KEYWORD (":" symbol)?)
  | errorSetDecl
 
-arrayType ::= "[" expr? "]" option("align" "(" expr option(":" integer ":" integer) ")") option("const") option("volatile") typeExpr
+arrayType ::=
+ "[" expr? "]"
+ (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")")?
+ CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr
 
 groupedExpr ::= "(" expr ")"
 
@@ -189,11 +192,20 @@ float ::= FLOAT_LITERAL
 boolean ::= TRUE_KEYWORD | FALSE_KEYWORD
 null ::= NULL_KEYWORD
 char ::= CHAR_LITERAL
-keywordLiteral ::= "undefined" | "error" | "this" | "unreachable" | "suspend"
+keywordLiteral ::=
+   UNDEFINED_KEYWORD
+ | ERROR_KEYWORD
+ | THIS_KEYWORD
+ | UNREACHABLE_KEYWORD
+ | SUSPEND_KEYWORD
 
-errorSetDecl ::= "error" "{" (symbol (COMMA_SYM symbol)*)? "}"
+errorSetDecl ::= ERROR_KEYWORD "{" (symbol (COMMA_SYM symbol)*)? "}"
 
-containerDecl ::= option("extern" | "packed")
-  ("struct" groupedExpr? | "union" (ENUM_KEYWORD groupedExpr? | groupedExpr)? | (ENUM_KEYWORD groupedExpr?))
+containerDecl ::= (EXTERN_KEYWORD | PACKED_KEYWORD)?
+  (
+    STRUCT_KEYWORD groupedExpr?
+  | UNION_KEYWORD (ENUM_KEYWORD groupedExpr? | groupedExpr)?
+  | ENUM_KEYWORD groupedExpr?
+  )
   "{" containerMember* "}"
 
