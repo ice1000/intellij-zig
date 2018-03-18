@@ -82,18 +82,18 @@ assignOperator ::= "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&="
 //BlockExpr(body) ::= Block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
 //Bnf泛型编程(雾
 blockExprBlock ::=
-  Block
+  block
   | ifExprBlock
   | ifErrorExprBlock
   | testExprBlock
   | whileExprBlock
   | forExprBlock
   | switchExpr
-  | CompTimeExprBlock
+  | compTimeExprBlock
   | suspendExprBlock
 
 blockExprBlockOrExpr ::=
-  Block
+  block
   | ifExprBlockOrExpr
   | ifErrorExprBlockOrExpr
   | testExprBlockOrExpr
@@ -104,7 +104,7 @@ blockExprBlockOrExpr ::=
   | suspendExprBlockOrExpr
 
 //CompTimeExpr(body) ::= "comptime" body
-CompTimeExprBlock ::= "comptime" block
+compTimeExprBlock ::= "comptime" block
 CompTimeExprBlockOrExpr ::= "comptime" blockOrExpr
 
 switchExpr ::= SWITCH_KEYWORD "(" expr ")" "{" switchProng* "}"
@@ -126,15 +126,15 @@ switchProng ::=
 forExprBlock ::=
  (symbol ":")? INLINE_KEYWORD?
  FOR_KEYWORD "(" expr ")"
-  option("|" "*"? symbol option("," symbol) "|")
+  ("|" "*"? symbol ("," symbol)? "|")?
    block
-  option(ELSE_KEYWORD blockExprBlock)
+  (ELSE_KEYWORD blockExprBlock)?
 forExprBlockOrExpr ::=
  (symbol ":")? INLINE_KEYWORD?
  FOR_KEYWORD "(" expr ")"
-  option("|" "*"? symbol option("," symbol) "|")
+  ("|" "*"? symbol ("," symbol)? "|")?
    blockOrExpr
-  option(ELSE_KEYWORD blockExprBlockOrExpr)
+  (ELSE_KEYWORD blockExprBlockOrExpr)?
 
 boolOrExpr ::= aoolAndExpr OR_KEYWORD boolOrExpr | aoolAndExpr
 returnExpr ::= RETURN_KEYWORD expr?
@@ -160,12 +160,12 @@ ifErrorExprBlock ::= IF_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? block ELSE_K
 ifErrorExprBlockOrExpr ::= IF_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? blockOrExpr ELSE_KEYWORD "|" symbol "|" blockExprBlockOrExpr
 
 //TestExpr(body) ::= "if" "(" expr ")" option("|" "*"? symbol "|") body option("else" BlockExpr(body))
-testExprBlock ::= IF_KEYWORD "(" expr ")" option("|" "*"? symbol "|") block (ELSE_KEYWORD blockExprBlock)?
-testExprBlockOrExpr ::= IF_KEYWORD "(" expr ")" option("|" "*"? symbol "|") blockOrExpr option(ELSE_KEYWORD blockExprBlockOrExpr)
+testExprBlock ::= IF_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? block (ELSE_KEYWORD blockExprBlock)?
+testExprBlockOrExpr ::= IF_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? blockOrExpr (ELSE_KEYWORD blockExprBlockOrExpr)?
 
 //WhileExpr(body) ::= option(symbol ":") option("inline") "while" "(" expr ")" option("|" "*"? symbol "|") option(":" "(" expr ")") body option("else" ("|" symbol "|")? BlockExpr(body))
-whileExprBlock ::= (symbol ":")? INLINE_KEYWORD? WHILE_KEYWORD "(" expr ")" option("|" "*"? symbol "|") option(":" "(" expr ")") block (ELSE_KEYWORD ("|" symbol "|")? blockExprBlock)?
-whileExprBlockOrExpr ::= (symbol ":")? INLINE_KEYWORD? WHILE_KEYWORD "(" expr ")" option("|" "*"? symbol "|") option(":" "(" expr ")") blockOrExpr (ELSE_KEYWORD ("|" symbol "|")? blockExprBlockOrExpr)?
+whileExprBlock ::= (symbol ":")? INLINE_KEYWORD? WHILE_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? (":" "(" expr ")")? block (ELSE_KEYWORD ("|" symbol "|")? blockExprBlock)?
+whileExprBlockOrExpr ::= (symbol ":")? INLINE_KEYWORD? WHILE_KEYWORD "(" expr ")" ("|" "*"? symbol "|")? (":" "(" expr ")")? blockOrExpr (ELSE_KEYWORD ("|" symbol "|")? blockExprBlockOrExpr)?
 
 aoolAndExpr ::= comparisonExpr AND_KEYWORD aoolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
@@ -203,7 +203,7 @@ prefixOp ::=
  | "-"
  | "~"
  | "*"
- | "&" (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")" )? CONST_KEYWORD? VOLATILE_KEYWORD?
+ | "&" (ALIGN_KEYWORD "(" expr (":" integer ":" integer)? ")" )? CONST_KEYWORD? VOLATILE_KEYWORD?
  | "?"
  | "??"
  | "-%"
@@ -231,7 +231,7 @@ primaryExpr ::=
 
 arrayType ::=
  "[" expr? "]"
- (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")")?
+ (ALIGN_KEYWORD "(" expr (":" integer ":" integer)? ")")?
  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr
 
 groupedExpr ::= "(" expr ")"
