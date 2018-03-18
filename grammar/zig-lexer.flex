@@ -24,6 +24,10 @@ WHITESPACE=[\s\n\f\r\t\v]
 SEMICOLON=;
 COMMENT=\/\/[^\n]*
 
+INT=[\d]+ // TODO
+SYMBOL_CHAR=[a-zA-Z_] // TODO
+SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{INT})*
+
 %%
 
 {COMMENT} { return ZigTypes.LINE_COMMENT; }
@@ -52,20 +56,20 @@ COMMENT=\/\/[^\n]*
 \/= { return ZigTypes.DIV_ASSIGN_SYM; }
 \^= { return ZigTypes.EXPONENT_ASSIGN_SYM; }
 \|= { return ZigTypes.OR_ASSIGN_SYM; }
-\!= { return ZigTypes.UNEQUALS_SYM; }
-\>= { return ZigTypes.GRATER_OR_EQUALS_SYM; }
-\<= { return ZigTypes.LESS_OR_EQUALS_SYM; }
+\!= { return ZigTypes.UNEQUAL_SYM; }
+\>= { return ZigTypes.GE_SYM; }
+\<= { return ZigTypes.LE_SYM; }
 &= { return ZigTypes.AND_ASSIGN_SYM; }
 %= { return ZigTypes.MOD_ASSIGN_SYM; }
-== { return ZigTypes.EQUALS_SYM; }
+== { return ZigTypes.EQUAL_SYM; }
 
 \+\+ { return ZigTypes.INC_SYM; }
-\-\- { return ZigTypes.DEC_SYM; }
+// \-\- { return ZigTypes.DEC_SYM; }
 \*\* { return ZigTypes.STAR_STAR_SYM; }
 \|\| { return ZigTypes.SEP_SEP_SYM; }
 
-\> { return ZigTypes.GRATER_THAN_SYM; }
-\< { return ZigTypes.LESS_THAN_SYM; }
+\> { return ZigTypes.GT_SYM; }
+\< { return ZigTypes.LT_SYM; }
 \+ { return ZigTypes.PLUS_SYM; }
 \- { return ZigTypes.MINUS_SYM; }
 \* { return ZigTypes.STAR_SYM; }
@@ -79,7 +83,7 @@ COMMENT=\/\/[^\n]*
 & { return ZigTypes.AND_SYM; }
 % { return ZigTypes.MOD_SYM; }
 = { return ZigTypes.EQ_SYM; }
-@ { return ANNOTATION_SYM; }
+@ { return ZigTypes.AT_SYM; }
 
 , { return ZigTypes.COMMA_SYM; }
 {SEMICOLON} { return ZigTypes.SEMICOLON_SYM; }
@@ -94,6 +98,8 @@ COMMENT=\/\/[^\n]*
 \.\.\. { return ZigTypes.RANGE_SYM; }
 \.\. { return ZigTypes.SLICE_SYM; }
 \. { return ZigTypes.DOT_SYM; }
+
+{INT} { return ZigTypes.INT_LITERAL; }
 
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
@@ -142,5 +148,7 @@ unreachable { return ZigTypes.UNREACHABLE_KEYWORD; }
 packed { return ZigTypes.PACKED_KEYWORD; }
 struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
+
+{SYMBOL} { return ZigTypes.SYM; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }

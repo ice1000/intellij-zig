@@ -1,0 +1,3 @@
+FILE
+  PsiErrorElement:<top level item> expected, got '// Line comment'
+    PsiElement(LINE_COMMENT)('// Line comment')
