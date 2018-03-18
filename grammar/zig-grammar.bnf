@@ -149,7 +149,17 @@ containerInitBody ::=
 
 structLiteralField ::= "." symbol "=" expr
 
-prefixOp ::= "!" | "-" | "~" | "*" | ("&" option("align" "(" expr option(":" integer ":" integer) ")" ) option("const") option("volatile")) | "?" | "??" | "-%" | "try" | "await"
+prefixOp ::=
+   "!"
+ | "-"
+ | "~"
+ | "*"
+ | "&" (ALIGN_KEYWORD "(" expr option(":" integer ":" integer) ")" )? CONST_KEYWORD? VOLATILE_KEYWORD?
+ | "?"
+ | "??"
+ | "-%"
+ | TRY_KEYWORD
+ | AWAIT_KEYWORD
 
 primaryExpr ::=
    integer
@@ -167,10 +177,10 @@ primaryExpr ::=
  | fnProto
  | asmExpr
  | containerDecl
- | ("continue" option(":" symbol))
+ | (CONTINUE_KEYWORD (":" symbol)?)
  | errorSetDecl
 
-arrayType ::= "[" expr? "]" option("align" "(" expr option(":" integer ":" integer) ")")) option("const") option("volatile") TypeExpr
+arrayType ::= "[" expr? "]" option("align" "(" expr option(":" integer ":" integer) ")") option("const") option("volatile") typeExpr
 
 groupedExpr ::= "(" expr ")"
 
@@ -184,6 +194,6 @@ keywordLiteral ::= "undefined" | "error" | "this" | "unreachable" | "suspend"
 errorSetDecl ::= "error" "{" (symbol (COMMA_SYM symbol)*)? "}"
 
 containerDecl ::= option("extern" | "packed")
-  ("struct" groupedExpr? | "union" option("enum" groupedExpr? | groupedExpr) | ("enum" groupedExpr?))
+  ("struct" groupedExpr? | "union" (ENUM_KEYWORD groupedExpr? | groupedExpr)? | (ENUM_KEYWORD groupedExpr?))
   "{" containerMember* "}"
 
