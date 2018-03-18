@@ -55,7 +55,7 @@ statement ::=
    localVarDecl SEMICOLON_SYM
  | deferBlock
  | deferExpr SEMICOLON_SYM
- | blockExpr(block)
+ | blockExprBlock
  | expr? SEMICOLON_SYM
 
 private typeExpr ::= errorSetExpr
@@ -110,7 +110,7 @@ compTimeExprBlockOrExpr ::= COMPTIME_KEYWORD blockOrExpr
 switchExpr ::= SWITCH_KEYWORD LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE switchProng* RIGHT_BRACE
 switchItem ::= expr | (expr RANGE_SYM expr)
 switchProng ::=
- (switchItem (COMMA_SYM switchItem) | ELSE_KEYWORD)
+ (ELSE_KEYWORD | (switchItem (COMMA_SYM switchItem)*)?)
  "=>"
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
  expr COMMA_SYM
@@ -171,8 +171,21 @@ testExprBlockOrExpr ::=
  (SEP_SYM STAR_SYM? symbol SEP_SYM)? blockOrExpr (ELSE_KEYWORD blockExprBlockOrExpr)?
 
 //WhileExpr(body) ::= option(symbol COLON_SYM) option("inline") "while" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) option(COLON_SYM LEFT_PAREN expr RIGHT_PAREN) body option("else" (SEP_SYM symbol SEP_SYM)? BlockExpr(body))
-whileExprBlock ::= (symbol COLON_SYM)? INLINE_KEYWORD? WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN (SEP_SYM STAR_SYM? symbol SEP_SYM)? (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)? block (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlock)?
-whileExprBlockOrExpr ::= (symbol COLON_SYM)? INLINE_KEYWORD? WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN (SEP_SYM STAR_SYM? symbol SEP_SYM)? (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)? blockOrExpr (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlockOrExpr)?
+whileExprBlock ::=
+ (symbol COLON_SYM)? INLINE_KEYWORD?
+ WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
+  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
+  (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
+   block
+  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlock)?
+
+whileExprBlockOrExpr ::=
+ (symbol COLON_SYM)? INLINE_KEYWORD?
+ WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
+  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
+  (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
+   blockOrExpr
+  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlockOrExpr)?
 
 boolAndExpr ::= comparisonExpr AND_KEYWORD boolAndExpr | comparisonExpr
 comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
