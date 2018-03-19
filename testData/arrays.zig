@@ -19,9 +19,9 @@ comptime {
 
 test "iterate over an array" {
 	var sum: usize = 0;
-	for (message) |byte| {
-		sum += byte;
-	}
+	//for (message) |byte| {
+	//	sum += byte;
+	//}
 	assert(sum == usize('h') + usize('e') + usize('l') * 2 + usize('o'));
 }
 
@@ -29,9 +29,9 @@ test "iterate over an array" {
 var some_integers: [100]i32 = undefined;
 
 test "modify an array" {
-	for (some_integers) |*item, i| {
-		*item = i32(i);
-	}
+	//for (some_integers) |*item, i| {
+	//	*item = i32(i);
+	//}
 	assert(some_integers[10] == 10);
 	assert(some_integers[99] == 99);
 }
@@ -70,12 +70,12 @@ comptime {
 // use compile-time code to initialize an array
 var fancy_array = init: {
 	var initial_value: [10]Point = undefined;
-	for (initial_value) |*pt, i| {
-		*pt = Point {
-			.x = i32(i),
-			.y = i32(i) * 2,
-		};
-	}
+	//for (initial_value) |*pt, i| {
+	//	*pt = Point {
+	//		.x = i32(i),
+	//		.y = i32(i) * 2,
+	//	};
+	//}
 	break :init initial_value;
 };
 const Point = struct {

@@ -39,17 +39,15 @@ testDeclaration ::= TEST_KEYWORD string block
 globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration endOfLine
 localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
- (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM typeExpr)?
+ (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM primary)?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? EQ_SYM expr
 
-containerField ::= symbol (COLON_SYM prefixOpExpr (EQ_SYM prefixOpExpr)?)? COMMA_SYM
+containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)? COMMA_SYM
 containerMember ::=
- (
    containerField
  | fnDeclaration
  | globalVarDeclaration
- )
 
 useDeclaration ::= USE_KEYWORD expr endOfLine
 externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) endOfLine
@@ -252,7 +250,10 @@ expr ::=
  | prefixOpExpr
  | asyncExpr
  | suffixOpExpr
- | integer
+ | primary
+
+private primary ::=
+   integer
  | float
  | string
  | char
@@ -287,10 +288,10 @@ binaryAndExpr ::= expr AND_SYM expr
 bitShiftExpr ::= expr bitShiftOperator expr
 additionExpr ::= expr additionOperator expr
 multiplyExpr ::= expr multiplyOperator expr
-curlySuffixExpr ::= typeExpr containerInitSuffix?
-typeExpr ::= prefixOpExpr NOT_SYM prefixOpExpr
-prefixOpExpr ::= prefixOp typeExpr
-asyncExpr ::= ASYNC_KEYWORD groupedExpr? expr fnCallSuffix
+curlySuffixExpr ::= expr containerInitSuffix
+typeExpr ::= expr NOT_SYM expr
+prefixOpExpr ::= prefixOp expr
+asyncExpr ::= ASYNC_KEYWORD groupedExpr? primary fnCallSuffix
 suffixOpExpr ::=
  expr
  (
@@ -304,7 +305,7 @@ fieldAccessSuffix ::= DOT_SYM symbol
 fnCallSuffix ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
 arrayAccessSuffix ::= LEFT_BRACKET expr RIGHT_BRACKET
 sliceSuffix ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET
-containerInitSuffix ::= LEFT_BRACE containerInitBody? RIGHT_BRACE
+containerInitSuffix ::= LEFT_BRACE (containerInitBody COMMA_SYM?)? RIGHT_BRACE
 
 bitShiftOperator ::= SHL_SYM | SHR_SYM
 additionOperator ::= PLUS_SYM | MINUS_SYM | INC_SYM | PLUS_MOD_SYM | MINUS_MOD_SYM
