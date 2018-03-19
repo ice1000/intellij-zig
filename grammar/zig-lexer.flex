@@ -24,9 +24,15 @@ WHITESPACE=[\s\n\f\r\t\v]
 SEMICOLON=;
 COMMENT=\/\/[^\n]*
 
-INT=[\d]+ // TODO
+INT=\d+ // TODO
 SYMBOL_CHAR=[a-zA-Z_] // TODO
-SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{INT})*
+SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|\d)*
+
+INCOMPLETE_STRING=\"([^\"\\\n]|\\[^])*
+STRING_LITERAL={INCOMPLETE_STRING}\"
+
+INCOMPLETE_CHAR='([^'\\\n]|\\[^])*
+CHAR_LITERAL={INCOMPLETE_CHAR}'
 
 %%
 
@@ -150,5 +156,10 @@ struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
 
 {SYMBOL} { return ZigTypes.SYM; }
+
+{STRING_LITERAL} { return ZigTypes.STR; }
+{INCOMPLETE_STRING} { return TokenType.BAD_CHARACTER; }
+{CHAR_LITERAL} { return ZigTypes.CHAR_LITERAL; }
+{INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }

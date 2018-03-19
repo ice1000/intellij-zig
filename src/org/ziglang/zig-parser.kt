@@ -18,6 +18,7 @@ class ZigParserDefinition : ParserDefinition {
 	override fun getStringLiteralElements() = ZigTokenType.STRINGS
 	override fun getCommentTokens() = ZigTokenType.COMMENTS
 	override fun getFileNodeType() = FILE
+	override fun getWhitespaceTokens() = TokenSet.WHITE_SPACE
 	override fun spaceExistanceTypeBetweenTokens(left: ASTNode?, right: ASTNode?) =
 			ParserDefinition.SpaceRequirements.MAY
 
