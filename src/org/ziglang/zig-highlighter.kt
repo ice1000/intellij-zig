@@ -74,7 +74,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	override fun getHighlightingLexer() = ZigLexerAdapter()
 	override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> = when (tokenType) {
 		ZigTypes.STR -> STRING_KEY
-		ZigTypes.INTEGER,
+		ZigTypes.INT_LITERAL,
 		ZigTypes.FLOAT_LITERAL -> NUMBER_KEY
 		in KEYWORDS -> KEYWORD_KEY
 		else -> emptyArray()
