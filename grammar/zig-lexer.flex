@@ -71,7 +71,7 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 == { return ZigTypes.EQUAL_SYM; }
 
 \+\+ { return ZigTypes.INC_SYM; }
-\-\- { return ZigTypes.DEC_SYM; }
+// \-\- { return ZigTypes.DEC_SYM; }
 \*\* { return ZigTypes.STAR_STAR_SYM; }
 \|\| { return ZigTypes.SEP_SEP_SYM; }
 
