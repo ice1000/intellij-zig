@@ -17,8 +17,8 @@ zigFile ::= topLevelItem*
 
 private endOfLine ::= SEMICOLON_SYM comment?
 private comment ::= LINE_COMMENT
-symbol ::= SYM
-string ::= STR
+symbol ::= SYM { extends=expr }
+string ::= STR { extends=expr }
 
 private topLevelDeclaration ::=
  PUB_KEYWORD?
@@ -71,30 +71,23 @@ paramDeclaration ::=
 statement ::=
    localVarDeclaration endOfLine
  | deferBlock
- | deferExpr endOfLine
+ | defer endOfLine
  | blockExprBlock
  | expr? endOfLine
 
-private typeExpr ::= errorSetExpr
-private errorSetExpr ::= (prefixOpExpr NOT_SYM prefixOpExpr) | prefixOpExpr
+private ExprOrBlock ::= block | expr
 
-private blockOrExpr ::= block | expr
-
-expr ::= tryExpr | returnExpr | breakExpr | cancelExpr | resumeExpr | awaitExpr | assignExpr
 block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
 
-asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
 asmOutput ::= COLON_SYM (asmOutputItem (COMMA_SYM asmOutputItem)*)? asmInput?
 asmInput ::= COLON_SYM (asmInputItem (COMMA_SYM asmInputItem)*)? asmClobbers?
 asmOutputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN (symbol | SMALL_ARROW_SYM typeExpr) RIGHT_PAREN
 asmInputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN expr RIGHT_PAREN
 asmClobbers ::= COLON_SYM (string (COMMA_SYM string)*)?
 
-private unwrapExpr ::= boolOrExpr (unwrapNullable | unwrapError) | boolOrExpr
 unwrapNullable ::= VERY_QUESTION_SYM expr
 unwrapError ::= CATCH_KEYWORD (SEP_SYM symbol SEP_SYM)? expr
 
-private assignExpr ::= unwrapExpr assignOperator unwrapExpr | unwrapExpr
 assignOperator ::=
    EQ_SYM
  | TIMES_ASSIGN_SYM
@@ -121,26 +114,26 @@ blockExprBlock ::=
  | testExprBlock
  | whileExprBlock
  | forExprBlock
- | switchExpr
+ | switchStatement
  | compTimeExprBlock
  | suspendExprBlock
 
-blockExprBlockOrExpr ::=
+blockExprExprOrBlock ::=
    block
- | ifExprBlockOrExpr
- | ifErrorExprBlockOrExpr
- | testExprBlockOrExpr
- | whileExprBlockOrExpr
- | forExprBlockOrExpr
- | switchExpr
- | compTimeExprBlockOrExpr
- | suspendExprBlockOrExpr
+ | ifExprExprOrBlock
+ | ifErrorExprExprOrBlock
+ | testExprExprOrBlock
+ | whileExprExprOrBlock
+ | forExprExprOrBlock
+ | switchStatement
+ | compTimeExprExprOrBlock
+ | suspendExprExprOrBlock
 
 //CompTimeExpr(body) ::= "comptime" body
 compTimeExprBlock ::= COMPTIME_KEYWORD block
-compTimeExprBlockOrExpr ::= COMPTIME_KEYWORD blockOrExpr
+compTimeExprExprOrBlock ::= COMPTIME_KEYWORD ExprOrBlock
 
-switchExpr ::=
+switchStatement ::=
  SWITCH_KEYWORD
   LEFT_PAREN expr RIGHT_PAREN
   LEFT_BRACE switchProng* RIGHT_BRACE
@@ -165,20 +158,14 @@ forExprBlock ::=
    block
   (ELSE_KEYWORD blockExprBlock)?
 
-forExprBlockOrExpr ::=
+forExprExprOrBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  FOR_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol (COMMA_SYM symbol)? SEP_SYM)?
-   blockOrExpr
-  (ELSE_KEYWORD blockExprBlockOrExpr)?
+   ExprOrBlock
+  (ELSE_KEYWORD blockExprExprOrBlock)?
 
-private returnExpr ::= RETURN_KEYWORD expr?
-private tryExpr ::= TRY_KEYWORD expr
-private awaitExpr ::= AWAIT_KEYWORD expr
-private breakExpr ::= BREAK_KEYWORD (COLON_SYM symbol)? expr?
-private cancelExpr ::= CANCEL_KEYWORD expr
-private resumeExpr ::= RESUME_KEYWORD expr
-private deferExpr ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
+defer ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
 deferBlock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
 
 //IfExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN body option("else" BlockExpr(body))
@@ -186,14 +173,14 @@ ifExprBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   block
  (ELSE_KEYWORD blockExprBlock)?
-ifExprBlockOrExpr ::=
+ifExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
-  blockOrExpr
- (ELSE_KEYWORD blockExprBlockOrExpr)?
+  ExprOrBlock
+ (ELSE_KEYWORD blockExprExprOrBlock)?
 
 //SuspendExpr(body) ::= "suspend" option((SEP_SYM symbol SEP_SYM body))
 suspendExprBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM block)?
-suspendExprBlockOrExpr ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM blockOrExpr)?
+suspendExprExprOrBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM ExprOrBlock)?
 
 //IfErrorExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body "else" SEP_SYM symbol SEP_SYM BlockExpr(body)
 ifErrorExprBlock ::=
@@ -201,11 +188,11 @@ ifErrorExprBlock ::=
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   block
  ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExprBlock
-ifErrorExprBlockOrExpr ::=
+ifErrorExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
-  blockOrExpr
- ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExprBlockOrExpr
+  ExprOrBlock
+ ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExprExprOrBlock
 
 //TestExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body option("else" BlockExpr(body))
 testExprBlock ::=
@@ -213,11 +200,11 @@ testExprBlock ::=
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   block
  (ELSE_KEYWORD blockExprBlock)?
-testExprBlockOrExpr ::=
+testExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
-  blockOrExpr
- (ELSE_KEYWORD blockExprBlockOrExpr)?
+  ExprOrBlock
+ (ELSE_KEYWORD blockExprExprOrBlock)?
 
 //WhileExpr(body) ::= option(symbol COLON_SYM) option("inline") "while" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) option(COLON_SYM LEFT_PAREN expr RIGHT_PAREN) body option("else" (SEP_SYM symbol SEP_SYM)? BlockExpr(body))
 whileExprBlock ::=
@@ -228,25 +215,54 @@ whileExprBlock ::=
    block
   (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlock)?
 
-whileExprBlockOrExpr ::=
+whileExprExprOrBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
-   blockOrExpr
-  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlockOrExpr)?
+   ExprOrBlock
 
-private boolOrExpr ::= boolAndExpr OR_KEYWORD boolOrExpr | boolAndExpr
-private boolAndExpr ::= comparisonExpr AND_KEYWORD boolAndExpr | comparisonExpr
-private comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
-private binaryOrExpr ::= binaryXorExpr SEP_SYM binaryOrExpr | binaryXorExpr
-private binaryXorExpr ::= binaryAndExpr EXPONENT_SYM binaryXorExpr | binaryAndExpr
-private binaryAndExpr ::= bitShiftExpr AND_SYM binaryAndExpr | bitShiftExpr
-private bitShiftExpr ::= additionExpr bitShiftOperator bitShiftExpr | additionExpr
-private additionExpr ::= multiplyExpr additionOperator additionExpr | multiplyExpr
-private multiplyExpr ::= curlySuffixExpr multiplyOperator multiplyExpr | curlySuffixExpr
-private curlySuffixExpr ::= typeExpr containerInitExpr?
-private prefixOpExpr ::= prefixOp errorSetExpr | suffixOpExpr
+expr ::=
+   tryExpr
+ | returnExpr
+  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprExprOrBlock)?
+ | breakExpr
+ | cancelExpr
+ | resumeExpr
+ | awaitExpr
+ | assignExpr
+
+asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
+returnExpr ::= RETURN_KEYWORD expr?
+tryExpr ::= TRY_KEYWORD expr
+awaitExpr ::= AWAIT_KEYWORD expr
+breakExpr ::= BREAK_KEYWORD (COLON_SYM symbol)? expr?
+cancelExpr ::= CANCEL_KEYWORD expr
+resumeExpr ::= RESUME_KEYWORD expr
+assignExpr ::= unwrapExpr assignOperator unwrapExpr | unwrapExpr
+unwrapExpr ::= boolOrExpr (unwrapNullable | unwrapError) | boolOrExpr
+boolOrExpr ::= boolAndExpr OR_KEYWORD boolOrExpr | boolAndExpr
+boolAndExpr ::= comparisonExpr AND_KEYWORD boolAndExpr | comparisonExpr
+comparisonExpr ::= binaryOrExpr comparisonOperator binaryOrExpr | binaryOrExpr
+binaryOrExpr ::= binaryXorExpr SEP_SYM binaryOrExpr | binaryXorExpr
+binaryXorExpr ::= binaryAndExpr EXPONENT_SYM binaryXorExpr | binaryAndExpr
+binaryAndExpr ::= bitShiftExpr AND_SYM binaryAndExpr | bitShiftExpr
+bitShiftExpr ::= additionExpr bitShiftOperator bitShiftExpr | additionExpr
+additionExpr ::= multiplyExpr additionOperator additionExpr | multiplyExpr
+multiplyExpr ::= curlySuffixExpr multiplyOperator multiplyExpr | curlySuffixExpr
+curlySuffixExpr ::= typeExpr containerInitSuffix?
+typeExpr ::= (prefixOpExpr NOT_SYM prefixOpExpr) | prefixOpExpr
+prefixOpExpr ::= prefixOp typeExpr | suffixOpExpr
+suffixOpExpr ::=
+   (ASYNC_KEYWORD (LEFT_PAREN expr RIGHT_PAREN)? primaryExpr fnCallSuffix)
+ | primaryExpr (fnCallSuffix | arrayAccessSuffix | fieldAccessSuffix | sliceSuffix)?
+
+private fieldAccessSuffix ::= DOT_SYM symbol
+private fnCallSuffix ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
+private arrayAccessSuffix ::= LEFT_BRACKET expr RIGHT_BRACKET
+private sliceSuffix ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET
+private containerInitSuffix ::= LEFT_BRACE containerInitBody? RIGHT_BRACE
+
 bitShiftOperator ::= SHL_SYM | SHR_SYM
 additionOperator ::= PLUS_SYM | MINUS_SYM | INC_SYM | PLUS_MOD_SYM | MINUS_MOD_SYM
 multiplyOperator ::= SEP_SEP_SYM | STAR_SYM | DIV_SYM | MOD_SYM | STAR_STAR_SYM | STAR_MOD_SYM
@@ -257,16 +273,6 @@ comparisonOperator ::=
  | GT_SYM
  | LE_SYM
  | GE_SYM
-
-private suffixOpExpr ::=
-   (ASYNC_KEYWORD (LEFT_PAREN expr RIGHT_PAREN)? primaryExpr fnCallExpr)
- | primaryExpr (fnCallExpr | arrayAccessExpr | fieldAccessExpr | sliceExpr)?
-
-private fieldAccessExpr ::= DOT_SYM symbol
-private fnCallExpr ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
-private arrayAccessExpr ::= LEFT_BRACKET expr RIGHT_BRACKET
-private sliceExpr ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET
-private containerInitExpr ::= LEFT_BRACE containerInitBody? RIGHT_BRACE
 
 containerInitBody ::=
    structLiteralField (COMMA_SYM structLiteralField)*
@@ -298,7 +304,7 @@ private primaryExpr ::=
  | keywordLiteral
  | boolean
  | null
- | blockExprBlockOrExpr
+ | blockExprExprOrBlock
  | symbol
  | macroCall
  | arrayType
@@ -309,7 +315,7 @@ private primaryExpr ::=
  | errorSetDeclaration
  | groupedExpr
 
-macroCall ::= AT_SYM symbol fnCallExpr
+macroCall ::= AT_SYM symbol fnCallSuffix
 
 arrayType ::=
  LEFT_BRACKET expr? RIGHT_BRACKET
