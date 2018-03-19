@@ -33,7 +33,7 @@ OCT_NUM=0[oO][0-7]+
 BIN_NUM=0[bB][01]+
 DEC_NUM=\d+{E_SUFFIX}?
 INTEGER={HEX_NUM}|{OCT_NUM}|{BIN_NUM}|{DEC_NUM}
-FLOAT=((\d+\.\d*)|(\d*\.\d+)){E_SUFFIX}?|({HEX_NUM}+\.{HEXDIGIT}*p{DEC_NUM})
+FLOAT=((\d+\.\d*)|(\d*\.\d+))({E_SUFFIX}|{P_SUFFIX})?
 
 SYMBOL_CHAR=[a-zA-Z_] // TODO
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|\d)*
