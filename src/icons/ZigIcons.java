@@ -13,4 +13,5 @@ import javax.swing.*;
 public interface ZigIcons {
 	@NotNull Icon ZIG_BIG_ICON = IconLoader.getIcon("/icons/zig_icon.png");
 	// @NotNull Icon ZIG_RESOURCE_ICON = IconLoader.getIcon("/icons/zig_resource.png");
+	@NotNull Icon ZIG_FILE = IconLoader.getIcon("/icons/zig_file.png");		//本小姐觉得这个比较好看
 }
