@@ -56,12 +56,12 @@ fnProto ::=
  | EXTERN_KEYWORD
  | (ASYNC_KEYWORD (LEFT_PAREN expr RIGHT_PAREN)?)
  )?
- FN_KEYWORD symbol? paramDeclarationList (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
+ FN_KEYWORD symbol? parameterList (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? NOT_SYM? (typeExpr | VAR_KEYWORD)
 
 fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
 
-paramDeclarationList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
+parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
 paramDeclaration ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?
@@ -80,7 +80,7 @@ private errorSetExpr ::= (prefixOpExpr NOT_SYM prefixOpExpr) | prefixOpExpr
 
 private blockOrExpr ::= block | expr
 
-expr ::= tryExpr | returnExpr | breakExpr | assignExpr | cancelExpr | resumeExpr | awaitExpr
+expr ::= tryExpr | returnExpr | breakExpr | cancelExpr | resumeExpr | awaitExpr | assignExpr
 block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
 
 asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
