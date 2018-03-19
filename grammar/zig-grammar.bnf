@@ -6,6 +6,8 @@
   psiPackage='org.ziglang.psi'
   psiImplPackage='org.ziglang.psi.impl'
 
+  extends('.*Expr')=expr
+
   tokenTypeClass='org.ziglang.ZigTokenType'
   elementTypeHolderClass='org.ziglang.psi.ZigTypes'
   elementTypeClass='org.ziglang.ZigElementType'
@@ -17,9 +19,18 @@ private endOfLine ::= SEMICOLON_SYM comment?
 private comment ::= LINE_COMMENT
 symbol ::= SYM
 string ::= STR
+
+private topLevelDeclaration ::=
+ PUB_KEYWORD?
+ (
+   fnDeclaration
+ | externDeclaration
+ | globalVarDeclaration
+ | useDeclaration
+ )
+
 topLevelItem ::= COMPTIME_KEYWORD block | topLevelDeclaration | testDeclaration
 testDeclaration ::= TEST_KEYWORD string block
-topLevelDeclaration ::= PUB_KEYWORD? (fnDeclaration | externDeclaration | globalVarDeclaration | useDeclaration)
 globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration endOfLine
 localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
@@ -27,11 +38,15 @@ variableDeclaration ::=
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? EQ_SYM expr
 
-containerMember ::= (containerField | fnDeclaration | globalVarDeclaration)
 containerField ::= symbol (COLON_SYM prefixOpExpr (EQ_SYM prefixOpExpr)?)? COMMA_SYM
+containerMember ::=
+ (
+   containerField
+ | fnDeclaration
+ | globalVarDeclaration
+ )
 
 useDeclaration ::= USE_KEYWORD expr endOfLine
-
 externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) endOfLine
 
 fnProto ::=
