@@ -307,7 +307,7 @@ sliceSuffix ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET
 containerInitSuffix ::= LEFT_BRACE (containerInitBody COMMA_SYM?)? RIGHT_BRACE
 
 bitShiftOperator ::= SHL_SYM | SHR_SYM
-additionOperator ::= PLUS_SYM | MINUS_SYM | INC_SYM | PLUS_MOD_SYM | MINUS_MOD_SYM
+additionOperator ::= PLUS_SYM | MINUS_SYM | INC_SYM | DEC_SYM | PLUS_MOD_SYM | MINUS_MOD_SYM
 multiplyOperator ::= SEP_SEP_SYM | STAR_SYM | DIV_SYM | MOD_SYM | STAR_STAR_SYM | STAR_MOD_SYM
 comparisonOperator ::=
    EQUAL_SYM

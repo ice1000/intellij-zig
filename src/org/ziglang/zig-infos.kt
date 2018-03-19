@@ -10,7 +10,7 @@ import org.jetbrains.annotations.PropertyKey
 import java.util.*
 
 object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
-	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
+	override fun getIcon() = ZigIcons.ZIG_FILE
 	override fun getName() = ZIG_NAME
 	override fun getDefaultExtension() = ZIG_EXTENSION
 	override fun getDescription() = ZigBundle.message("zig.description")
