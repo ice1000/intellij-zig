@@ -262,7 +262,7 @@ expr ::=
  | blockExpr
  | symbol
  | macroExpr
- | arrayType
+ | arrayExpr
  | fnProto
  | asmExpr
  | containerExpr
@@ -288,7 +288,7 @@ bitShiftExpr ::= expr bitShiftOperator expr
 additionExpr ::= expr additionOperator expr
 multiplyExpr ::= expr multiplyOperator expr
 curlySuffixExpr ::= typeExpr containerInitSuffix?
-typeExpr ::= prefixOpExpr (NOT_SYM prefixOpExpr)?
+typeExpr ::= prefixOpExpr NOT_SYM prefixOpExpr
 prefixOpExpr ::= prefixOp typeExpr
 asyncExpr ::= ASYNC_KEYWORD groupedExpr? expr fnCallSuffix
 suffixOpExpr ::=
@@ -342,7 +342,7 @@ prefixOp ::=
 asmExpr ::=
  ASM_KEYWORD VOLATILE_KEYWORD?
  LEFT_PAREN string asmOutput? RIGHT_PAREN
-arrayType ::=
+arrayExpr ::=
  LEFT_BRACKET expr? RIGHT_BRACKET
  (ALIGN_KEYWORD LEFT_PAREN expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN)?
  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr {

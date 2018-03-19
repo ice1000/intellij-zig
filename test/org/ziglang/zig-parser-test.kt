@@ -35,4 +35,14 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		println(name)
 		doTest(true)
 	}
+
+	fun testfoo() {
+		println(name)
+		doTest(true)
+	}
+
+	fun testarrays() {
+		println(name)
+		doTest(true)
+	}
 }
