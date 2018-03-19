@@ -1,3 +1,3 @@
 FILE
-  PsiErrorElement:<top level item> expected, got '// Line comment'
+  ZigTopLevelItemImpl(TOP_LEVEL_ITEM)
     PsiElement(LINE_COMMENT)('// Line comment')
