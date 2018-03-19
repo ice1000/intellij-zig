@@ -1,3 +1,2 @@
 FILE
-  ZigTopLevelItemImpl(TOP_LEVEL_ITEM)
-    PsiElement(LINE_COMMENT)('// Line comment')
+  PsiComment(LINE_COMMENT)('// Line comment')

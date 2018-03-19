@@ -38,7 +38,7 @@ FILE
                 PsiElement(LEFT_PAREN)('(')
                 PsiElement(RIGHT_PAREN)(')')
             PsiElement(SEMICOLON_SYM)(';')
-            PsiElement(LINE_COMMENT)('// die! die!')
+          PsiComment(LINE_COMMENT)('// die! die!')
           ZigStatementImpl(STATEMENT)
             PsiElement(SEMICOLON_SYM)(';')
           ZigStatementImpl(STATEMENT)

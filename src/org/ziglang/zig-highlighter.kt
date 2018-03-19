@@ -70,9 +70,11 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val KEYWORD_KEY = arrayOf(KEYWORD)
 	@JvmField val STRING_KEY = arrayOf(STRING)
 	@JvmField val NUMBER_KEY = arrayOf(NUMBER)
+	@JvmField val SYMBOL_KEY = arrayOf(SYMBOL)
 
 	override fun getHighlightingLexer() = ZigLexerAdapter()
 	override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> = when (tokenType) {
+		ZigTypes.SYM -> SYMBOL_KEY
 		ZigTypes.STR -> STRING_KEY
 		ZigTypes.INT_LITERAL,
 		ZigTypes.FLOAT_LITERAL -> NUMBER_KEY

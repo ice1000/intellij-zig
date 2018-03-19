@@ -250,7 +250,25 @@ expr ::=
  | curlySuffixExpr
  | typeExpr
  | prefixOpExpr
+ | asyncExpr
  | suffixOpExpr
+ | integer
+ | float
+ | string
+ | char
+ | keywordLiteral
+ | boolean
+ | null
+ | blockExpr
+ | symbol
+ | macroExpr
+ | arrayType
+ | fnProto
+ | asmExpr
+ | containerExpr
+ | continueExpr
+ | errorSetExpr
+ | groupedExpr
 
 returnExpr ::= RETURN_KEYWORD expr?
 tryExpr ::= TRY_KEYWORD expr
@@ -272,18 +290,15 @@ multiplyExpr ::= expr multiplyOperator expr
 curlySuffixExpr ::= typeExpr containerInitSuffix?
 typeExpr ::= prefixOpExpr (NOT_SYM prefixOpExpr)?
 prefixOpExpr ::= prefixOp typeExpr
+asyncExpr ::= ASYNC_KEYWORD groupedExpr? expr fnCallSuffix
 suffixOpExpr ::=
-   ASYNC_KEYWORD
-   (
-    LEFT_PAREN expr RIGHT_PAREN
-   )? primaryExpr fnCallSuffix
- | primaryExpr
-   (
-     fnCallSuffix
-   | arrayAccessSuffix
-   | fieldAccessSuffix
-   | sliceSuffix
-   )?
+ expr
+ (
+   fnCallSuffix
+ | arrayAccessSuffix
+ | fieldAccessSuffix
+ | sliceSuffix
+ )
 
 fieldAccessSuffix ::= DOT_SYM symbol
 fnCallSuffix ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
@@ -323,25 +338,6 @@ prefixOp ::=
  | MINUS_MOD_SYM
  | TRY_KEYWORD
  | AWAIT_KEYWORD
-
-private primaryExpr ::=
-   integer
- | float
- | string
- | char
- | keywordLiteral
- | boolean
- | null
- | blockExpr
- | symbol
- | macroExpr
- | arrayType
- | fnProto
- | asmExpr
- | containerExpr
- | continueExpr
- | errorSetExpr
- | groupedExpr
 
 asmExpr ::=
  ASM_KEYWORD VOLATILE_KEYWORD?
