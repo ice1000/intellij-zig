@@ -4,6 +4,7 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 import org.ziglang.psi.ZigTypes;
+import org.ziglang.ZigTokenType;
 
 %%
 
@@ -46,7 +47,7 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 
 %%
 
-{COMMENT} { return ZigTypes.LINE_COMMENT; }
+{COMMENT} { return ZigTokenType.LINE_COMMENT; }
 {WHITESPACE} { return TokenType.WHITE_SPACE; }
 
 \<\<= { return ZigTypes.SHL_ASSIGN_SYM; } // <<=

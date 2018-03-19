@@ -29,7 +29,8 @@ class ZigParserDefinition : ParserDefinition {
 
 class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INSTANCE) {
 	companion object TokenHolder {
-		@JvmField val COMMENTS = TokenSet.create(ZigTypes.LINE_COMMENT)
+		@JvmField val LINE_COMMENT = ZigTokenType("comment")
+		@JvmField val COMMENTS = TokenSet.create(LINE_COMMENT)
 		@JvmField val STRINGS = TokenSet.create(ZigTypes.STR)
 	}
 }

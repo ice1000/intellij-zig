@@ -1,2 +1,2 @@
 FILE
-  PsiComment(LINE_COMMENT)('// Line comment')
+  PsiComment(comment)('// Line comment')

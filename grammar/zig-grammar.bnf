@@ -15,8 +15,7 @@
 
 zigFile ::= topLevelItem*
 
-private endOfLine ::= SEMICOLON_SYM comment?
-private comment ::= LINE_COMMENT
+private endOfLine ::= SEMICOLON_SYM
 symbol ::= SYM { extends=expr }
 string ::= STR { extends=expr }
 
