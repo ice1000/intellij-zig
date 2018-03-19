@@ -24,17 +24,7 @@ WHITESPACE=[\s\n\f\r\t\v]
 SEMICOLON=;
 COMMENT=\/\/[^\n]*
 
-NUM_SUFFIX=-?\d+
-P_SUFFIX=[pP]{NUM_SUFFIX}
-E_SUFFIX=[eE]{NUM_SUFFIX}
-HEXDIGIT=[a-fA-F0-9]
-HEX_NUM=0[xX]{HEXDIGIT}+({P_SUFFIX}|{E_SUFFIX})?
-OCT_NUM=0[oO][0-7]+
-BIN_NUM=0[bB][01]+
-DEC_NUM=\d+{E_SUFFIX}?
-INTEGER={HEX_NUM}|{OCT_NUM}|{BIN_NUM}|{DEC_NUM}
-FLOAT=((\d+\.\d*)|(\d*\.\d+))({E_SUFFIX}|{P_SUFFIX})?
-
+INT=\d+ // TODO
 SYMBOL_CHAR=[a-zA-Z_] // TODO
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|\d)*
 
@@ -169,7 +159,6 @@ union { return ZigTypes.UNION_KEYWORD; }
 {INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
 
 {SYMBOL} { return ZigTypes.SYM; }
-{INTEGER} { return ZigTypes.INT_LITERAL; }
-{FLOAT} { return ZigTypes.FLOAT_LITERAL; }
+{INT} { return ZigTypes.INT_LITERAL; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }
