@@ -68,7 +68,7 @@ private blockOrExpr ::= block | expr
 expr ::= tryExpr | returnExpr | breakExpr | assignExpr | cancelExpr | resumeExpr | awaitExpr
 block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
 
-private asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
+asmExpr ::= ASM_KEYWORD VOLATILE_KEYWORD? LEFT_PAREN string asmOutput? RIGHT_PAREN
 asmOutput ::= COLON_SYM (asmOutputItem (COMMA_SYM asmOutputItem)*)? asmInput?
 asmInput ::= COLON_SYM (asmInputItem (COMMA_SYM asmInputItem)*)? asmClobbers?
 asmOutputItem ::= LEFT_BRACKET symbol RIGHT_BRACKET string LEFT_PAREN (symbol | SMALL_ARROW_SYM typeExpr) RIGHT_PAREN
@@ -231,7 +231,7 @@ private suffixOpExpr ::=
  | primaryExpr (fnCallExpr | arrayAccessExpr | fieldAccessExpr | sliceExpr)?
 
 private fieldAccessExpr ::= DOT_SYM symbol
-private fnCallExpr ::= LEFT_PAREN expr (COMMA_SYM expr)* RIGHT_PAREN
+private fnCallExpr ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
 private arrayAccessExpr ::= LEFT_BRACKET expr RIGHT_BRACKET
 private sliceExpr ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET
 private containerInitExpr ::= LEFT_BRACE containerInitBody? RIGHT_BRACE
@@ -273,7 +273,7 @@ private primaryExpr ::=
  | fnProto
  | asmExpr
  | containerDeclaration
- | (CONTINUE_KEYWORD (COLON_SYM symbol)?)
+ | CONTINUE_KEYWORD (COLON_SYM symbol)?
  | errorSetDeclaration
  | groupedExpr
 
@@ -282,7 +282,7 @@ arrayType ::=
  (ALIGN_KEYWORD LEFT_PAREN expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN)?
  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr
 
-groupedExpr ::= LEFT_PAREN expr RIGHT_PAREN { pin=1 }
+groupedExpr ::= LEFT_PAREN expr RIGHT_PAREN
 
 integer ::= INT_LITERAL
 float ::= FLOAT_LITERAL

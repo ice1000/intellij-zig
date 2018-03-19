@@ -20,4 +20,9 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		println(name)
 		doTest(true)
 	}
+
+	fun testFunctionCall() {
+		println(name)
+		doTest(true)
+	}
 }

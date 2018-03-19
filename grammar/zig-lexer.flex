@@ -105,8 +105,6 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 \.\. { return ZigTypes.SLICE_SYM; }
 \. { return ZigTypes.DOT_SYM; }
 
-{INT} { return ZigTypes.INT_LITERAL; }
-
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
 export { return ZigTypes.EXPORT_KEYWORD; }
@@ -155,11 +153,12 @@ packed { return ZigTypes.PACKED_KEYWORD; }
 struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
 
-{SYMBOL} { return ZigTypes.SYM; }
-
 {STRING_LITERAL} { return ZigTypes.STR; }
 {INCOMPLETE_STRING} { return TokenType.BAD_CHARACTER; }
 {CHAR_LITERAL} { return ZigTypes.CHAR_LITERAL; }
 {INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
+
+{SYMBOL} { return ZigTypes.SYM; }
+{INT} { return ZigTypes.INT_LITERAL; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }
