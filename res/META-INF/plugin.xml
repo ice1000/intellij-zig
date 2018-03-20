@@ -13,6 +13,9 @@
 		<projectService
 				serviceInterface="org.ziglang.project.ZigProjectService"
 				serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
+		<lang.braceMatcher
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigBraceMatcher"/>
 		<lang.commenter
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigCommenter"/>
