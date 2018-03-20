@@ -9,9 +9,13 @@ interface ZigProjectService {
 }
 
 class ZigSettings(
-	var exePath: String = zigPath,
-	var version: String = ""      //TODO :)
-)
+		var exePath: String = zigPath,
+		var version: String = ""      //TODO :)
+) {
+	fun initWithExe() {
+		version = versionOf(exePath)
+	}
+}
 
 val Project.zigSettings: ZigProjectService
 	get() = ServiceManager.getService(this, ZigProjectService::class.java)

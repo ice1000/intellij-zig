@@ -17,6 +17,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.util.PlatformUtils
 import icons.ZigIcons
 import org.ziglang.ZigBundle
+import org.ziglang.action.NewZigFile
 import org.ziglang.project.ui.ZigProjectGeneratorPeerImpl
 
 class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
@@ -56,11 +57,10 @@ project($name)
 					.getInstance(this)
 					.getTemplate("Zig File")
 			PsiManager.getInstance(this).findDirectory(baseDir.createChildDirectory(null, "src"))?.let { srcDir ->
-				// TODO
-//				FileTemplateUtil.createFromTemplate(
-//						template,
-//						"main.zig",
-//						NewZigFile.createProperties(this, name), srcDir)
+				FileTemplateUtil.createFromTemplate(
+						template,
+						"main.zig",
+						NewZigFile.createProperties(this, "main"), srcDir)
 			}
 			generateCMakeFile(baseDir)
 		}

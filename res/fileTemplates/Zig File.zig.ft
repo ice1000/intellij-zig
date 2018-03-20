@@ -1,4 +1,6 @@
-//${NAME}:
-//Zig version: QAQ, I dont know
-//Author: ${USER}
-//Date: ${YEAR}-${MONTH}-${DAY}
+//
+// ${NAME}
+// Zig version: ${ZIG_VERSION}
+// Author: ${USER}
+// Date: ${YEAR}-${MONTH}-${DAY}
+//

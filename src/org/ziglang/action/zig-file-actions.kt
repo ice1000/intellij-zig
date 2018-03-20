@@ -19,13 +19,12 @@ import org.ziglang.project.zigSettings
 class NewZigFile : CreateFileFromTemplateAction(
 	ZigBundle.message("zig.actions.new-file.title"),
 	ZigBundle.message("zig.actions.new-file.description"),
-	ZigIcons.ZIG_BIG_ICON
-), DumbAware {
-	companion object {
-		fun createProperties(project: Project, className: String) =
+	ZigIcons.ZIG_FILE), DumbAware {
+	companion object PropertyCreator {
+		fun createProperties(project: Project, fileName: String) =
 			FileTemplateManager.getInstance(project).defaultProperties.also { properties ->
 				properties += "ZIG_VERSION" to project.zigSettings.settings.version
-				properties += "NAME" to className
+				properties += "NAME" to fileName
 			}
 	}
 
@@ -40,18 +39,15 @@ class NewZigFile : CreateFileFromTemplateAction(
 		//.addKind("Other", ZigIcons.ZIG_BIG_ICON, "Zig Other")		For test
 	}
 
-	override fun createFileFromTemplate(name: String, template: FileTemplate, dir: PsiDirectory) =
-		try {
-			val className = FileUtilRt.getNameWithoutExtension(name)
-			val project = dir.project
-			val properties = createProperties(project, className)
-			CreateFromTemplateDialog(project, dir, template, AttributesDefaults(className).withFixedName(true), properties)
+	override fun createFileFromTemplate(name: String, template: FileTemplate, dir: PsiDirectory) = try {
+		val fileName = FileUtilRt.getNameWithoutExtension(name)
+		val project = dir.project
+		val properties = createProperties(project, fileName)
+		CreateFromTemplateDialog(project, dir, template, AttributesDefaults(fileName).withFixedName(true), properties)
 				.create()
 				.containingFile
-		} catch (e: Exception) {
-			LOG.error("Error while creating new file", e)
-			null
-		}
-
-
+	} catch (e: Exception) {
+		LOG.error("Error while creating new file", e)
+		null
+	}
 }
