@@ -3,6 +3,8 @@ package org.ziglang.project
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.SystemInfo
+import org.ziglang.ZigBundle
+import org.ziglang.executeCommand
 import java.nio.file.*
 
 val zigPath: String by lazy {
@@ -14,7 +16,10 @@ val zigPath: String by lazy {
 			}
 }
 
-fun versionOf(path: String) = "" // TODO
+fun versionOf(path: String) = executeCommand("$path version")
+		.first
+		.firstOrNull()
+		?: ZigBundle.message("zig.version.unknown")
 
 fun validateJuliaSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe")) // TODO
