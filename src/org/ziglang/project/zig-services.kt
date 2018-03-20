@@ -10,7 +10,8 @@ interface ZigProjectService {
 }
 
 class ZigSettings(
-		var exePath: String = zigPath
+	var exePath: String = zigPath,
+	var version: String = ""      //TODO :)
 )
 
 val Project.zigSettings: ZigProjectService

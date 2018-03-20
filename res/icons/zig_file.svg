@@ -1,93 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   id="Layer_1"
-   data-name="Layer 1"
-   viewBox="0 0 32 32"
-   version="1.1"
-   sodipodi:docname="zig_file_bottom.svg"
-   inkscape:version="0.92.2 (unknown)">
-  <metadata
-     id="metadata959">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>css@2x</dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <defs
-     id="defs957" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1293"
-     inkscape:window-height="744"
-     id="namedview955"
-     showgrid="false"
-     inkscape:zoom="3.6875"
-     inkscape:cx="-27.981835"
-     inkscape:cy="29.559351"
-     inkscape:window-x="67"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="Layer_1"
-     showguides="false" />
-  <title
-     id="title934">css@2x</title>
-  <g
-     id="g952">
-    <rect
-       x="2"
-       y="18"
-       width="30"
-       height="14"
-       id="rect936"
-       fill="#62b543"
-       opacity="0.6"
-       style="fill:#f7a41d;fill-opacity:1" />
-    <g
-       opacity="0.6"
-       id="g940" />
-    <g
-       id="g946">
-      <polygon
-         points="12 0 4 8 12 8 12 0"
-         fill="#9aa7b0"
-         opacity="0.7"
-         style="isolation: isolate"
-         id="polygon942" />
-      <polygon
-         points="14 0 14 8 14 10 12 10 4 10 4 16 26 16 26 0 14 0"
-         fill="#9aa7b0"
-         opacity="0.7"
-         style="isolation: isolate"
-         id="polygon944" />
+<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 32 32">
+    <path fill="#f7a41d" opacity=".6" d="M2 18h30v14H2z"/>
+    <g fill="#9aa7b0">
+        <path opacity=".7" style="isolation:isolate" d="M12 0L4 8h8V0z"/>
+        <path opacity=".7" style="isolation:isolate" d="M14 0v10H4v6h22V0H14z"/>
     </g>
-  </g>
-  <path
-     d="M 17.64748,22.451773 H 11.849721 V 19.873057 H 20.23382 L 25.947727,18 16.358121,27.611388 h 5.809737 v 2.579807 H 13.784847 L 8.0709397,32 Z"
-     id="path876"
-     inkscape:connector-curvature="0"
-     style="fill:#231f20;stroke-width:1.0889858;fill-opacity:0.50980395" />
-  <path
-     d="m 5,27.611388 v -7.738331 h 5.735688 v 2.578716 H 7.5798071 v 5.159615 H 11.448973 L 8.8691662,30.191195 H 5 v -2.580896 z m 21.377878,-5.159615 h -3.869166 l 2.579806,-2.578716 h 3.869167 v 10.318138 h -5.734599 v -2.579807 h 3.154792 z"
-     id="path878"
-     inkscape:connector-curvature="0"
-     style="fill:#231f20;stroke-width:1.0889858;fill-opacity:0.50980395" />
+    <path d="M17.647 22.452H11.85v-2.579h8.384L25.948 18l-9.59 9.611h5.81v2.58h-8.383L8.07 32z" fill="#231f20"
+          fill-opacity=".51"/>
+    <path d="M5 27.611v-7.738h5.736v2.579H7.58v5.16h3.869l-2.58 2.58H5V27.61zm21.378-5.16h-3.87l2.58-2.578h3.87v10.318h-5.735v-2.58h3.155z"
+          fill="#231f20" fill-opacity=".51"/>
 </svg>
