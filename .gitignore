@@ -90,3 +90,4 @@ build
 .gradle/
 exportToHTML
 www.ziglang.org
+zig
