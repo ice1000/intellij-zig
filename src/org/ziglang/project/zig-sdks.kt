@@ -33,6 +33,3 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
 		val instance get() = SdkType.findInstance(ZigSdkType::class.java)
 	}
 }
-
-fun validateJuliaSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "julia")) or
-		Files.isExecutable(Paths.get(sdkHome, "bin", "julia.exe"))

@@ -93,7 +93,8 @@ java {
 }
 
 tasks.withType<KotlinCompile> {
-	dependsOn("genParser")
+	// TODO workaround for hurricup/gradle-grammar-kit-plugin#8
+	// dependsOn("genParser")
 	dependsOn("genLexer")
 	kotlinOptions {
 		jvmTarget = "1.8"

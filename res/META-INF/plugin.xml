@@ -10,6 +10,9 @@
 		<errorHandler implementation="de.halirutan.mathematica.errorreporting.zig.GitHubErrorReporter"/>
 		<fileTypeFactory implementation="org.ziglang.ZigFileTypeFactory"/>
 		<sdkType implementation="org.ziglang.project.ZigSdkType"/>
+		<projectService
+				serviceInterface="org.ziglang.project.ZigProjectService"
+				serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
 		<lang.syntaxHighlighterFactory
 				language="Zig"
 				implementationClass="org.ziglang.ZigSyntaxHighlighterFactory"/>
