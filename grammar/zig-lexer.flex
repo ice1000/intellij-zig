@@ -121,10 +121,6 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 {CHAR_LITERAL} { return ZigTypes.CHAR_LITERAL; }
 {INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
 
-{SYMBOL} { return ZigTypes.SYM; }
-{INTEGER} { return ZigTypes.INT_LITERAL; }
-{FLOAT} { return ZigTypes.FLOAT_LITERAL; }
-
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
 export { return ZigTypes.EXPORT_KEYWORD; }
@@ -172,5 +168,9 @@ unreachable { return ZigTypes.UNREACHABLE_KEYWORD; }
 packed { return ZigTypes.PACKED_KEYWORD; }
 struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
+
+{SYMBOL} { return ZigTypes.SYM; }
+{INTEGER} { return ZigTypes.INT_LITERAL; }
+{FLOAT} { return ZigTypes.FLOAT_LITERAL; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }

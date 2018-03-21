@@ -16,6 +16,11 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		doTest(true)
 	}
 
+	fun testComptimeCodes() {
+		println(name)
+		doTest(true)
+	}
+
 	fun testStrings() {
 		println(name)
 		doTest(true)
