@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.platform.ProjectGeneratorPeer
 import org.ziglang.ZigBundle
 import org.ziglang.project.*
+import java.awt.event.ItemListener
 
 class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	private val settings = ZigSettings()
@@ -16,14 +17,15 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 		zigWebsite.setListener({ _, _ ->
 			BrowserLauncher.instance.browse(zigWebsite.text)
 		}, null)
-		setupLater.addPropertyChangeListener {
-			executablePath.isEnabled = setupLater.isSelected
+		setupLater.addActionListener {
+			executablePath.isEnabled = !setupLater.isSelected
 		}
-		executablePath.addPropertyChangeListener {
-			val selected = executablePath.comboBox.selectedItem as? String
-					?: return@addPropertyChangeListener
+		val listener = ItemListener {
+			val selected = executablePath.comboBox.selectedItem as? String ?: return@ItemListener
 			version.text = versionOf(selected)
 		}
+		listener.itemStateChanged(null)
+		executablePath.comboBox.addItemListener(listener)
 	}
 
 	@Suppress("OverridingDeprecatedMember")
