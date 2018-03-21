@@ -23,7 +23,7 @@ class ZigSettings(
 }
 
 class ZigGlobalSettings(
-		var allJuliaExePath: String = "")
+		var allZigExePath: String = "")
 
 val Project.zigSettings: ZigProjectService
 	get() = ServiceManager.getService(this, ZigProjectService::class.java)
@@ -44,7 +44,7 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 
 @State(
 		name = "ZigGlobalSettings",
-		storages = [Storage(file = "juliaGlobalConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
+		storages = [Storage(file = "zigGlobalConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
 class ZigGlobalSettingsServiceImpl :
 		ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {
 	override val knownZigExes: MutableSet<String> = hashSetOf()
@@ -56,6 +56,6 @@ class ZigGlobalSettingsServiceImpl :
 
 	override fun loadState(state: ZigGlobalSettings) {
 		invalidate()
-		knownZigExes += state.allJuliaExePath.split(File.pathSeparatorChar)
+		knownZigExes += state.allZigExePath.split(File.pathSeparatorChar)
 	}
 }

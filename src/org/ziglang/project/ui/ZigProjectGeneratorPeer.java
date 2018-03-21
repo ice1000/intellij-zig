@@ -12,4 +12,5 @@ public abstract class ZigProjectGeneratorPeer implements ProjectGeneratorPeer<Zi
 	protected @NotNull com.intellij.ui.ComboboxWithBrowseButton executablePath;
 	protected @NotNull LinkLabel<Object> zigWebsite;
 	protected @NotNull JLabel version;
+	protected @NotNull JCheckBox setupLater;
 }

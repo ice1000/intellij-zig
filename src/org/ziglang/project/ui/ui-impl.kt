@@ -2,7 +2,6 @@ package org.ziglang.project.ui
 
 import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.ide.util.projectWizard.SettingsStep
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.platform.ProjectGeneratorPeer
 import org.ziglang.ZigBundle
@@ -13,11 +12,18 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	private val listeners = ArrayList<ProjectGeneratorPeer.SettingsListener>()
 
 	init {
-		executablePath.addBrowseFolderListener(null,
-				FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+		initExeComboBox(executablePath)
 		zigWebsite.setListener({ _, _ ->
 			BrowserLauncher.instance.browse(zigWebsite.text)
 		}, null)
+		setupLater.addPropertyChangeListener {
+			executablePath.isEnabled = setupLater.isSelected
+		}
+		executablePath.addPropertyChangeListener {
+			val selected = executablePath.comboBox.selectedItem as? String
+					?: return@addPropertyChangeListener
+			version.text = versionOf(selected)
+		}
 	}
 
 	@Suppress("OverridingDeprecatedMember")
@@ -33,6 +39,7 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	override fun buildUI(settingsStep: SettingsStep) = settingsStep.addExpertPanel(component)
 
 	override fun validate(): ValidationInfo? {
+		if (setupLater.isSelected) return null
 		val selected = executablePath.comboBox.selectedItem as? String
 		return if (selected != null && validateZigExe(selected)) {
 			listeners.forEach { it.stateChanged(true) }
