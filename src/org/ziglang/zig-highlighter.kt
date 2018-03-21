@@ -11,7 +11,7 @@ import com.intellij.psi.tree.IElementType
 import org.ziglang.psi.ZigTypes
 
 object ZigSyntaxHighlighter : SyntaxHighlighter {
-	@JvmField val KEYWORDS = listOf(
+	@JvmField val KEYWORDS = arrayOf(
 			ZigTypes.TEST_KEYWORD,
 			ZigTypes.PUB_KEYWORD,
 			ZigTypes.EXPORT_KEYWORD,
@@ -54,11 +54,69 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.SUSPEND_KEYWORD,
 			ZigTypes.THIS_KEYWORD,
 			ZigTypes.ERROR_KEYWORD,
-			ZigTypes.UNDEFINED_KEYWORD,
 			ZigTypes.UNREACHABLE_KEYWORD,
 			ZigTypes.PACKED_KEYWORD,
 			ZigTypes.STRUCT_KEYWORD,
-			ZigTypes.UNION_KEYWORD
+			ZigTypes.UNION_KEYWORD,
+			ZigTypes.UNDEFINED_KEYWORD
+	)
+
+	@JvmField val OPERATORS = arrayOf(
+			ZigTypes.COMMA_SYM,
+			ZigTypes.SEMICOLON_SYM,
+			ZigTypes.COLON_SYM,
+			ZigTypes.LEFT_PAREN,
+			ZigTypes.RIGHT_PAREN,
+			ZigTypes.LEFT_BRACE,
+			ZigTypes.RIGHT_BRACE,
+			ZigTypes.LEFT_BRACKET,
+			ZigTypes.RIGHT_BRACKET,
+			ZigTypes.RANGE_SYM,
+			ZigTypes.SLICE_SYM,
+			ZigTypes.DOT_SYM,
+			ZigTypes.GT_SYM,
+			ZigTypes.LT_SYM,
+			ZigTypes.PLUS_SYM,
+			ZigTypes.MINUS_SYM,
+			ZigTypes.STAR_SYM,
+			ZigTypes.DIV_SYM,
+			ZigTypes.EXPONENT_SYM,
+			ZigTypes.SEP_SYM,
+			ZigTypes.NOT_SYM,
+			ZigTypes.VERY_QUESTION_SYM,
+			ZigTypes.QUESTION_SYM,
+			ZigTypes.BITWISE_NOT_SYM,
+			ZigTypes.AND_SYM,
+			ZigTypes.MOD_SYM,
+			ZigTypes.EQ_SYM,
+			ZigTypes.AT_SYM,
+			ZigTypes.PLUS_MOD_SYM,
+			ZigTypes.MINUS_MOD_SYM,
+			ZigTypes.PLUS_ASSIGN_SYM,
+			ZigTypes.MINUS_ASSIGN_SYM,
+			ZigTypes.STAR_ASSIGN_SYM,
+			ZigTypes.DIV_ASSIGN_SYM,
+			ZigTypes.EXPONENT_ASSIGN_SYM,
+			ZigTypes.OR_ASSIGN_SYM,
+			ZigTypes.AND_ASSIGN_SYM,
+			ZigTypes.MOD_ASSIGN_SYM,
+			ZigTypes.STAR_STAR_SYM,
+			ZigTypes.SEP_SEP_SYM,
+			ZigTypes.STAR_SYM,
+			ZigTypes.SHL_SYM,
+			ZigTypes.SHR_SYM,
+			ZigTypes.UNEQUAL_SYM,
+			ZigTypes.GE_SYM,
+			ZigTypes.LE_SYM,
+			ZigTypes.EQUAL_SYM,
+			ZigTypes.INC_SYM,
+			ZigTypes.PLUS_MOD_ASSIGN_SYM,
+			ZigTypes.MINUS_MOD_ASSIGN_SYM,
+			ZigTypes.STAR_MOD_ASSIGN_SYM,
+			ZigTypes.SHL_ASSIGN_SYM,
+			ZigTypes.SHR_ASSIGN_SYM,
+			ZigTypes.ARROW_SYM,
+			ZigTypes.SMALL_ARROW_SYM
 	)
 
 	@JvmField val KEYWORD = TextAttributesKey.createTextAttributesKey("ZIG_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
@@ -68,6 +126,8 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
 	@JvmField val LINE_COMMENT = TextAttributesKey.createTextAttributesKey("ZIG_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 	@JvmField val SEMICOLON = TextAttributesKey.createTextAttributesKey("ZIG_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
+	@JvmField val UNDEFINED = TextAttributesKey.createTextAttributesKey("ZIG_UNDEFINED", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
+	@JvmField val OPERATOR = TextAttributesKey.createTextAttributesKey("ZIG_OPERATORS", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
 
 	@JvmField val KEYWORD_KEY = arrayOf(KEYWORD)
 	@JvmField val STRING_KEY = arrayOf(STRING)
@@ -75,6 +135,8 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val SYMBOL_KEY = arrayOf(SYMBOL)
 	@JvmField val LINE_COMMENT_KEY = arrayOf(LINE_COMMENT)
 	@JvmField val SEMICOLON_KEY = arrayOf(SEMICOLON)
+	@JvmField val UNDEFINED_KEY = arrayOf(UNDEFINED)
+	@JvmField val OPERATOR_KEY = arrayOf(OPERATOR)
 
 	override fun getHighlightingLexer() = ZigLexerAdapter()
 	override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> = when (tokenType) {
@@ -84,7 +146,9 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 		ZigTypes.STR -> STRING_KEY
 		ZigTypes.INT_LITERAL,
 		ZigTypes.FLOAT_LITERAL -> NUMBER_KEY
+		ZigTypes.UNDEFINED_KEYWORD -> UNDEFINED_KEY
 		in KEYWORDS -> KEYWORD_KEY
+		in OPERATORS -> OPERATOR_KEY
 		else -> emptyArray()
 	}
 }
