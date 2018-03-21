@@ -17,6 +17,8 @@
 		<liveTemplateContext implementation="org.ziglang.ZigContext"/>
 		<defaultLiveTemplatesProvider implementation="org.ziglang.ZigLiveTemplateProvider"/>
 		<directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>
+		<runConfigurationProducer implementation="org.ziglang.execution.ZigRunConfigurationProducer"/>
+		<configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
 		<projectService
 				serviceInterface="org.ziglang.project.ZigProjectService"
 				serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
