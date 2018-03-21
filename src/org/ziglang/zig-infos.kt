@@ -1,9 +1,12 @@
 package org.ziglang
 
 import com.intellij.CommonBundle
+import com.intellij.codeInsight.template.TemplateContextType
+import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiFile
 import icons.ZigIcons
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
@@ -24,6 +27,19 @@ class ZigFileTypeFactory : FileTypeFactory() {
 
 class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLanguage.INSTANCE) {
 	override fun getFileType() = ZigFileType
+}
+
+class ZigContext : TemplateContextType(ZIG_CONTEXT_ID, ZIG_NAME) {
+	override fun isInContext(file: PsiFile, offset: Int) = file.fileType == ZigFileType
+}
+
+class ZigLiveTemplateProvider : DefaultLiveTemplatesProvider {
+	private companion object DefaultHolder {
+		private val DEFAULT = arrayOf("liveTemplates/Zig")
+	}
+
+	override fun getDefaultLiveTemplateFiles() = DEFAULT
+	override fun getHiddenLiveTemplateFiles(): Array<String>? = null
 }
 
 object ZigBundle {

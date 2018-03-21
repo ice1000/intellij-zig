@@ -1,0 +1,54 @@
+<templateSet group="Zig">
+	<template name="main" value="pub fn main() void {&#10;    $END$&#10;}" description="Create a main function"
+	          toReformat="true" toShortenFQNames="true">
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="fn" value="fn $NAME$($PARAM$) $RET$ {&#10;    $END$&#10;}" description="Create a function"
+	          toReformat="false" toShortenFQNames="true">
+		<variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="PARAM" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="RET" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="if" value="if ($COND$) {&#10;    $END$&#10;}" description="Create an if expression" toReformat="true"
+	          toShortenFQNames="true">
+		<variable name="COND" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="while" value="while ($COND$) {&#10;    $END$&#10;}" description="Create a while expression"
+	          toReformat="true" toShortenFQNames="true">
+		<variable name="COND" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="test" value="test &quot;$DESC$&quot; {&#10;    $END$&#10;}" description="Create a test case"
+	          toReformat="true" toShortenFQNames="true">
+		<variable name="DESC" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="for" value="for ($EXPR$) |$PARAM$| {&#10;    $END$&#10;}" description="Create a for statement"
+	          toReformat="false" toShortenFQNames="true">
+		<variable name="EXPR" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="PARAM" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+	<template name="import" value="const $VAR$ = @import(&quot;$PKG$&quot;)$END$;" description="Import something"
+	          toReformat="false" toShortenFQNames="true">
+		<variable name="PKG" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="VAR" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="ZIG_CONTEXT_ID" value="true"/>
+		</context>
+	</template>
+</templateSet>
