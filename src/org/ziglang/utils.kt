@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit
 
 fun Boolean?.orFalse() = this == true
 
+fun String.trimPath() = trimEnd('/', '!')
+
 /**
  * @param command the cmd string
  * @param input stdin
