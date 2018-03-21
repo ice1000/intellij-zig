@@ -55,7 +55,7 @@ project($name)
 
 			val template = FileTemplateManager
 					.getInstance(this)
-					.getTemplate("Zig File")
+					.getTemplate("Zig Exe")
 			PsiManager.getInstance(this).findDirectory(baseDir.createChildDirectory(null, "src"))?.let { srcDir ->
 				FileTemplateUtil.createFromTemplate(
 						template,

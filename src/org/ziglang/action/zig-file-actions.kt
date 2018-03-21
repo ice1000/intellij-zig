@@ -36,6 +36,7 @@ class NewZigFile : CreateFileFromTemplateAction(
 			.setTitle(ZigBundle.message("zig.actions.new-file.title"))
 			.setValidator(ZigNameValidator)
 			.addKind("File", ZigIcons.ZIG_FILE, "Zig File")
+			.addKind("Executable", ZigIcons.ZIG_FILE, "Zig Exe")
 		//.addKind("Other", ZigIcons.ZIG_BIG_ICON, "Zig Other")		For test
 	}
 

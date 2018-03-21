@@ -8,6 +8,7 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<internalFileTemplate name="Zig File"/>
+		<internalFileTemplate name="Zig Exe"/>
 		<errorHandler implementation="de.halirutan.mathematica.errorreporting.zig.GitHubErrorReporter"/>
 		<fileTypeFactory implementation="org.ziglang.ZigFileTypeFactory"/>
 		<sdkType implementation="org.ziglang.project.ZigSdkType"/>

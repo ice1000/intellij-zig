@@ -63,7 +63,7 @@ fnProto ::=
 	extends=expr
 }
 
-fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
+fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)* fnProto block
 
 parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
