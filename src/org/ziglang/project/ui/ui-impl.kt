@@ -1,12 +1,25 @@
 package org.ziglang.project.ui
 
+import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.ide.util.projectWizard.SettingsStep
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.ValidationInfo
+import org.ziglang.ZigBundle
 import org.ziglang.project.ZigSettings
 
 
 class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	private val settings = ZigSettings()
+
+	init {
+		executablePath.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor()))
+		zigWebsite.setListener({ _, _ ->
+			BrowserLauncher.instance.browse(zigWebsite.text)
+		}, null)
+	}
+
 	@Suppress("OverridingDeprecatedMember")
 	override fun addSettingsStateListener(
 			@Suppress("DEPRECATION") listener: com.intellij.platform.WebProjectGenerator.SettingsStateListener) = Unit
@@ -18,7 +31,13 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	}
 
 	override fun validate(): ValidationInfo? {
-		return null
+		val path = executablePath.text
+		return if (true) {    //TODO check the executable is valid
+			settings.exePath = path
+			null
+		} else {
+			ValidationInfo(ZigBundle.message("zig.project.invalid-exe"))
+		}
 	}
 
 	override fun isBackgroundJobRunning() = false
