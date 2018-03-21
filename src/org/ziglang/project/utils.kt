@@ -54,3 +54,7 @@ fun createSourceDirectory(model: ModifiableRootModel, entryPath: String?): Path 
 	Files.createDirectories(srcPath)
 	return srcPath
 }
+
+fun Project.buildProject() {
+	//TODO build project
+}
