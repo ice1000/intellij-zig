@@ -66,15 +66,21 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("ZIG_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
 	@JvmField val FLOAT_LIT = TextAttributesKey.createTextAttributesKey("ZIG_FLOAT_LIT", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
 	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
+	@JvmField val LINE_COMMENT = TextAttributesKey.createTextAttributesKey("ZIG_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+	@JvmField val SEMICOLON = TextAttributesKey.createTextAttributesKey("ZIG_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
 
 	@JvmField val KEYWORD_KEY = arrayOf(KEYWORD)
 	@JvmField val STRING_KEY = arrayOf(STRING)
 	@JvmField val NUMBER_KEY = arrayOf(NUMBER)
 	@JvmField val SYMBOL_KEY = arrayOf(SYMBOL)
+	@JvmField val LINE_COMMENT_KEY = arrayOf(LINE_COMMENT)
+	@JvmField val SEMICOLON_KEY = arrayOf(SEMICOLON)
 
 	override fun getHighlightingLexer() = ZigLexerAdapter()
 	override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> = when (tokenType) {
 		ZigTypes.SYM -> SYMBOL_KEY
+		ZigTokenType.LINE_COMMENT -> LINE_COMMENT_KEY
+		ZigTypes.SEMICOLON_SYM -> SEMICOLON_KEY
 		ZigTypes.STR -> STRING_KEY
 		ZigTypes.INT_LITERAL,
 		ZigTypes.FLOAT_LITERAL -> NUMBER_KEY
