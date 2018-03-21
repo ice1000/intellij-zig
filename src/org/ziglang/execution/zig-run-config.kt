@@ -17,11 +17,12 @@ import org.jdom.Element
 import org.ziglang.*
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
+import com.google.common.io.Files as GoogleFiles
 
 class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		LocatableConfigurationBase(project, factory, ZigBundle.message("zig.name")), DumbAware {
 	var exePath = ""
-	var filePath = ""
+	var targetFile = ""
 	var workingDir = ""
 	var additionalOptions = ""
 	var programArgs = ""
@@ -35,7 +36,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		super.readExternal(element)
 		PathMacroManager.getInstance(project).expandPaths(element)
 		JDOMExternalizer.readString(element, "exePath")?.let { exePath = it }
-		JDOMExternalizer.readString(element, "filePath")?.let { filePath = it }
+		JDOMExternalizer.readString(element, "targetFile")?.let { targetFile = it }
 		JDOMExternalizer.readString(element, "workingDir")?.let { workingDir = it }
 		JDOMExternalizer.readString(element, "additionalOptions")?.let { additionalOptions = it }
 		JDOMExternalizer.readString(element, "programArgs")?.let { programArgs = it }
@@ -44,7 +45,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	override fun writeExternal(element: Element) {
 		super.writeExternal(element)
 		JDOMExternalizer.write(element, "exePath", exePath)
-		JDOMExternalizer.write(element, "filePath", filePath)
+		JDOMExternalizer.write(element, "targetFile", targetFile)
 		JDOMExternalizer.write(element, "workingDir", workingDir)
 		JDOMExternalizer.write(element, "additionalOptions", additionalOptions)
 		JDOMExternalizer.write(element, "programArgs", programArgs)
@@ -72,7 +73,7 @@ class ZigRunConfigurationProducer :
 		RunConfigurationProducer<ZigRunConfiguration>(ZigRunConfigurationType) {
 	override fun isConfigurationFromContext(
 			configuration: ZigRunConfiguration, context: ConfigurationContext) =
-			configuration.filePath == CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)?.run { path.trimPath() }
+			configuration.targetFile == CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)?.run { path.trimPath() }
 
 	private fun validate(
 			configuration: ZigRunConfiguration, context: ConfigurationContext) =
@@ -81,7 +82,16 @@ class ZigRunConfigurationProducer :
 
 	override fun setupConfigurationFromContext(
 			configuration: ZigRunConfiguration, context: ConfigurationContext, sourceElement: Ref<PsiElement>): Boolean {
-		configuration.filePath = CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)?.path.orEmpty().trimPath()
+		CommonDataKeys
+				.VIRTUAL_FILE
+				.getData(context.dataContext)
+				?.path
+				.orEmpty()
+				.trimPath()
+				.let {
+					configuration.targetFile = it
+					configuration.name = GoogleFiles.getNameWithoutExtension(configuration.targetFile)
+				}
 		return validate(configuration, context)
 	}
 }

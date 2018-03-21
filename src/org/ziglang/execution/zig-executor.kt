@@ -12,7 +12,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAware
-import org.ziglang.project.zigSettings
 
 class ZigCommandLineState(
 		private val configuration: ZigRunConfiguration,
@@ -27,10 +26,11 @@ class ZigCommandLineState(
 		with(configuration) {
 			params += exePath
 			params += "build-exe"
+			params += targetFile
 			params += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
-			params += "&&"
-			params += filePath
-			params += programArgs.split(' ', '\n').filter(String::isNotBlank)
+			// params += "&&"
+			// params += targetFile
+			// params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 		}
 		val handler = OSProcessHandler(GeneralCommandLine(params)
 				.withWorkDirectory(configuration.workingDir))
