@@ -39,7 +39,7 @@ FLOAT=((\d+\.\d*)|(\d*\.\d+))({E_SUFFIX}|{P_SUFFIX})?
 SYMBOL_CHAR=[a-zA-Z_] // TODO
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|\d)*
 
-INCOMPLETE_STRING=\"([^\"\\\n]|\\[^])*
+INCOMPLETE_STRING=c?\"([^\"\\\n]|\\[^])*
 STRING_LITERAL={INCOMPLETE_STRING}\"
 
 INCOMPLETE_CHAR='([^'\\\n]|\\[^])*
@@ -116,6 +116,15 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 \.\. { return ZigTypes.SLICE_SYM; }
 \. { return ZigTypes.DOT_SYM; }
 
+{STRING_LITERAL} { return ZigTypes.STR; }
+{INCOMPLETE_STRING} { return TokenType.BAD_CHARACTER; }
+{CHAR_LITERAL} { return ZigTypes.CHAR_LITERAL; }
+{INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
+
+{SYMBOL} { return ZigTypes.SYM; }
+{INTEGER} { return ZigTypes.INT_LITERAL; }
+{FLOAT} { return ZigTypes.FLOAT_LITERAL; }
+
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
 export { return ZigTypes.EXPORT_KEYWORD; }
@@ -163,14 +172,5 @@ unreachable { return ZigTypes.UNREACHABLE_KEYWORD; }
 packed { return ZigTypes.PACKED_KEYWORD; }
 struct { return ZigTypes.STRUCT_KEYWORD; }
 union { return ZigTypes.UNION_KEYWORD; }
-
-{STRING_LITERAL} { return ZigTypes.STR; }
-{INCOMPLETE_STRING} { return TokenType.BAD_CHARACTER; }
-{CHAR_LITERAL} { return ZigTypes.CHAR_LITERAL; }
-{INCOMPLETE_CHAR} { return TokenType.BAD_CHARACTER; }
-
-{SYMBOL} { return ZigTypes.SYM; }
-{INTEGER} { return ZigTypes.INT_LITERAL; }
-{FLOAT} { return ZigTypes.FLOAT_LITERAL; }
 
 {OTHERWISE} { return TokenType.BAD_CHARACTER; }

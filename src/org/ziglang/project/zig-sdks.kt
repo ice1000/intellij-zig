@@ -5,7 +5,6 @@ import icons.ZigIcons
 import org.jdom.Element
 import org.ziglang.ZIG_WEBSITE
 import org.ziglang.ZigBundle
-import java.nio.file.Files
 import java.nio.file.Paths
 
 /**
@@ -15,7 +14,7 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
 	override fun getPresentableName() = ZigBundle.message("zig.sdk.name")
 	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
 	override fun getIconForAddAction() = icon
-	override fun isValidSdkHome(sdkHome: String?) = validateJuliaSDK(sdkHome.orEmpty())
+	override fun isValidSdkHome(sdkHome: String?) = validateZigSDK(sdkHome.orEmpty())
 	override fun suggestSdkName(s: String?, p1: String?) = ZigBundle.message("zig.sdk.name")
 	override fun suggestHomePath() = Paths.get(zigPath).parent?.parent?.toString()
 	override fun getDownloadSdkUrl() = ZIG_WEBSITE
@@ -24,7 +23,7 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
 	override fun saveAdditionalData(additionalData: SdkAdditionalData, element: Element) = Unit // leave blank
 	override fun setupSdkPaths(sdk: Sdk, sdkModel: SdkModel): Boolean {
 		val modificator = sdk.sdkModificator
-		modificator.versionString = getVersionString(sdk) ?: ZigBundle.message("zig.sdk.unknown-version")
+		modificator.versionString = getVersionString(sdk) ?: ZigBundle.message("zig.version.unknown")
 		modificator.commitChanges()
 		return true
 	}

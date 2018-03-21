@@ -16,6 +16,9 @@
 		<projectService
 				serviceInterface="org.ziglang.project.ZigProjectService"
 				serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
+		<applicationService
+				serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
+				serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
 		<lang.braceMatcher
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigBraceMatcher"/>

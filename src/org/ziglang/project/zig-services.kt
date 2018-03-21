@@ -3,9 +3,14 @@ package org.ziglang.project
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
+import java.io.File
 
 interface ZigProjectService {
 	val settings: ZigSettings
+}
+
+interface ZigGlobalSettingsService {
+	val knownZigExes: MutableSet<String>
 }
 
 class ZigSettings(
@@ -17,8 +22,14 @@ class ZigSettings(
 	}
 }
 
+class ZigGlobalSettings(
+		var allJuliaExePath: String = "")
+
 val Project.zigSettings: ZigProjectService
 	get() = ServiceManager.getService(this, ZigProjectService::class.java)
+
+val zigGlobalSettings: ZigGlobalSettingsService
+	get() = ServiceManager.getService(ZigGlobalSettingsService::class.java)
 
 @State(
 		name = "ZigProjectSettings",
@@ -31,3 +42,20 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 	}
 }
 
+@State(
+		name = "ZigGlobalSettings",
+		storages = [Storage(file = "juliaGlobalConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
+class ZigGlobalSettingsServiceImpl :
+		ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {
+	override val knownZigExes: MutableSet<String> = hashSetOf()
+	private fun invalidate() = knownZigExes.removeAll { !validateZigExe(it) }
+	override fun getState(): ZigGlobalSettings {
+		invalidate()
+		return ZigGlobalSettings(knownZigExes.joinToString(File.pathSeparator))
+	}
+
+	override fun loadState(state: ZigGlobalSettings) {
+		invalidate()
+		knownZigExes += state.allJuliaExePath.split(File.pathSeparatorChar)
+	}
+}

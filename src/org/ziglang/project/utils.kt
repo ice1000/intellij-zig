@@ -21,8 +21,9 @@ fun versionOf(path: String) = executeCommand("$path version")
 		.firstOrNull()
 		?: ZigBundle.message("zig.version.unknown")
 
-fun validateJuliaSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
-		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe")) // TODO
+fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
+fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
+		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 
 fun createSourceDirectory(model: ModifiableRootModel, entryPath: String?): Path {
 	model.inheritSdk()
