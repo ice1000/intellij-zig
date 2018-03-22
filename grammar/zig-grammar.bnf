@@ -78,7 +78,7 @@ statement ::=
  | blockExprBlock
  | expr? endOfLine
 
-private ExprOrBlock ::= block | expr
+private exprOrBlock ::= block | expr
 
 block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
 
@@ -134,7 +134,7 @@ blockExpr ::=
 
 //CompTimeExpr(body) ::= "comptime" body
 compTimeExprBlock ::= COMPTIME_KEYWORD block
-compTimeExprExprOrBlock ::= COMPTIME_KEYWORD ExprOrBlock
+compTimeExprExprOrBlock ::= COMPTIME_KEYWORD exprOrBlock
 
 switchStatement ::=
  SWITCH_KEYWORD
@@ -165,7 +165,7 @@ forExprExprOrBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  FOR_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol (COMMA_SYM symbol)? SEP_SYM)?
-   ExprOrBlock
+   exprOrBlock
   (ELSE_KEYWORD blockExpr)?
 
 defer ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
@@ -178,12 +178,12 @@ ifExprBlock ::=
  (ELSE_KEYWORD blockExprBlock)?
 ifExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
-  ExprOrBlock
+  exprOrBlock
  (ELSE_KEYWORD blockExpr)?
 
 //SuspendExpr(body) ::= "suspend" option((SEP_SYM symbol SEP_SYM body))
 suspendExprBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM block)?
-suspendExprExprOrBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM ExprOrBlock)?
+suspendExprExprOrBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM exprOrBlock)?
 
 //IfErrorExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body "else" SEP_SYM symbol SEP_SYM BlockExpr(body)
 ifErrorExprBlock ::=
@@ -194,7 +194,7 @@ ifErrorExprBlock ::=
 ifErrorExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
-  ExprOrBlock
+  exprOrBlock
  ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExpr
 
 //TestExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body option("else" BlockExpr(body))
@@ -206,7 +206,7 @@ testExprBlock ::=
 testExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
-  ExprOrBlock
+  exprOrBlock
  (ELSE_KEYWORD blockExpr)?
 
 //WhileExpr(body) ::= option(symbol COLON_SYM) option("inline") "while" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) option(COLON_SYM LEFT_PAREN expr RIGHT_PAREN) body option("else" (SEP_SYM symbol SEP_SYM)? BlockExpr(body))
@@ -223,7 +223,7 @@ whileExprExprOrBlock ::=
  WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
-   ExprOrBlock
+   exprOrBlock
 
 expr ::=
    tryExpr
