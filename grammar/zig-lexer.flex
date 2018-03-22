@@ -128,6 +128,7 @@ comptime { return ZigTypes.COMPTIME_KEYWORD; }
 const { return ZigTypes.CONST_KEYWORD; }
 var { return ZigTypes.VAR_KEYWORD; }
 align { return ZigTypes.ALIGN_KEYWORD; }
+for { return ZigTypes.FOR_KEYWORD; }
 section { return ZigTypes.SECTION_KEYWORD; }
 use { return ZigTypes.USE_KEYWORD; }
 extern { return ZigTypes.EXTERN_KEYWORD; }
