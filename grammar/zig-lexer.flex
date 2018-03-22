@@ -158,6 +158,7 @@ null { return ZigTypes.NULL_KEYWORD; }
 enum { return ZigTypes.ENUM_KEYWORD; }
 continue { return ZigTypes.CONTINUE_KEYWORD; }
 and { return ZigTypes.AND_KEYWORD; }
+or { return ZigTypes.OR_KEYWORD; }
 if { return ZigTypes.IF_KEYWORD; }
 else { return ZigTypes.ELSE_KEYWORD; }
 while { return ZigTypes.WHILE_KEYWORD; }

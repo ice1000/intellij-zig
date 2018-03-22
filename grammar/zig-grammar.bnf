@@ -37,7 +37,7 @@ testDeclaration ::= TEST_KEYWORD string block
 globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration endOfLine
 localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
- (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM primary)?
+ (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? EQ_SYM expr
 
