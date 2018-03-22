@@ -1,16 +1,27 @@
 package org.ziglang.execution
 
+import org.ziglang.project.initExeComboBox
+
 class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
 	init {
 		resetEditorFrom(configuration)
+		initExeComboBox(executablePath)
 	}
 
 	override fun createEditor() = mainPanel
 	override fun resetEditorFrom(configuration: ZigRunConfiguration) {
-		// TODO swing 泛型编程
+		executablePath.comboBox.selectedItem = configuration.exePath
+		targetFileField.text = configuration.targetFile
+		workingDirField.text = configuration.workingDir
+		compilerArgsField.text = configuration.additionalOptions
+		programArgsField.text = configuration.programArgs
 	}
 
 	override fun applyEditorTo(configuration: ZigRunConfiguration) {
-		// TODO swing 泛型编程
+		configuration.targetFile = targetFileField.text
+		configuration.workingDir = workingDirField.text
+		configuration.additionalOptions = compilerArgsField.text
+		configuration.programArgs = programArgsField.text
+		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
 	}
 }
