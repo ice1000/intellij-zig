@@ -1,6 +1,8 @@
 package org.ziglang.project
 
+import com.intellij.execution.*
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
+import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModifiableRootModel
@@ -53,8 +55,4 @@ fun createSourceDirectory(model: ModifiableRootModel, entryPath: String?): Path 
 	val srcPath = Paths.get(entryPath, "src").toAbsolutePath()
 	Files.createDirectories(srcPath)
 	return srcPath
-}
-
-fun Project.buildProject() {
-	//TODO build project
 }
