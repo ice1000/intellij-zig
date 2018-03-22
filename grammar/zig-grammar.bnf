@@ -246,8 +246,11 @@ expr ::=
  | curlySuffixExpr
  | typeExpr
  | prefixOpExpr
+ | suffixed
+
+private suffixed ::=
+   suffixOpExpr
  | asyncExpr
- | suffixOpExpr
  | primary
 
 private primary ::=
@@ -289,7 +292,7 @@ multiplyExpr ::= expr multiplyOperator expr
 curlySuffixExpr ::= expr containerInitSuffix
 typeExpr ::= expr NOT_SYM expr
 prefixOpExpr ::= prefixOp expr
-asyncExpr ::= ASYNC_KEYWORD groupedExpr? primary fnCallSuffix
+asyncExpr ::= ASYNC_KEYWORD (LT_SYM suffixed GT_SYM)? suffixed fnCallSuffix
 suffixOpExpr ::=
  expr
  (
