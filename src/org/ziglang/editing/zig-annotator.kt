@@ -13,8 +13,11 @@ class ZigAnnotator : Annotator {
 		}
 	}
 
-	private fun symbol(element: PsiElement, holder: AnnotationHolder) {
-		holder.createInfoAnnotation(element, null)
-				.textAttributes = ZigSyntaxHighlighter.FUNCTION_DECLARATION
+	private fun symbol(element: ZigSymbol, holder: AnnotationHolder) {
+		when {
+			element.isFunctionName ->
+				holder.createInfoAnnotation(element, null)
+						.textAttributes = ZigSyntaxHighlighter.FUNCTION_DECLARATION
+		}
 	}
 }
