@@ -27,6 +27,8 @@ class ZigCommandLineState(
 			params += exePath
 			params += "build-exe"
 			params += targetFile
+			params += "--zig-install-path"
+			params += installPath
 			params += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 			// params += "&&"
 			// params += targetFile
