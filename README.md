@@ -4,6 +4,12 @@ This is a **work in progress**, some features are implemented partially, there m
 
 [![](https://tinyurl.com/y9e4n2zh)](https://github.com/ice1000/julia-intellij)
 
+CI|Status
+:---:|:---:
+Travis CI (master, linux)|[![Build Status](https://travis-ci.org/ice1000/zig-intellij.svg?branch=master)](https://travis-ci.org/ice1000/zig-intellij)
+AppVeyor (newest, windows)|[![Build status](https://ci.appveyor.com/api/projects/status/cb5gl5rgsjv00nen?svg=true)](https://ci.appveyor.com/project/ice1000/zig-intellij)
+CircleCI (newest with tests, linux)|TODO
+
 ## Installing Zig
 
 We're not planning to support Zig 0.2.0 or 0.1.1.

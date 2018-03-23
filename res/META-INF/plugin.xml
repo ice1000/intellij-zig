@@ -55,7 +55,10 @@
 				id="Zig.Build"
 				icon="AllIcons.Actions.Compile"
 				use-shortcut-of="CompileDirty">
-			<add-to-group group-id="ToolbarRunGroup" relative-to-action="RunConfiguration" anchor="before"/>
+			<add-to-group
+					group-id="ToolbarRunGroup"
+					relative-to-action="CompileDirty"
+					anchor="before"/>
 		</action>
 	</actions>
 </idea-plugin>
