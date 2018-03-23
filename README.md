@@ -3,6 +3,8 @@
 This is a **work in progress**, some features are implemented partially, there may be performance and stability problems.
 
 [![](https://tinyurl.com/y9e4n2zh)](https://github.com/ice1000/julia-intellij)
+[![downloads](https://img.shields.io/jetbrains/plugin/d/10560-zig.svg)](https://plugins.jetbrains.com/plugin/10560-zig)
+[![version](https://img.shields.io/jetbrains/plugin/v/10560-zig.svg)](https://plugins.jetbrains.com/plugin/10560-zig)
 
 CI|Status
 :---:|:---:
