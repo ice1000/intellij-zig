@@ -22,6 +22,7 @@ class ZigCommandLineState(
 					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
+		val baseDir = configuration.project.baseDir
 		val buildParams = mutableListOf<String>()
 		with(configuration) {
 			buildParams += exePath
@@ -31,7 +32,7 @@ class ZigCommandLineState(
 			buildParams += installPath
 			// TODO 把输出目录改成一个『默认 `baseDir/out/` ，然后可以自己改』的值
 			// buildParams += "--output"
-			// buildParams += configuration.project.baseDir
+			// buildParams += baseDir.toString()
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
@@ -43,10 +44,12 @@ class ZigCommandLineState(
 					console.clear()
 					val params = mutableListOf<String>()
 					with(configuration) {
-						params += targetFile
+						// TODO 改成和上面那个东西相同的输出目录
+						baseDir.findChild("main")?.run { params += path }
 						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 					}
-					val runHandler = OSProcessHandler(GeneralCommandLine(params))
+					val runHandler = OSProcessHandler(GeneralCommandLine(params)
+							.withWorkDirectory(configuration.workingDir))
 					ProcessTerminatedListener.attach(runHandler)
 					console.attachToProcess(runHandler)
 					runHandler.startNotify()
