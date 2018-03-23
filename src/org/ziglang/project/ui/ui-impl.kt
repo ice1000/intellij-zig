@@ -2,6 +2,8 @@ package org.ziglang.project.ui
 
 import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.ide.util.projectWizard.SettingsStep
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.platform.ProjectGeneratorPeer
 import org.ziglang.ZigBundle
@@ -14,6 +16,8 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 
 	init {
 		initExeComboBox(executablePath)
+		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		zigWebsite.setListener({ _, _ ->
 			BrowserLauncher.instance.browse(zigWebsite.text)
 		}, null)
