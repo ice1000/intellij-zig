@@ -5,6 +5,7 @@ import com.intellij.lang.ParserDefinition
 import com.intellij.lexer.FlexAdapter
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.tree.*
 import org.ziglang.psi.ZigTypes
 
@@ -32,6 +33,11 @@ class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INST
 		@JvmField val LINE_COMMENT = ZigTokenType("comment")
 		@JvmField val COMMENTS = TokenSet.create(LINE_COMMENT)
 		@JvmField val STRINGS = TokenSet.create(ZigTypes.STR)
+
+		fun fromText(string: String, project: Project) = PsiFileFactory
+				.getInstance(project)
+				.createFileFromText(ZigLanguage.INSTANCE, string)
+				.firstChild
 	}
 }
 
