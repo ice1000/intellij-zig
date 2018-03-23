@@ -27,7 +27,7 @@ class ZigCommandLineState(
 			buildParams += exePath
 			buildParams += "build-exe"
 			buildParams += targetFile
-			buildParams += "--zig-install-path"
+			buildParams += "--zig-install-prefix"
 			buildParams += installPath
 			// TODO 把输出目录改成一个『默认 `baseDir/out/` ，然后可以自己改』的值
 			// buildParams += "--output"
