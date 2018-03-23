@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit
 fun Boolean?.orFalse() = this == true
 
 fun String.trimPath() = trimEnd('/', '!')
+fun String.fileName() = substring(lastIndexOf('/') + 1)
 
 /**
  * @param command the cmd string

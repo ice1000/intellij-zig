@@ -12,6 +12,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.vfs.VfsUtil
+import org.ziglang.fileName
+import org.ziglang.trimPath
 
 class ZigCommandLineState(
 		private val configuration: ZigRunConfiguration,
@@ -22,17 +25,17 @@ class ZigCommandLineState(
 					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
-		val baseDir = configuration.project.baseDir
+		val outputDir = VfsUtil.createDirectoryIfMissing(configuration.outputDir)
 		val buildParams = mutableListOf<String>()
+		val outputName = configuration.targetFile.fileName() + ".out"
 		with(configuration) {
 			buildParams += exePath
 			buildParams += "build-exe"
 			buildParams += targetFile
 			buildParams += "--zig-install-prefix"
 			buildParams += installPath
-			// TODO 把输出目录改成一个『默认 `baseDir/out/` ，然后可以自己改』的值
-			// buildParams += "--output"
-			// buildParams += baseDir.toString()
+			buildParams += "--output"
+			buildParams += "${this.outputDir.trimPath()}/$outputName"
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
@@ -44,8 +47,7 @@ class ZigCommandLineState(
 					console.clear()
 					val params = mutableListOf<String>()
 					with(configuration) {
-						// TODO 改成和上面那个东西相同的输出目录
-						baseDir.findChild("main")?.run { params += path }
+						outputDir?.findChild(outputName)?.run { params += path }
 						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 					}
 					val runHandler = OSProcessHandler(GeneralCommandLine(params)
