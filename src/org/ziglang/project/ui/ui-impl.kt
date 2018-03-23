@@ -43,15 +43,22 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	override fun validate(): ValidationInfo? {
 		if (setupLater.isSelected) return null
 		val selected = executablePath.comboBox.selectedItem as? String
-		return if (selected != null && validateZigExe(selected)) {
+		if (selected != null) {
+			if (!validateZigExe(selected)) {
+				// usefulText.isVisible = true
+				return ValidationInfo(ZigBundle.message("zig.project.invalid-exe"))
+			}
+			val installPath = installPathField.text
+			if (!validateZigLib(installPath)) {
+				// usefulText.isVisible = true
+				return ValidationInfo(ZigBundle.message("zig.project.invalid-install-path"))
+			}
+			settings.installPath = installPath
 			listeners.forEach { it.stateChanged(true) }
 			settings.exePath = selected
 			zigGlobalSettings.knownZigExes += selected
-			null
-		} else {
-			// usefulText.isVisible = true
-			ValidationInfo(ZigBundle.message("zig.project.invalid-exe"))
 		}
+		return null
 	}
 
 	override fun isBackgroundJobRunning() = false

@@ -4,7 +4,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.ziglang.project.versionOf
 import org.ziglang.project.zigPath
-import kotlin.test.assertTrue
 
 class UtilsKtTest {
 	@Test(timeout = 1000L)
@@ -13,7 +12,7 @@ class UtilsKtTest {
 		executeCommand("$zigPath version", timeLimit = 5000L)
 				.also(::println)
 				.also(::assertNotNull)
-				// .also { (stdout, _) -> assertTrue(stdout.isNotEmpty()) }
+		// .also { (stdout, _) -> assertTrue(stdout.isNotEmpty()) }
 	}
 
 	@Test

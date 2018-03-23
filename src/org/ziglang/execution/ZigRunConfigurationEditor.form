@@ -34,7 +34,7 @@
         </constraints>
         <properties>
           <labelFor value="a486"/>
-          <text resource-bundle="de/halirutan/mathematica/errorreporting-zig/report-bundle" key="zig.run-config.target-file"/>
+          <text resource-bundle="org/ziglang/zig-bundle" key="zig.run-config.target-file"/>
         </properties>
       </component>
       <component id="755c1" class="javax.swing.JLabel">
@@ -43,7 +43,7 @@
         </constraints>
         <properties>
           <labelFor value="7f0c3"/>
-          <text resource-bundle="de/halirutan/mathematica/errorreporting-zig/report-bundle" key="zig.run-config.compiler-args"/>
+          <text resource-bundle="org/ziglang/zig-bundle" key="zig.run-config.compiler-args"/>
         </properties>
       </component>
       <component id="7734f" class="javax.swing.JLabel">
@@ -52,7 +52,7 @@
         </constraints>
         <properties>
           <labelFor value="adb5b"/>
-          <text resource-bundle="de/halirutan/mathematica/errorreporting-zig/report-bundle" key="zig.run-config.program-args"/>
+          <text resource-bundle="org/ziglang/zig-bundle" key="zig.run-config.program-args"/>
         </properties>
       </component>
       <component id="a486" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="targetFileField">
@@ -67,7 +67,7 @@
         </constraints>
         <properties>
           <labelFor value="91b34"/>
-          <text resource-bundle="de/halirutan/mathematica/errorreporting-zig/report-bundle" key="zig.run-config.working-dir"/>
+          <text resource-bundle="org/ziglang/zig-bundle" key="zig.run-config.working-dir"/>
         </properties>
       </component>
       <component id="91b34" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="workingDirField">

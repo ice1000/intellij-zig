@@ -1,5 +1,6 @@
 package org.ziglang.project.ui;
 
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.platform.ProjectGeneratorPeer;
 import com.intellij.ui.components.labels.LinkLabel;
 import org.jetbrains.annotations.NotNull;
@@ -13,4 +14,5 @@ public abstract class ZigProjectGeneratorPeer implements ProjectGeneratorPeer<Zi
 	protected @NotNull LinkLabel<Object> zigWebsite;
 	protected @NotNull JLabel version;
 	protected @NotNull JCheckBox setupLater;
+	protected @NotNull TextFieldWithBrowseButton installPathField;
 }

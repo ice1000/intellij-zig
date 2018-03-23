@@ -1,8 +1,6 @@
 package org.ziglang.project
 
-import com.intellij.execution.*
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
-import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModifiableRootModel
@@ -29,6 +27,7 @@ fun versionOf(path: String) = executeCommand("$path version")
 		?: ZigBundle.message("zig.version.unknown")
 
 fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
+fun validateZigLib(libPath: String) = Files.exists(Paths.get(libPath, "")) // TODO
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 

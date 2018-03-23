@@ -4,6 +4,7 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import java.io.File
+import java.nio.file.Paths
 
 interface ZigProjectService {
 	val settings: ZigSettings
@@ -15,10 +16,12 @@ interface ZigGlobalSettingsService {
 
 class ZigSettings(
 		var exePath: String = zigPath,
-		var version: String = ""      //TODO :)
+		var version: String = "",
+		var installPath: String = ""
 ) {
 	fun initWithExe() {
 		version = versionOf(exePath)
+		installPath = Paths.get(exePath).parent.toAbsolutePath().toString()
 	}
 }
 
