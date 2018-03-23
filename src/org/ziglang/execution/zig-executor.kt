@@ -29,6 +29,9 @@ class ZigCommandLineState(
 			buildParams += targetFile
 			buildParams += "--zig-install-path"
 			buildParams += installPath
+			// TODO 把输出目录改成一个『默认 `baseDir/out/` ，然后可以自己改』的值
+			// buildParams += "--output"
+			// buildParams += configuration.project.baseDir
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)

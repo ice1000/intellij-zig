@@ -30,7 +30,9 @@ fun versionOf(path: String) = executeCommand("$path version")
 		?: ZigBundle.message("zig.version.unknown")
 
 fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
-fun validateZigLib(libPath: String) = Files.exists(Paths.get(libPath, "")) // TODO
+
+// https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
+fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib", "zig", "std", "index.zig"))
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 

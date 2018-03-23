@@ -1,11 +1,15 @@
 package org.ziglang.execution
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ui.TextBrowseFolderListener
 import org.ziglang.project.initExeComboBox
 
 class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
 	init {
 		resetEditorFrom(configuration)
 		initExeComboBox(executablePath)
+		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 	}
 
 	override fun createEditor() = mainPanel
