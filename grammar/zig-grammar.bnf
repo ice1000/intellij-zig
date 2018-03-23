@@ -16,7 +16,12 @@
 zigFile ::= topLevelItem*
 
 private endOfLine ::= SEMICOLON_SYM
-symbol ::= SYM { extends=expr }
+symbol ::= SYM {
+	extends=expr
+	implements=['org.ziglang.psi.impl.IZigSymbol']
+	mixin='org.ziglang.psi.impl.ZigSymbolMixin'
+}
+
 string ::= STR { extends=expr }
 
 topLevelDeclaration ::=

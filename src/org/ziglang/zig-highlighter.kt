@@ -128,6 +128,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val SEMICOLON = TextAttributesKey.createTextAttributesKey("ZIG_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
 	@JvmField val UNDEFINED = TextAttributesKey.createTextAttributesKey("ZIG_UNDEFINED", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
 	@JvmField val OPERATOR = TextAttributesKey.createTextAttributesKey("ZIG_OPERATORS", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
+	@JvmField val FUNCTION_DECLARATION = TextAttributesKey.createTextAttributesKey("ZIG_FUNCTION_DECLARATION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
 
 	@JvmField val KEYWORD_KEY = arrayOf(KEYWORD)
 	@JvmField val STRING_KEY = arrayOf(STRING)

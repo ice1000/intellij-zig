@@ -25,6 +25,9 @@
 		<applicationService
 				serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
 				serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
+		<annotator
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigAnnotator"/>
 		<lang.braceMatcher
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigBraceMatcher"/>
