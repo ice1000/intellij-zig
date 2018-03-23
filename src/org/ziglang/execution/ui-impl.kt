@@ -15,6 +15,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		workingDirField.text = configuration.workingDir
 		compilerArgsField.text = configuration.additionalOptions
 		programArgsField.text = configuration.programArgs
+		installPathField.text = configuration.installPath
 	}
 
 	override fun applyEditorTo(configuration: ZigRunConfiguration) {
@@ -22,6 +23,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.workingDir = workingDirField.text
 		configuration.additionalOptions = compilerArgsField.text
 		configuration.programArgs = programArgsField.text
+		configuration.installPath = installPathField.text
 		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
 	}
 }

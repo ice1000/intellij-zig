@@ -26,6 +26,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	var workingDir = ""
 	var additionalOptions = ""
 	var programArgs = ""
+	var installPath = ""
 
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
 			ZigCommandLineState(this@ZigRunConfiguration, environment)
@@ -40,6 +41,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.readString(element, "workingDir")?.let { workingDir = it }
 		JDOMExternalizer.readString(element, "additionalOptions")?.let { additionalOptions = it }
 		JDOMExternalizer.readString(element, "programArgs")?.let { programArgs = it }
+		JDOMExternalizer.readString(element, "installPath")?.let { installPath = it }
 	}
 
 	override fun writeExternal(element: Element) {
@@ -49,6 +51,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.write(element, "workingDir", workingDir)
 		JDOMExternalizer.write(element, "additionalOptions", additionalOptions)
 		JDOMExternalizer.write(element, "programArgs", programArgs)
+		JDOMExternalizer.write(element, "installPath", installPath)
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
 }
@@ -64,7 +67,10 @@ object ZigRunConfigurationType : ConfigurationType, DumbAware {
 
 class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type), DumbAware {
 	override fun createTemplateConfiguration(project: Project) = ZigRunConfiguration(project, this).apply {
-		exePath = project.zigSettings.settings.exePath
+		project.zigSettings.settings.let {
+			exePath = it.exePath
+			installPath = it.installPath
+		}
 		workingDir = project.basePath.orEmpty()
 	}
 }

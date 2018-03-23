@@ -15,4 +15,5 @@ public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunCon
 	protected @NotNull TextFieldWithBrowseButton workingDirField;
 	protected @NotNull RawCommandLineEditor compilerArgsField;
 	protected @NotNull RawCommandLineEditor programArgsField;
+	protected @NotNull TextFieldWithBrowseButton installPathField;
 }
