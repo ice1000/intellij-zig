@@ -2,14 +2,17 @@ package org.ziglang.project
 
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ModifiableRootModel
+import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.ui.TextComponentAccessor
 import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.ComboboxWithBrowseButton
 import org.ziglang.ZigBundle
 import org.ziglang.executeCommand
-import java.nio.file.*
+import java.nio.file.Files
+import java.nio.file.Paths
 import javax.swing.JComboBox
 
 val zigPath: String by lazy {
@@ -49,9 +52,13 @@ inline fun initExeComboBox(
 	zigGlobalSettings.knownZigExes.forEach(zigExeField.comboBox::addItem)
 }
 
-fun createSourceDirectory(model: ModifiableRootModel, entryPath: String?): Path {
-	model.inheritSdk()
-	val srcPath = Paths.get(entryPath, "src").toAbsolutePath()
-	Files.createDirectories(srcPath)
-	return srcPath
+fun createDir(module: Module, baseDir: VirtualFile, inheritSdk: Boolean = false, vararg dirs: String) {
+	module.rootManager.modifiableModel.apply {
+		if (inheritSdk) inheritSdk()
+		contentEntries.firstOrNull()?.apply {
+			dirs.forEach { addExcludeFolder(baseDir.findOrCreateChildData(module, it)) }
+		}
+		commit()
+	}
 }
+

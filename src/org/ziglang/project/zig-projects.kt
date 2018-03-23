@@ -7,8 +7,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ModifiableModelsProvider
-import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.DirectoryProjectGenerator
@@ -34,9 +32,7 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 	override fun generateProject(project: Project, baseDir: VirtualFile, settings: ZigSettings, module: Module) {
 		(project.zigSettings as ZigProjectServiceImpl).loadState(settings)
 		ApplicationManager.getApplication().runWriteAction {
-			val modifiableModel: ModifiableRootModel = ModifiableModelsProvider.SERVICE.getInstance().getModuleModifiableModel(module)
-			createSourceDirectory(modifiableModel, project.basePath)
-			ModifiableModelsProvider.SERVICE.getInstance().commitModuleModifiableModel(modifiableModel)
+			createDir(module, baseDir, false, "out", "src")
 			project.forCLion()
 		}
 	}
@@ -47,7 +43,7 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 	private fun Project.forCLion() {
 		if (PlatformUtils.isCLion()) {
 			fun generateCMakeFile(baseDir: VirtualFile) = runWriteAction {
-				val cmakeList = baseDir.createChildData(this, "CMakeLists.txt")
+				val cmakeList = baseDir.findOrCreateChildData(this, "CMakeLists.txt")
 				VfsUtil.saveText(cmakeList, """
 project($name)
 """)
@@ -65,4 +61,5 @@ project($name)
 			generateCMakeFile(baseDir)
 		}
 	}
+
 }

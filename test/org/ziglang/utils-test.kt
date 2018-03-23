@@ -5,7 +5,7 @@ import org.junit.Test
 import org.ziglang.project.versionOf
 import org.ziglang.project.zigPath
 
-class UtilsKtTest {
+class UtilsTest {
 	@Test(timeout = 1000L)
 	fun executeCommand() {
 		if (!System.getenv("CI").isNullOrBlank()) return

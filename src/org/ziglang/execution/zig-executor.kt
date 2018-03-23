@@ -22,25 +22,37 @@ class ZigCommandLineState(
 					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
-		val params = mutableListOf<String>()
+		val buildParams = mutableListOf<String>()
 		with(configuration) {
-			params += exePath
-			params += "build-exe"
-			params += targetFile
-			params += "--zig-install-path"
-			params += installPath
-			params += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
-			// params += "&&"
-			// params += targetFile
-			// params += programArgs.split(' ', '\n').filter(String::isNotBlank)
+			buildParams += exePath
+			buildParams += "build-exe"
+			buildParams += targetFile
+			buildParams += "--zig-install-path"
+			buildParams += installPath
+			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 		}
-		val handler = OSProcessHandler(GeneralCommandLine(params)
+		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
 				.withWorkDirectory(configuration.workingDir))
-		ProcessTerminatedListener.attach(handler)
 		val console = consoleBuilder.console
-		console.attachToProcess(handler)
-		handler.startNotify()
-		return DefaultExecutionResult(console, handler, PauseOutputAction(console, handler))
+		buildHandler.addProcessListener(object : ProcessAdapter() {
+			override fun processTerminated(event: ProcessEvent) {
+				if (event.exitCode == 0) {
+					console.clear()
+					val params = mutableListOf<String>()
+					with(configuration) {
+						params += targetFile
+						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
+					}
+					val runHandler = OSProcessHandler(GeneralCommandLine(params))
+					ProcessTerminatedListener.attach(runHandler)
+					console.attachToProcess(runHandler)
+					runHandler.startNotify()
+				}
+			}
+		})
+		console.attachToProcess(buildHandler)
+		buildHandler.startNotify()
+		return DefaultExecutionResult(console, buildHandler, PauseOutputAction(console, buildHandler))
 	}
 
 	private class PauseOutputAction(private val console: ConsoleView, private val handler: ProcessHandler) :
