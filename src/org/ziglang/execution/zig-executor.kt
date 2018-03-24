@@ -43,6 +43,7 @@ class ZigCommandLineState(
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
 				.withWorkDirectory(configuration.workingDir))
 		val console = consoleBuilder.console
+		console.allowHeavyFilters()
 		buildHandler.addProcessListener(object : ProcessAdapter() {
 			override fun processTerminated(event: ProcessEvent) {
 				if (event.exitCode == 0) {

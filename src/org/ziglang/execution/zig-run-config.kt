@@ -33,7 +33,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
 			ZigCommandLineState(this@ZigRunConfiguration, environment)
 
-	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
+	override fun getIcon() = ZigIcons.ZIG_WEBSITE_ICON
 	override fun getConfigurationEditor() = ZigRunConfigurationEditorImpl(this)
 	override fun readExternal(element: Element) {
 		super.readExternal(element)
@@ -62,7 +62,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 
 object ZigRunConfigurationType : ConfigurationType, DumbAware {
 	private val factories = arrayOf(ZigRunConfigurationFactory(this))
-	override fun getIcon() = ZigIcons.ZIG_WEBSITE_ICON
+	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
 	override fun getConfigurationTypeDescription() = ZigBundle.message("zig.run-config.description")
 	override fun getDisplayName() = ZigBundle.message("zig.name")
 	override fun getConfigurationFactories() = factories

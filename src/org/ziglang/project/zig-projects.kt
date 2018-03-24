@@ -39,8 +39,9 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 			module.rootManager.modifiableModel.apply {
 				inheritSdk()
 				contentEntries.firstOrNull()?.apply {
-					addExcludeFolder(baseDir.findChild("out") ?: baseDir.createChildDirectory(module, "out"))
-					addSourceFolder(baseDir.findChild("src") ?: baseDir.createChildDirectory(module, "src"), false)
+					addExcludeFolder(findOrCreate(baseDir, "out", module))
+					addExcludeFolder(findOrCreate(baseDir, "zig-cache", module))
+					addSourceFolder(findOrCreate(baseDir, "src", module), false)
 				}
 				commit()
 			}
@@ -48,6 +49,11 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 			project.forCLion()
 		}
 	}
+
+	private fun findOrCreate(
+			baseDir: VirtualFile,
+			dir: String,
+			module: Module) = baseDir.findChild(dir) ?: baseDir.createChildDirectory(module, dir)
 
 	/**
 	 * Codes for CLion, write zig information in CMakeLists.txt
