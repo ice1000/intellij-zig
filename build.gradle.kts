@@ -28,7 +28,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.0.1"
+val pluginComingVersion = "0.0.2"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 val kotlinVersion: String by extra
@@ -50,7 +50,7 @@ buildscript {
 
 	dependencies {
 		classpath(kotlin("gradle-plugin", kotlinVersion))
-		classpath("com.github.hurricup:gradle-grammar-kit-plugin:$grammarKitVersion")
+		classpath("com.github.JetBrains:gradle-grammar-kit-plugin:$grammarKitVersion")
 	}
 }
 
