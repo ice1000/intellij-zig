@@ -23,6 +23,10 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		programArgsField.text = configuration.programArgs
 		installPathField.text = configuration.installPath
 		outputDirField.text = configuration.outputDir
+
+		releaseSafe.isSelected = configuration.releaseSafe
+		statically.isSelected = configuration.static
+		strip.isSelected = configuration.strip
 	}
 
 	override fun applyEditorTo(configuration: ZigRunConfiguration) {
@@ -33,5 +37,9 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.installPath = installPathField.text
 		configuration.outputDir = outputDirField.text
 		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
+
+		configuration.releaseSafe = releaseSafe.isSelected
+		configuration.static = statically.isSelected
+		configuration.strip = strip.isSelected
 	}
 }

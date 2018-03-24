@@ -42,6 +42,10 @@ class ZigCommandLineState(
 			buildParams += "--output"
 			buildParams += outputFile
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
+
+			buildParams += if (releaseSafe) "--release-safe" else "--release-fast"
+			if (static) buildParams += "static"
+			if (strip) buildParams += "strip"
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
 				.withWorkDirectory(configuration.workingDir))

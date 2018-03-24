@@ -29,7 +29,12 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	var programArgs = ""
 	var installPath = ""
 	var outputDir = ""
-	var isBuildOnly = false
+
+	var releaseSafe = false
+	var static = false
+	var strip = false
+
+	var isBuildOnly = false      //Seperate "Build" and "Run"
 
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
 		ZigCommandLineState(this@ZigRunConfiguration, isBuildOnly, environment)
@@ -46,6 +51,10 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.readString(element, "programArgs")?.let { programArgs = it }
 		JDOMExternalizer.readString(element, "installPath")?.let { installPath = it }
 		JDOMExternalizer.readString(element, "outputDir")?.let { outputDir = it }
+
+		JDOMExternalizer.readBoolean(element, "releaseSafe").let { releaseSafe = it }
+		JDOMExternalizer.readBoolean(element, "static").let { static = it }
+		JDOMExternalizer.readBoolean(element, "strip").let { strip = it }
 	}
 
 	override fun writeExternal(element: Element) {
@@ -57,6 +66,10 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.write(element, "programArgs", programArgs)
 		JDOMExternalizer.write(element, "installPath", installPath)
 		JDOMExternalizer.write(element, "outputDir", outputDir)
+
+		JDOMExternalizer.write(element, "releaseSafe", releaseSafe)
+		JDOMExternalizer.write(element, "static", static)
+		JDOMExternalizer.write(element, "strip", strip)
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
 }

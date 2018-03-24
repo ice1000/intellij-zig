@@ -17,4 +17,10 @@ public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunCon
 	protected @NotNull RawCommandLineEditor programArgsField;
 	protected @NotNull TextFieldWithBrowseButton installPathField;
 	protected @NotNull TextFieldWithBrowseButton outputDirField;
+	protected @NotNull
+	JCheckBox releaseSafe;
+	protected @NotNull
+	JCheckBox statically;
+	protected @NotNull
+	JCheckBox strip;
 }
