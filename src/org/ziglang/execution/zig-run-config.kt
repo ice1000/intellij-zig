@@ -73,9 +73,11 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 		project.zigSettings.settings.let {
 			exePath = it.exePath
 			installPath = it.installPath
-			outputDir = "${project.baseDir.path}/out"
 		}
-		workingDir = project.basePath.orEmpty()
+		project.baseDir.run {
+			outputDir = findOrCreateChildData(project, "out").path
+			workingDir = path
+		}
 	}
 }
 

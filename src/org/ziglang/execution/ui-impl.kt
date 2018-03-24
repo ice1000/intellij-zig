@@ -10,7 +10,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		initExeComboBox(executablePath)
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
-		outputDir.addBrowseFolderListener(TextBrowseFolderListener(
+		outputDirField.addBrowseFolderListener(TextBrowseFolderListener(
 			FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 	}
 
@@ -22,7 +22,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		compilerArgsField.text = configuration.additionalOptions
 		programArgsField.text = configuration.programArgs
 		installPathField.text = configuration.installPath
-		outputDir.text = configuration.outputDir
+		outputDirField.text = configuration.outputDir
 	}
 
 	override fun applyEditorTo(configuration: ZigRunConfiguration) {
@@ -31,7 +31,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.additionalOptions = compilerArgsField.text
 		configuration.programArgs = programArgsField.text
 		configuration.installPath = installPathField.text
-		configuration.outputDir = outputDir.text
+		configuration.outputDir = outputDirField.text
 		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
 	}
 }

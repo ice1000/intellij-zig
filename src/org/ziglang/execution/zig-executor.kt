@@ -13,8 +13,7 @@ import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.vfs.VfsUtil
-import org.ziglang.fileName
-import org.ziglang.trimPath
+import java.nio.file.Paths
 
 class ZigCommandLineState(
 		private val configuration: ZigRunConfiguration,
@@ -25,9 +24,12 @@ class ZigCommandLineState(
 					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
-		val outputDir = VfsUtil.createDirectoryIfMissing(configuration.outputDir)
+		VfsUtil.createDirectoryIfMissing(configuration.outputDir)
 		val buildParams = mutableListOf<String>()
-		val outputName = configuration.targetFile.fileName() + ".out"
+		val outputFile = Paths.get(
+				configuration.outputDir,
+				configuration.name
+		).toString()
 		with(configuration) {
 			buildParams += exePath
 			buildParams += "build-exe"
@@ -35,7 +37,7 @@ class ZigCommandLineState(
 			buildParams += "--zig-install-prefix"
 			buildParams += installPath
 			buildParams += "--output"
-			buildParams += "${this.outputDir.trimPath()}/$outputName"
+			buildParams += outputFile
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
@@ -47,7 +49,7 @@ class ZigCommandLineState(
 					console.clear()
 					val params = mutableListOf<String>()
 					with(configuration) {
-						outputDir?.findChild(outputName)?.run { params += path }
+						params += outputFile
 						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 					}
 					val runHandler = OSProcessHandler(GeneralCommandLine(params)
