@@ -45,8 +45,8 @@ object ZigNameValidator : InputValidatorEx {
 
 class ZigSpellcheckerStrategy : SpellcheckingStrategy() {
 	override fun getTokenizer(element: PsiElement): Tokenizer<PsiElement> = when (element) {
-		is PsiComment,
-		is ZigSymbol -> TEXT_TOKENIZER
+		is PsiComment-> TEXT_TOKENIZER
+		is ZigSymbol -> if (element.isDeclaration) TEXT_TOKENIZER else EMPTY_TOKENIZER
 		is ZigString -> super.getTokenizer(element).takeIf { it != EMPTY_TOKENIZER } ?: TEXT_TOKENIZER
 		else -> EMPTY_TOKENIZER
 	}
