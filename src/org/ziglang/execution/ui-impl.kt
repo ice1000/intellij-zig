@@ -7,6 +7,9 @@ import org.ziglang.project.initExeComboBox
 class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
 	init {
 		resetEditorFrom(configuration)
+
+		listOf("fast", "safe", "debug").forEach(releaseMode::addItem)
+
 		initExeComboBox(executablePath)
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
@@ -24,7 +27,8 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		installPathField.text = configuration.installPath
 		outputDirField.text = configuration.outputDir
 
-		releaseSafe.isSelected = configuration.releaseSafe
+		releaseMode.selectedItem = configuration.releaseMode
+
 		statically.isSelected = configuration.static
 		strip.isSelected = configuration.strip
 	}
@@ -38,7 +42,8 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.outputDir = outputDirField.text
 		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
 
-		configuration.releaseSafe = releaseSafe.isSelected
+		configuration.releaseMode = releaseMode.selectedItem.toString()
+
 		configuration.static = statically.isSelected
 		configuration.strip = strip.isSelected
 	}

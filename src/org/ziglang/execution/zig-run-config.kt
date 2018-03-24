@@ -29,8 +29,8 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	var programArgs = ""
 	var installPath = ""
 	var outputDir = ""
+	var releaseMode = ""
 
-	var releaseSafe = false
 	var static = false
 	var strip = false
 
@@ -51,8 +51,8 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.readString(element, "programArgs")?.let { programArgs = it }
 		JDOMExternalizer.readString(element, "installPath")?.let { installPath = it }
 		JDOMExternalizer.readString(element, "outputDir")?.let { outputDir = it }
+		JDOMExternalizer.readString(element, "releaseMode")?.let { releaseMode = it }
 
-		JDOMExternalizer.readBoolean(element, "releaseSafe").let { releaseSafe = it }
 		JDOMExternalizer.readBoolean(element, "static").let { static = it }
 		JDOMExternalizer.readBoolean(element, "strip").let { strip = it }
 	}
@@ -67,7 +67,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.write(element, "installPath", installPath)
 		JDOMExternalizer.write(element, "outputDir", outputDir)
 
-		JDOMExternalizer.write(element, "releaseSafe", releaseSafe)
+		JDOMExternalizer.write(element, "releaseMode", releaseMode)
 		JDOMExternalizer.write(element, "static", static)
 		JDOMExternalizer.write(element, "strip", strip)
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
@@ -88,6 +88,7 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 		project.zigSettings.settings.let {
 			exePath = it.exePath
 			installPath = it.installPath
+			releaseMode = "fast"
 		}
 		project.baseDir.run {
 			workingDir = path

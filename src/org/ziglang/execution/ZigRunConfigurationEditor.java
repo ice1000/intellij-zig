@@ -1,6 +1,7 @@
 package org.ziglang.execution;
 
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
@@ -18,7 +19,8 @@ public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunCon
 	protected @NotNull RawCommandLineEditor programArgsField;
 	protected @NotNull TextFieldWithBrowseButton installPathField;
 	protected @NotNull TextFieldWithBrowseButton outputDirField;
-	protected @NotNull JBCheckBox releaseSafe;
+	protected @NotNull
+	ComboBox<String> releaseMode;
 	protected @NotNull JBCheckBox statically;
 	protected @NotNull JBCheckBox strip;
 }

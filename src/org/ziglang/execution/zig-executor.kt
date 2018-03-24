@@ -44,7 +44,7 @@ class ZigCommandLineState(
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 
 			// FIXME 其实有三种模式，还有一个debug。建议做成comboBox，Julia插件里面也有例子。
-			buildParams += if (releaseSafe) "--release-safe" else "--release-fast"
+			buildParams += "--release-$releaseMode"
 			if (static) buildParams += "static"
 			if (strip) buildParams += "strip"
 		}
