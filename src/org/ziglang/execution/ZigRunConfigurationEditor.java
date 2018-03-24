@@ -4,6 +4,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
+import com.intellij.ui.components.JBCheckBox;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,10 +18,7 @@ public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunCon
 	protected @NotNull RawCommandLineEditor programArgsField;
 	protected @NotNull TextFieldWithBrowseButton installPathField;
 	protected @NotNull TextFieldWithBrowseButton outputDirField;
-	protected @NotNull
-	JCheckBox releaseSafe;
-	protected @NotNull
-	JCheckBox statically;
-	protected @NotNull
-	JCheckBox strip;
+	protected @NotNull JBCheckBox releaseSafe;
+	protected @NotNull JBCheckBox statically;
+	protected @NotNull JBCheckBox strip;
 }
