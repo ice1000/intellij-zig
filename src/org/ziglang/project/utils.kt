@@ -33,6 +33,7 @@ fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
 
 // https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
 fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib", "zig", "std", "index.zig"))
+
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 
@@ -53,14 +54,3 @@ inline fun initExeComboBox(
 			})
 	zigGlobalSettings.knownZigExes.forEach(zigExeField.comboBox::addItem)
 }
-
-fun createDir(module: Module, baseDir: VirtualFile, inheritSdk: Boolean = false, vararg dirs: String) {
-	module.rootManager.modifiableModel.apply {
-		if (inheritSdk) inheritSdk()
-		contentEntries.firstOrNull()?.apply {
-			dirs.forEach { addExcludeFolder(baseDir.findOrCreateChildData(module, it)) }
-		}
-		commit()
-	}
-}
-

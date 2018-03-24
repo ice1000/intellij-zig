@@ -7,6 +7,9 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.rootManager
+import com.intellij.openapi.roots.ModifiableModelsProvider
+import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.DirectoryProjectGenerator
@@ -32,7 +35,16 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 	override fun generateProject(project: Project, baseDir: VirtualFile, settings: ZigSettings, module: Module) {
 		(project.zigSettings as ZigProjectServiceImpl).loadState(settings)
 		ApplicationManager.getApplication().runWriteAction {
-			createDir(module, baseDir, false, "out", "src")
+			val modifiableModel: ModifiableRootModel = ModifiableModelsProvider.SERVICE.getInstance().getModuleModifiableModel(module)
+			module.rootManager.modifiableModel.apply {
+				inheritSdk()
+				contentEntries.firstOrNull()?.apply {
+					addExcludeFolder(baseDir.findChild("out") ?: baseDir.createChildDirectory(module, "out"))
+					addSourceFolder(baseDir.findChild("src") ?: baseDir.createChildDirectory(module, "src"), false)
+				}
+				commit()
+			}
+			ModifiableModelsProvider.SERVICE.getInstance().commitModuleModifiableModel(modifiableModel)
 			project.forCLion()
 		}
 	}
