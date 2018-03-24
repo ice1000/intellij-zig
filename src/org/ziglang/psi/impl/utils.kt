@@ -3,7 +3,9 @@ package org.ziglang.psi.impl
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 
-fun PsiElement.prevSiblingTypeIgnoring(type: IElementType, vararg types: IElementType): PsiElement? {
+fun PsiElement.prevSiblingTypeIgnoring(
+		type: IElementType,
+		vararg types: IElementType): PsiElement? {
 	var next: PsiElement? = prevSibling
 	while (true) {
 		val localNext = next ?: return null
