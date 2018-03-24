@@ -42,7 +42,7 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 		listeners += listener
 	}
 
-	override fun getSettings() = settings.apply { initWithExe() }
+	override fun getSettings() = settings
 	override fun getComponent() = mainPanel
 	override fun buildUI(settingsStep: SettingsStep) = settingsStep.addExpertPanel(component)
 
@@ -62,6 +62,7 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 			settings.installPath = installPath
 			listeners.forEach { it.stateChanged(true) }
 			settings.exePath = selected
+			settings.version = version.text
 			zigGlobalSettings.knownZigExes += selected
 		}
 		return null
@@ -72,6 +73,15 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 
 class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 	private val settings = project.zigSettings.settings
+
+	init {
+		initExeComboBox(executablePath) {
+			version.text = versionOf(it.comboBox.selectedItem as? String ?: return@initExeComboBox)
+		}
+		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
+	}
+
 	override fun createComponent() = mainPanel
 	override fun getDisplayName() = ZigBundle.message("zig.name")
 	override fun isModified() = executablePath.comboBox.selectedItem != settings.exePath ||

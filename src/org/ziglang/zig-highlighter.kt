@@ -48,6 +48,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.ENUM_KEYWORD,
 			ZigTypes.CONTINUE_KEYWORD,
 			ZigTypes.AND_KEYWORD,
+			ZigTypes.OR_KEYWORD,
 			ZigTypes.IF_KEYWORD,
 			ZigTypes.ELSE_KEYWORD,
 			ZigTypes.WHILE_KEYWORD,

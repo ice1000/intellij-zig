@@ -17,6 +17,7 @@ import org.jdom.Element
 import org.ziglang.*
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
+import java.nio.file.Paths
 import com.google.common.io.Files as GoogleFiles
 
 class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
@@ -75,8 +76,8 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 			installPath = it.installPath
 		}
 		project.baseDir.run {
-			outputDir = findOrCreateChildData(project, "out").path
 			workingDir = path
+			outputDir = Paths.get(canonicalPath, "out").toString()
 		}
 	}
 }

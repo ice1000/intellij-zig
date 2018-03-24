@@ -45,6 +45,7 @@ import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.IssueService
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
+import org.ziglang.project.zigSettings
 import java.awt.Component
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -258,8 +259,7 @@ private fun getKeyValuePairs(
 		namesInfo: ApplicationNamesInfo): MutableMap<String, String> {
 	val params = mutableMapOf(
 			"error.description" to error.description,
-			// TODO
-//			"CovScript Version" to (project?.run { covSettings.settings.version } ?: "Unknown"),
+			"Zig Version" to (project?.run { zigSettings.settings.version } ?: "Unknown"),
 			"Plugin Name" to error.pluginName,
 			"Plugin Version" to error.pluginVersion,
 			"OS Name" to SystemProperties.getOsName(),

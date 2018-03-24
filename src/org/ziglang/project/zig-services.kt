@@ -51,7 +51,7 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 class ZigGlobalSettingsServiceImpl :
 		ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {
 	override val knownZigExes: MutableSet<String> = hashSetOf()
-	private fun invalidate() = knownZigExes.removeAll { !validateZigExe(it) }
+	private fun invalidate() = knownZigExes.retainAll { validateZigExe(it) }
 	override fun getState(): ZigGlobalSettings {
 		invalidate()
 		return ZigGlobalSettings(knownZigExes.joinToString(File.pathSeparator))

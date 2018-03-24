@@ -19,7 +19,9 @@
 		<directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>
 		<runConfigurationProducer implementation="org.ziglang.execution.ZigRunConfigurationProducer"/>
 		<configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
-		<projectConfigurable instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
+		<projectConfigurable
+				groupId="language"
+				instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
 		<projectService
 				serviceInterface="org.ziglang.project.ZigProjectService"
 				serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
