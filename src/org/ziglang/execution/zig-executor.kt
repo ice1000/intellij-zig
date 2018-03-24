@@ -16,8 +16,9 @@ import com.intellij.openapi.vfs.VfsUtil
 import java.nio.file.Paths
 
 class ZigCommandLineState(
-		private val configuration: ZigRunConfiguration,
-		env: ExecutionEnvironment) : RunProfileState {
+	private val configuration: ZigRunConfiguration,
+	private val isBuildOnly: Boolean,
+	env: ExecutionEnvironment) : RunProfileState {
 	private val consoleBuilder = TextConsoleBuilderFactory
 			.getInstance()
 			.createBuilder(env.project,
@@ -34,23 +35,25 @@ class ZigCommandLineState(
 		val buildHandler = configuration.project.build(configuration)
 		val console = consoleBuilder.console
 		console.allowHeavyFilters()
-		buildHandler.addProcessListener(object : ProcessAdapter() {
-			override fun processTerminated(event: ProcessEvent) {
-				if (event.exitCode == 0) {
-					console.clear()
-					val params = mutableListOf<String>()
-					with(configuration) {
-						params += outputFile
-						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
-					}
-					val runHandler = OSProcessHandler(GeneralCommandLine(params)
+		if (isBuildOnly.not()) {
+			buildHandler.addProcessListener(object : ProcessAdapter() {
+				override fun processTerminated(event: ProcessEvent) {
+					if (event.exitCode == 0) {
+						console.clear()
+						val params = mutableListOf<String>()
+						with(configuration) {
+							params += outputFile
+							params += programArgs.split(' ', '\n').filter(String::isNotBlank)
+						}
+						val runHandler = OSProcessHandler(GeneralCommandLine(params)
 							.withWorkDirectory(configuration.workingDir))
-					ProcessTerminatedListener.attach(runHandler)
-					console.attachToProcess(runHandler)
-					runHandler.startNotify()
+						ProcessTerminatedListener.attach(runHandler)
+						console.attachToProcess(runHandler)
+						runHandler.startNotify()
+					}
 				}
-			}
-		})
+			})
+		}
 		console.attachToProcess(buildHandler)
 		buildHandler.startNotify()
 		return DefaultExecutionResult(console, buildHandler, PauseOutputAction(console, buildHandler))

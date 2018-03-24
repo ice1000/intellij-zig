@@ -29,9 +29,10 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	var programArgs = ""
 	var installPath = ""
 	var outputDir = ""
+	var isBuildOnly = false
 
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
-			ZigCommandLineState(this@ZigRunConfiguration, environment)
+		ZigCommandLineState(this@ZigRunConfiguration, isBuildOnly, environment)
 
 	override fun getIcon() = ZigIcons.ZIG_WEBSITE_ICON
 	override fun getConfigurationEditor() = ZigRunConfigurationEditorImpl(this)

@@ -25,7 +25,14 @@ class ZigBuildAction : ZigAction(
 				.createRunConfiguration(
 						Files.getNameWithoutExtension(path),
 						ZigRunConfigurationType.configurationFactories[0])
-				.apply { (configuration as ZigRunConfiguration).targetFile = path }
+			.apply {
+				(configuration as ZigRunConfiguration).apply {
+					targetFile = path
+					isBuildOnly = true
+					installPath = "/home/hoshino/Documents/Compiler/Zig/zig-0.2.0"
+					exePath = "$installPath/zig"
+				}
+			}
 		ProgramRunnerUtil.executeConfiguration(configuration, executor)
 	}
 }
