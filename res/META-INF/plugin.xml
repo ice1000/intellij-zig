@@ -28,6 +28,9 @@
 		<applicationService
 				serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
 				serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
+		<completion.contributor
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigCompletionContributor"/>
 		<spellchecker.support
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigSpellcheckerStrategy"/>
