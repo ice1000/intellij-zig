@@ -16,9 +16,9 @@ import com.intellij.openapi.vfs.VfsUtil
 import java.nio.file.Paths
 
 class ZigCommandLineState(
-	private val configuration: ZigRunConfiguration,
-	private val isBuildOnly: Boolean,
-	env: ExecutionEnvironment) : RunProfileState {
+		private val configuration: ZigRunConfiguration,
+		private val isBuildOnly: Boolean,
+		env: ExecutionEnvironment) : RunProfileState {
 	private val consoleBuilder = TextConsoleBuilderFactory
 			.getInstance()
 			.createBuilder(env.project,
@@ -28,14 +28,26 @@ class ZigCommandLineState(
 		ApplicationManager.getApplication().runWriteAction {
 			VfsUtil.createDirectoryIfMissing(configuration.outputDir)
 		}
+		val buildParams = mutableListOf<String>()
 		val outputFile = Paths.get(
 				configuration.outputDir,
 				configuration.name
 		).toString()
-		val buildHandler = configuration.project.build(configuration)
+		with(configuration) {
+			buildParams += exePath
+			buildParams += "build-exe"
+			buildParams += targetFile
+			buildParams += "--zig-install-prefix"
+			buildParams += installPath
+			buildParams += "--output"
+			buildParams += outputFile
+			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
+		}
+		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
+				.withWorkDirectory(configuration.workingDir))
 		val console = consoleBuilder.console
 		console.allowHeavyFilters()
-		if (isBuildOnly.not()) {
+		if (!isBuildOnly) {
 			buildHandler.addProcessListener(object : ProcessAdapter() {
 				override fun processTerminated(event: ProcessEvent) {
 					if (event.exitCode == 0) {
@@ -46,7 +58,7 @@ class ZigCommandLineState(
 							params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 						}
 						val runHandler = OSProcessHandler(GeneralCommandLine(params)
-							.withWorkDirectory(configuration.workingDir))
+								.withWorkDirectory(configuration.workingDir))
 						ProcessTerminatedListener.attach(runHandler)
 						console.attachToProcess(runHandler)
 						runHandler.startNotify()

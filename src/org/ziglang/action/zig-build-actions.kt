@@ -1,9 +1,6 @@
 package org.ziglang.action
 
-import com.google.common.io.Files
-import com.intellij.execution.ExecutorRegistry
-import com.intellij.execution.ProgramRunnerUtil
-import com.intellij.execution.RunManager
+import com.intellij.execution.*
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -11,6 +8,7 @@ import org.ziglang.ZigBundle
 import org.ziglang.execution.ZigRunConfiguration
 import org.ziglang.execution.ZigRunConfigurationType
 import org.ziglang.trimPath
+import com.google.common.io.Files as GoogleFiles
 
 class ZigBuildAction : ZigAction(
 		ZigBundle.message("zig.actions.build.title"),
@@ -23,16 +21,14 @@ class ZigBuildAction : ZigAction(
 		val configuration = RunManager
 				.getInstance(project)
 				.createRunConfiguration(
-						Files.getNameWithoutExtension(path),
+						"build${GoogleFiles.getNameWithoutExtension(path)}",
 						ZigRunConfigurationType.configurationFactories[0])
-			.apply {
-				(configuration as ZigRunConfiguration).apply {
-					targetFile = path
-					isBuildOnly = true
-					installPath = "/home/hoshino/Documents/Compiler/Zig/zig-0.2.0"
-					exePath = "$installPath/zig"
+				.apply {
+					(configuration as ZigRunConfiguration).apply {
+						targetFile = path
+						isBuildOnly = true
+					}
 				}
-			}
 		ProgramRunnerUtil.executeConfiguration(configuration, executor)
 	}
 }

@@ -9,6 +9,8 @@ import org.ziglang.psi.*
 
 interface IZigSymbol : PsiNameIdentifierOwner {
 	val isFunctionName: Boolean
+	val isVariableName: Boolean
+	val isDeclaration: Boolean
 }
 
 abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
@@ -17,6 +19,19 @@ abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSy
 				ZigTypes.FN_KEYWORD,
 				TokenType.WHITE_SPACE,
 				ZigTokenType.LINE_COMMENT) != null
+
+	override val isVariableName: Boolean
+		get() = parent is ZigVariableDeclaration && prevSiblingTypeIgnoring(
+				ZigTypes.CONST_KEYWORD,
+				TokenType.WHITE_SPACE,
+				ZigTokenType.LINE_COMMENT) ?: prevSiblingTypeIgnoring(
+				ZigTypes.VAR_KEYWORD,
+				TokenType.WHITE_SPACE,
+				ZigTokenType.LINE_COMMENT) != null
+
+	override val isDeclaration: Boolean
+		get() = isFunctionName or
+				isVariableName
 
 	override fun getNameIdentifier() = this
 	override fun setName(name: String) = replace(ZigTokenType.fromText(name, project))
