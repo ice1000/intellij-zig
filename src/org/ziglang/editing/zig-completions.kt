@@ -7,7 +7,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 import icons.ZigIcons
 import org.ziglang.ZigBundle
-import org.ziglang.psi.ZigSymbol
+import org.ziglang.psi.ZigTypes
 
 class ZigCompletionProvider(private val list: List<LookupElement>)
 	: CompletionProvider<CompletionParameters>() {
@@ -37,7 +37,7 @@ class ZigCompletionContributor : CompletionContributor() {
 
 	init {
 		extend(CompletionType.BASIC,
-				PlatformPatterns.psiElement(ZigSymbol::class.java),
+				PlatformPatterns.psiElement(ZigTypes.SYM),
 				ZigCompletionProvider(KEYWORD_LITERALS))
 	}
 }
