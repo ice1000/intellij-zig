@@ -2,12 +2,12 @@ package org.ziglang.editing
 
 import com.intellij.lang.*
 import com.intellij.openapi.ui.InputValidatorEx
-import com.intellij.psi.PsiFile
+import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
-import org.ziglang.ZIG_COMMENT_START
-import org.ziglang.ZigBundle
-import org.ziglang.orFalse
-import org.ziglang.psi.ZigTypes
+import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
+import com.intellij.spellchecker.tokenizer.Tokenizer
+import org.ziglang.*
+import org.ziglang.psi.*
 
 class ZigCommenter : Commenter {
 	override fun getCommentedBlockCommentPrefix(): String? = blockCommentPrefix
@@ -40,7 +40,14 @@ object ZigNameValidator : InputValidatorEx {
 	}.orFalse()
 
 	override fun getErrorText(inputString: String?) =
-		ZigBundle.message("zig.actions.new-file.invalid", inputString.orEmpty())
+			ZigBundle.message("zig.actions.new-file.invalid", inputString.orEmpty())
+}
 
-
+class ZigSpellcheckerStrategy : SpellcheckingStrategy() {
+	override fun getTokenizer(element: PsiElement): Tokenizer<PsiElement> = when (element) {
+		is PsiComment,
+		is ZigSymbol -> TEXT_TOKENIZER
+		is ZigString -> super.getTokenizer(element).takeIf { it != EMPTY_TOKENIZER } ?: TEXT_TOKENIZER
+		else -> EMPTY_TOKENIZER
+	}
 }
