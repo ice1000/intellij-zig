@@ -24,24 +24,14 @@ class ZigCommandLineState(
 					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
-		VfsUtil.createDirectoryIfMissing(configuration.outputDir)
-		val buildParams = mutableListOf<String>()
+		ApplicationManager.getApplication().runWriteAction {
+			VfsUtil.createDirectoryIfMissing(configuration.outputDir)
+		}
 		val outputFile = Paths.get(
 				configuration.outputDir,
 				configuration.name
 		).toString()
-		with(configuration) {
-			buildParams += exePath
-			buildParams += "build-exe"
-			buildParams += targetFile
-			buildParams += "--zig-install-prefix"
-			buildParams += installPath
-			buildParams += "--output"
-			buildParams += outputFile
-			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
-		}
-		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
-				.withWorkDirectory(configuration.workingDir))
+		val buildHandler = configuration.project.build(configuration)
 		val console = consoleBuilder.console
 		console.allowHeavyFilters()
 		buildHandler.addProcessListener(object : ProcessAdapter() {
