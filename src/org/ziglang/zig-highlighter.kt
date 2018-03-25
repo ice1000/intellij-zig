@@ -131,7 +131,9 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val SYMBOL = TextAttributesKey.createTextAttributesKey("ZIG_SYMBOL", HighlighterColors.TEXT)
 	@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("ZIG_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
 	@JvmField val FLOAT_LIT = TextAttributesKey.createTextAttributesKey("ZIG_FLOAT_LIT", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
-	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
+	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE)
+	@JvmField val STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE_INVALID", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
+	@JvmField val STRING_ESCAPE_INVALID = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
 	@JvmField val LINE_COMMENT = TextAttributesKey.createTextAttributesKey("ZIG_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 	@JvmField val SEMICOLON = TextAttributesKey.createTextAttributesKey("ZIG_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
 	@JvmField val UNDEFINED = TextAttributesKey.createTextAttributesKey("ZIG_UNDEFINED", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
@@ -174,12 +176,19 @@ class ZigColorSettingsPage : ColorSettingsPage {
 			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.keyword"), ZigSyntaxHighlighter.KEYWORD),
 			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.number"), ZigSyntaxHighlighter.NUMBER),
 			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string"), ZigSyntaxHighlighter.STRING),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape"), ZigSyntaxHighlighter.STRING_ESCAPE),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape-invalid"), ZigSyntaxHighlighter.STRING_ESCAPE_INVALID),
 			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.comment"), ZigSyntaxHighlighter.LINE_COMMENT),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator"), ZigSyntaxHighlighter.OPERATOR)
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator"), ZigSyntaxHighlighter.OPERATOR),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.ordinary"), ZigSyntaxHighlighter.SYMBOL),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.builtin"), ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL)
 		)
 
 		private val ADDITIONAL_DESCRIPTIONS = mapOf(
-			"functionName" to ZigSyntaxHighlighter.FUNCTION_DECLARATION
+			"functionName" to ZigSyntaxHighlighter.FUNCTION_DECLARATION,
+			"builtinFunction" to ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL,
+			"escape" to ZigSyntaxHighlighter.STRING_ESCAPE,
+			"escapeInvalid" to ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
 		)
 	}
 
@@ -189,10 +198,15 @@ class ZigColorSettingsPage : ColorSettingsPage {
 	override fun getAttributeDescriptors() = DESCRIPTION
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
 	override fun getDisplayName() = ZigFileType.name
-	@Language("Zig")
+	// @Language("Zig")
 	override fun getDemoText() =
 		"""
-			//Add Demo Code
+		// Comment
+		const std = @<builtinFunction>import</builtinFunction>("std");
+		pub fn <functionName>main</functionName>() !void {
+		    var aVar = 1 + 2.0;
+		    std.debug.warn("This is a<escape>\n</escape>new line<escapeInvalid>\g</escapeInvalid>");
+		}
 		""".trimIndent()
 
 }
