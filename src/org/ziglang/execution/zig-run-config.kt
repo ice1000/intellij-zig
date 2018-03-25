@@ -33,8 +33,14 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 
 	var static = false
 	var strip = false
+	var verboseTokenize = false
+	var verboseParsing = false
+	var verboseLinking = false
+	var verboseCImports = false
+	var verboseZigIR = false
+	var verboseLlvmIR = false
 
-	var isBuildOnly = false      //Seperate "Build" and "Run"
+	var isBuildOnly = false      // Separate "Build" and "Run"
 
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
 		ZigCommandLineState(this@ZigRunConfiguration, isBuildOnly, environment)
@@ -55,6 +61,12 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 
 		JDOMExternalizer.readBoolean(element, "static").let { static = it }
 		JDOMExternalizer.readBoolean(element, "strip").let { strip = it }
+		JDOMExternalizer.readBoolean(element, "verboseTokenize").let { verboseTokenize = it }
+		JDOMExternalizer.readBoolean(element, "verboseParsing").let { verboseParsing = it }
+		JDOMExternalizer.readBoolean(element, "verboseLinking").let { verboseLinking = it }
+		JDOMExternalizer.readBoolean(element, "verboseCImports").let { verboseCImports = it }
+		JDOMExternalizer.readBoolean(element, "verboseZigIR").let { verboseZigIR = it }
+		JDOMExternalizer.readBoolean(element, "verboseLlvmIR").let { verboseLlvmIR = it }
 	}
 
 	override fun writeExternal(element: Element) {
@@ -70,6 +82,12 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		JDOMExternalizer.write(element, "releaseMode", releaseMode)
 		JDOMExternalizer.write(element, "static", static)
 		JDOMExternalizer.write(element, "strip", strip)
+		JDOMExternalizer.write(element, "verboseTokenize", verboseTokenize)
+		JDOMExternalizer.write(element, "verboseParsing", verboseParsing)
+		JDOMExternalizer.write(element, "verboseLinking", verboseLinking)
+		JDOMExternalizer.write(element, "verboseCImports", verboseCImports)
+		JDOMExternalizer.write(element, "verboseZigIR", verboseZigIR)
+		JDOMExternalizer.write(element, "verboseLlvmIR", verboseLlvmIR)
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
 }

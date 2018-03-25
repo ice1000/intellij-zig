@@ -28,9 +28,15 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		outputDirField.text = configuration.outputDir
 
 		releaseMode.selectedItem = configuration.releaseMode
-
 		statically.isSelected = configuration.static
 		strip.isSelected = configuration.strip
+
+		verboseTokenize.isSelected = configuration.verboseTokenize
+		verboseParsing.isSelected = configuration.verboseParsing
+		verboseLinking.isSelected = configuration.verboseLinking
+		verboseCImports.isSelected = configuration.verboseCImports
+		verboseZigIR.isSelected = configuration.verboseZigIR
+		verboseLlvmIR.isSelected = configuration.verboseLlvmIR
 	}
 
 	override fun applyEditorTo(configuration: ZigRunConfiguration) {
@@ -40,10 +46,17 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.programArgs = programArgsField.text
 		configuration.installPath = installPathField.text
 		configuration.outputDir = outputDirField.text
-		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
+		configuration.exePath = executablePath.comboBox.selectedItem as String
 
 		configuration.static = statically.isSelected
 		configuration.strip = strip.isSelected
-		configuration.releaseMode = releaseMode.selectedItem as? String ?: return
+		configuration.releaseMode = releaseMode.selectedItem as String
+
+		configuration.verboseTokenize = verboseTokenize.isSelected
+		configuration.verboseParsing = verboseParsing.isSelected
+		configuration.verboseLinking = verboseLinking.isSelected
+		configuration.verboseCImports = verboseCImports.isSelected
+		configuration.verboseZigIR = verboseZigIR.isSelected
+		configuration.verboseLlvmIR = verboseLlvmIR.isSelected
 	}
 }

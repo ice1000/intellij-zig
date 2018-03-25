@@ -22,4 +22,10 @@ public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunCon
 	protected @NotNull JComboBox<String> releaseMode;
 	protected @NotNull JBCheckBox statically;
 	protected @NotNull JBCheckBox strip;
+	protected @NotNull JBCheckBox verboseTokenize;
+	protected @NotNull JBCheckBox verboseParsing;
+	protected @NotNull JBCheckBox verboseLinking;
+	protected @NotNull JBCheckBox verboseCImports;
+	protected @NotNull JBCheckBox verboseZigIR;
+	protected @NotNull JBCheckBox verboseLlvmIR;
 }
