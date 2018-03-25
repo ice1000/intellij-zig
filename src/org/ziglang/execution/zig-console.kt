@@ -7,7 +7,6 @@ import java.util.regex.Pattern
 
 class ZigConsoleFilter(private val project: Project) : Filter {
 	companion object {
-		//后面那两个字符是保险用的。。。
 		private val ERROR_FILE_LOCATION = Pattern.compile("(.+\\.zig):([0-9]+):([0-9]+):")
 	}
 
