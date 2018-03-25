@@ -49,6 +49,12 @@ class ZigCommandLineState(
 			}
 			if (static) buildParams += "--static"
 			if (strip) buildParams += "--strip"
+			if (verboseTokenize) buildParams += "--verbose-tokenize"
+			if (verboseParsing) buildParams += "--verbose-ast"
+			if (verboseLinking) buildParams += "--verbose-link"
+			if (verboseCImports) buildParams += "--verbose-cimport"
+			if (verboseZigIR) buildParams += "--verbose-ir"
+			if (verboseLlvmIR) buildParams += "--verbose-llvm-ir"
 		}
 		val buildHandler = OSProcessHandler(GeneralCommandLine(buildParams)
 				.withWorkDirectory(configuration.workingDir))

@@ -15,4 +15,5 @@ public abstract class ZigProjectGeneratorPeer implements ProjectGeneratorPeer<Zi
 	protected @NotNull JLabel version;
 	protected @NotNull JCheckBox setupLater;
 	protected @NotNull TextFieldWithBrowseButton installPathField;
+	protected @NotNull LinkLabel<Object> iceZigRelease;
 }

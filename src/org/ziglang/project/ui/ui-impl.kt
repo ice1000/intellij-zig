@@ -1,6 +1,5 @@
 package org.ziglang.project.ui
 
-import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.ide.util.projectWizard.SettingsStep
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.ConfigurationException
@@ -20,9 +19,8 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 		initExeComboBox(executablePath)
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
-		zigWebsite.setListener({ _, _ ->
-			BrowserLauncher.instance.browse(zigWebsite.text)
-		}, null)
+		zigWebsite.asLink()
+		iceZigRelease.asLink()
 		setupLater.addActionListener {
 			executablePath.isEnabled = !setupLater.isSelected
 		}
@@ -78,6 +76,8 @@ class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 		initExeComboBox(executablePath) {
 			version.text = versionOf(it.comboBox.selectedItem as? String ?: return@initExeComboBox)
 		}
+		zigWebsite.asLink()
+		iceZigRelease.asLink()
 		installPathField.text = settings.installPath
 		version.text = settings.version
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
