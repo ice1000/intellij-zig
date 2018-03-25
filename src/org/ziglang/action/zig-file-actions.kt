@@ -9,8 +9,9 @@ import com.intellij.ide.fileTemplates.FileTemplate
 import com.intellij.ide.fileTemplates.FileTemplateManager
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.lang.Language
+import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtilRt
@@ -20,8 +21,29 @@ import org.ziglang.ZigBundle
 import org.ziglang.editing.ZigNameValidator
 import org.ziglang.execution.ZigRunConfiguration
 import org.ziglang.execution.ZigRunConfigurationType
+import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
 import org.ziglang.trimPath
+
+class ZigTranslateToCAction : AnAction() {
+	override fun actionPerformed(e: AnActionEvent) {
+		// TODO
+	}
+
+	override fun update(e: AnActionEvent) {
+		e.project?.run {
+			e.presentation.run {
+				val file = CommonDataKeys.VIRTUAL_FILE.getData(e.dataContext)
+				val fileType = file?.fileType as? LanguageFileType
+				isVisible = fileType != null && validateZigExe(zigSettings.settings.exePath)
+				val clang = Language.findLanguageByID("C")
+				isEnabled = (file != null && fileType != null) &&
+						(clang != null && fileType.language == clang || file.extension == "c")
+			}
+		}
+		super.update(e)
+	}
+}
 
 class ZigBuildAction : ZigAction(
 		ZigBundle.message("zig.actions.build.title"),
@@ -47,26 +69,26 @@ class ZigBuildAction : ZigAction(
 }
 
 class NewZigFile : CreateFileFromTemplateAction(
-	ZigBundle.message("zig.actions.new-file.title"),
-	ZigBundle.message("zig.actions.new-file.description"),
-	ZigIcons.ZIG_FILE), DumbAware {
+		ZigBundle.message("zig.actions.new-file.title"),
+		ZigBundle.message("zig.actions.new-file.description"),
+		ZigIcons.ZIG_FILE), DumbAware {
 	companion object PropertyCreator {
 		fun createProperties(project: Project, fileName: String) =
-			FileTemplateManager.getInstance(project).defaultProperties.also { properties ->
-				properties += "ZIG_VERSION" to project.zigSettings.settings.version
-				properties += "NAME" to fileName
-			}
+				FileTemplateManager.getInstance(project).defaultProperties.also { properties ->
+					properties += "ZIG_VERSION" to project.zigSettings.settings.version
+					properties += "NAME" to fileName
+				}
 	}
 
 	override fun getActionName(dir: PsiDirectory?, name: String?, templateName: String?) =
-		ZigBundle.message("zig.actions.new-file.title")
+			ZigBundle.message("zig.actions.new-file.title")
 
 	override fun buildDialog(project: Project?, dir: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {
 		builder
-			.setTitle(ZigBundle.message("zig.actions.new-file.title"))
-			.setValidator(ZigNameValidator)
-			.addKind("File", ZigIcons.ZIG_FILE, "Zig File")
-			.addKind("Executable", ZigIcons.ZIG_FILE, "Zig Exe")
+				.setTitle(ZigBundle.message("zig.actions.new-file.title"))
+				.setValidator(ZigNameValidator)
+				.addKind("File", ZigIcons.ZIG_FILE, "Zig File")
+				.addKind("Executable", ZigIcons.ZIG_FILE, "Zig Exe")
 		//.addKind("Other", ZigIcons.ZIG_BIG_ICON, "Zig Other")		For test
 	}
 
