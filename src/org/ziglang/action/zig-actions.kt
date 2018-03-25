@@ -2,7 +2,7 @@ package org.ziglang.action
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.ui.Messages.showInfoMessage
+import com.intellij.openapi.ui.Messages.showDialog
 import com.petebevin.markdown.MarkdownProcessor
 import icons.ZigIcons
 import org.ziglang.ZigBundle
@@ -24,8 +24,11 @@ class ZigZenAction : AnAction(
 		val project = e.project ?: return
 		val zig = project.zigSettings.settings.exePath
 		val (stdout) = executeCommand("$zig zen")
-		showInfoMessage(project,
-				MarkdownProcessor().markdown(stdout.joinToString("\n")),
-				ZigBundle.message("zig.actions.zen.dialog.title"))
+		showDialog(project,
+				"<html>${MarkdownProcessor().markdown(stdout.joinToString("\n"))}</html>",
+				ZigBundle.message("zig.actions.zen.dialog.title"),
+				arrayOf(ZigBundle.message("zig.yes")),
+				0,
+				null)
 	}
 }
