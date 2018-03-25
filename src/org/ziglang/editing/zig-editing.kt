@@ -36,7 +36,7 @@ object ZigNameValidator : InputValidatorEx {
 	override fun checkInput(inputString: String?) = inputString?.run {
 		all {
 			it.isLetterOrDigit() || it == '_'
-		} && firstOrNull()?.isDigit()?.not().orFalse()      //starts with number was allowed?
+		} && !firstOrNull()?.isDigit().orFalse()
 	}.orFalse()
 
 	override fun getErrorText(inputString: String?) =
