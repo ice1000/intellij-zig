@@ -87,6 +87,7 @@ class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 	override fun createComponent() = mainPanel
 	override fun getDisplayName() = ZigBundle.message("zig.name")
 	override fun isModified() = executablePath.comboBox.selectedItem != settings.exePath ||
+			version.text != settings.version ||
 			installPathField.text != settings.installPath
 
 	@Throws(ConfigurationException::class)

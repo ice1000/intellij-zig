@@ -5,16 +5,12 @@ import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
-import com.intellij.openapi.options.colors.AttributesDescriptor
-import com.intellij.openapi.options.colors.ColorDescriptor
-import com.intellij.openapi.options.colors.ColorSettingsPage
+import com.intellij.openapi.options.colors.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.tree.IElementType
 import icons.ZigIcons
-import org.intellij.lang.annotations.Language
 import org.ziglang.psi.ZigTypes
-import javax.swing.Icon
 
 object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val KEYWORDS = arrayOf(
@@ -69,16 +65,24 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.UNDEFINED_KEYWORD
 	)
 
+	@JvmField val PARENS = arrayOf(
+			ZigTypes.LEFT_PAREN,
+			ZigTypes.RIGHT_PAREN
+	)
+
+	@JvmField val BRACKETS = arrayOf(
+			ZigTypes.LEFT_BRACKET,
+			ZigTypes.RIGHT_BRACKET
+	)
+
+	@JvmField val BRACES = arrayOf(
+			ZigTypes.LEFT_BRACE,
+			ZigTypes.RIGHT_BRACE
+	)
+
 	@JvmField val OPERATORS = arrayOf(
 			ZigTypes.COMMA_SYM,
-			ZigTypes.SEMICOLON_SYM,
 			ZigTypes.COLON_SYM,
-			ZigTypes.LEFT_PAREN,
-			ZigTypes.RIGHT_PAREN,
-			ZigTypes.LEFT_BRACE,
-			ZigTypes.RIGHT_BRACE,
-			ZigTypes.LEFT_BRACKET,
-			ZigTypes.RIGHT_BRACKET,
 			ZigTypes.RANGE_SYM,
 			ZigTypes.SLICE_SYM,
 			ZigTypes.DOT_SYM,
@@ -130,14 +134,16 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val KEYWORD = TextAttributesKey.createTextAttributesKey("ZIG_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 	@JvmField val SYMBOL = TextAttributesKey.createTextAttributesKey("ZIG_SYMBOL", HighlighterColors.TEXT)
 	@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("ZIG_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-	@JvmField val FLOAT_LIT = TextAttributesKey.createTextAttributesKey("ZIG_FLOAT_LIT", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
-	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE)
-	@JvmField val STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE_INVALID", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
-	@JvmField val STRING_ESCAPE_INVALID = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
+	@JvmField val STRING = TextAttributesKey.createTextAttributesKey("ZIG_STRING", DefaultLanguageHighlighterColors.STRING)
+	@JvmField val STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE)
+	@JvmField val STRING_ESCAPE_INVALID = TextAttributesKey.createTextAttributesKey("ZIG_STRING_ESCAPE_INVALID", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
 	@JvmField val LINE_COMMENT = TextAttributesKey.createTextAttributesKey("ZIG_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 	@JvmField val SEMICOLON = TextAttributesKey.createTextAttributesKey("ZIG_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
 	@JvmField val UNDEFINED = TextAttributesKey.createTextAttributesKey("ZIG_UNDEFINED", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
 	@JvmField val OPERATOR = TextAttributesKey.createTextAttributesKey("ZIG_OPERATORS", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
+	@JvmField val PAREN = TextAttributesKey.createTextAttributesKey("ZIG_PARENS", DefaultLanguageHighlighterColors.PARENTHESES)
+	@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("ZIG_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
+	@JvmField val BRACE = TextAttributesKey.createTextAttributesKey("ZIG_BRACES", DefaultLanguageHighlighterColors.BRACES)
 	@JvmField val FUNCTION_DECLARATION = TextAttributesKey.createTextAttributesKey("ZIG_FUNCTION_DECLARATION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
 	@JvmField val BUILTIN_FUNCTION_CALL = TextAttributesKey.createTextAttributesKey("ZIG_BUILTIN_FUNCTION_CALL", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL)
 
@@ -173,22 +179,26 @@ class ZigSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 class ZigColorSettingsPage : ColorSettingsPage {
 	private companion object DescriptionHolder {
 		private val DESCRIPTION = arrayOf(
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.keyword"), ZigSyntaxHighlighter.KEYWORD),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.number"), ZigSyntaxHighlighter.NUMBER),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string"), ZigSyntaxHighlighter.STRING),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape"), ZigSyntaxHighlighter.STRING_ESCAPE),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape-invalid"), ZigSyntaxHighlighter.STRING_ESCAPE_INVALID),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.comment"), ZigSyntaxHighlighter.LINE_COMMENT),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator"), ZigSyntaxHighlighter.OPERATOR),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.ordinary"), ZigSyntaxHighlighter.SYMBOL),
-			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.builtin"), ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL)
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.keyword"), ZigSyntaxHighlighter.KEYWORD),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.number"), ZigSyntaxHighlighter.NUMBER),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string"), ZigSyntaxHighlighter.STRING),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape"), ZigSyntaxHighlighter.STRING_ESCAPE),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string-escape-invalid"), ZigSyntaxHighlighter.STRING_ESCAPE_INVALID),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.comment"), ZigSyntaxHighlighter.LINE_COMMENT),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator.ordinary"), ZigSyntaxHighlighter.OPERATOR),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator.semicolon"), ZigSyntaxHighlighter.SEMICOLON),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator.parens"), ZigSyntaxHighlighter.PAREN),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator.brackets"), ZigSyntaxHighlighter.BRACKET),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator.braces"), ZigSyntaxHighlighter.BRACE),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.ordinary"), ZigSyntaxHighlighter.SYMBOL),
+				AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.reference.builtin"), ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL)
 		)
 
 		private val ADDITIONAL_DESCRIPTIONS = mapOf(
-			"functionName" to ZigSyntaxHighlighter.FUNCTION_DECLARATION,
-			"builtinFunction" to ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL,
-			"escape" to ZigSyntaxHighlighter.STRING_ESCAPE,
-			"escapeInvalid" to ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
+				"functionName" to ZigSyntaxHighlighter.FUNCTION_DECLARATION,
+				"builtinFunction" to ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL,
+				"escape" to ZigSyntaxHighlighter.STRING_ESCAPE,
+				"escapeInvalid" to ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
 		)
 	}
 
@@ -200,11 +210,11 @@ class ZigColorSettingsPage : ColorSettingsPage {
 	override fun getDisplayName() = ZigFileType.name
 	// @Language("Zig")
 	override fun getDemoText() =
-		"""
+			"""
 		// Comment
 		const std = @<builtinFunction>import</builtinFunction>("std");
 		pub fn <functionName>main</functionName>() !void {
-		    var aVar = 1 + 2.0;
+		    var aVar = []f64{1 + 2.0};
 		    std.debug.warn("This is a<escape>\n</escape>new line<escapeInvalid>\g</escapeInvalid>");
 		}
 		""".trimIndent()
