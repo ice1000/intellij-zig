@@ -22,7 +22,7 @@ symbol ::= SYM {
 	mixin='org.ziglang.psi.impl.ZigSymbolMixin'
 }
 
-string ::= STR { extends=expr }
+string ::= STR | RAW_STR { extends=expr }
 
 topLevelDeclaration ::=
  PUB_KEYWORD?

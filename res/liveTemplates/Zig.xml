@@ -43,7 +43,7 @@
 			<option name="ZIG_CONTEXT_ID" value="true"/>
 		</context>
 	</template>
-	<template name="import" value="const $VAR$ = @import(&quot;$PKG$&quot;)$END$;" description="Import something"
+	<template name="import" value="const $PKG$ = @import(&quot;$PKG$&quot;)$END$;" description="Import something"
 	          toReformat="false" toShortenFQNames="true">
 		<variable name="PKG" expression="" defaultValue="" alwaysStopAt="true"/>
 		<variable name="VAR" expression="" defaultValue="" alwaysStopAt="true"/>

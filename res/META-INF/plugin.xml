@@ -65,7 +65,6 @@
 				id="Zig.NewZigFile">
 			<add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
 		</action>
-
 		<action
 				class="org.ziglang.action.ZigBuildAction"
 				id="Zig.Build"
@@ -73,7 +72,7 @@
 				use-shortcut-of="CompileDirty">
 			<add-to-group
 					group-id="ToolbarRunGroup"
-					relative-to-action="CompileDirty"
+					relative-to-action="RunConfiguration"
 					anchor="before"/>
 		</action>
 	</actions>

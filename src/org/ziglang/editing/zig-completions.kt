@@ -77,7 +77,7 @@ class ZigCompletionContributor : CompletionContributor() {
 	}
 
 	override fun invokeAutoPopup(position: PsiElement, typeChar: Char): Boolean {
-		return typeChar in "@." || super.invokeAutoPopup(position, typeChar)
+		return typeChar in "@.(" || super.invokeAutoPopup(position, typeChar)
 	}
 
 	init {

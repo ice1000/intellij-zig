@@ -17,7 +17,7 @@ class ZigAnnotator : Annotator {
 		}
 	}
 
-	@Suppress("RemoveRedundantBackticks")
+	@Suppress("RemoveRedundantBackticks", "LocalVariableName")
 	private fun symbol(element: ZigSymbol, holder: AnnotationHolder) {
 		when {
 			element.isFunctionName ->
@@ -29,6 +29,7 @@ class ZigAnnotator : Annotator {
 							.textAttributes = ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL
 				else holder.createErrorAnnotation(element, ZigBundle.message("zig.lint.unknown-builtin-symbol")).run {
 					highlightType = ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
+					@Suppress("LocalVariableName")
 					val `@` = element.prevSiblingTypeIgnoring(
 							ZigTypes.AT_SYM,
 							ZigTokenType.LINE_COMMENT,

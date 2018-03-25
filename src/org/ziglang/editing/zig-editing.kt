@@ -49,7 +49,7 @@ object ZigNameValidator : InputValidatorEx {
 
 class ZigSpellcheckerStrategy : SpellcheckingStrategy() {
 	override fun getTokenizer(element: PsiElement): Tokenizer<PsiElement> = when (element) {
-		is PsiComment-> TEXT_TOKENIZER
+		is PsiComment -> TEXT_TOKENIZER
 		is ZigSymbol -> if (element.isDeclaration) TEXT_TOKENIZER else EMPTY_TOKENIZER
 		is ZigString -> super.getTokenizer(element).takeIf { it != EMPTY_TOKENIZER } ?: TEXT_TOKENIZER
 		else -> EMPTY_TOKENIZER
@@ -57,22 +57,18 @@ class ZigSpellcheckerStrategy : SpellcheckingStrategy() {
 }
 
 class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
-	private fun fold(element: PsiElement, holder: String) =
-		object : FoldingDescriptor(element.node, element.textRange) {
-			override fun getPlaceholderText() = holder
-		}
+	class fold(element: PsiElement, private val holder: String)
+		: FoldingDescriptor(element.node, element.textRange) {
+		override fun getPlaceholderText() = holder
+	}
 
 	//树..树的遍历..?
-	override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) =
-		ArrayList<FoldingDescriptor>().apply {
-			root.forEach { element ->
-				when (element) {
-					is ZigBlock -> add(fold(element, "{...}"))
-				}
-			}
-		}.toTypedArray()
-
+	override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
+			.psiTraverser(root)
+			.filterIsInstance<ZigBlock>()
+			.map { fold(it, "{…}") }
+			.toTypedArray()
 
 	override fun isCollapsedByDefault(node: ASTNode) = true
-	override fun getPlaceholderText(node: ASTNode) = "..."
+	override fun getPlaceholderText(node: ASTNode) = "…"
 }
