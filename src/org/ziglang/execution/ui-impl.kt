@@ -2,6 +2,7 @@ package org.ziglang.execution
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.ui.TextBrowseFolderListener
+import org.ziglang.ZigFileType
 import org.ziglang.project.initExeComboBox
 
 class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
@@ -15,6 +16,8 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		outputDirField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
+		targetFileField.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFileDescriptor(ZigFileType)))
 	}
 
 	override fun createEditor() = mainPanel
