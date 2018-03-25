@@ -5,10 +5,16 @@ import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
+import com.intellij.openapi.options.colors.AttributesDescriptor
+import com.intellij.openapi.options.colors.ColorDescriptor
+import com.intellij.openapi.options.colors.ColorSettingsPage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.tree.IElementType
+import icons.ZigIcons
+import org.intellij.lang.annotations.Language
 import org.ziglang.psi.ZigTypes
+import javax.swing.Icon
 
 object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val KEYWORDS = arrayOf(
@@ -162,4 +168,31 @@ class ZigSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 			ZigSyntaxHighlighter
 }
 
+class ZigColorSettingsPage : ColorSettingsPage {
+	private companion object DescriptionHolder {
+		private val DESCRIPTION = arrayOf(
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.keyword"), ZigSyntaxHighlighter.KEYWORD),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.number"), ZigSyntaxHighlighter.NUMBER),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.string"), ZigSyntaxHighlighter.STRING),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.comment"), ZigSyntaxHighlighter.LINE_COMMENT),
+			AttributesDescriptor(ZigBundle.message("zig.highlighter.settings.operator"), ZigSyntaxHighlighter.OPERATOR)
+		)
 
+		private val ADDITIONAL_DESCRIPTIONS = mapOf(
+			"functionName" to ZigSyntaxHighlighter.FUNCTION_DECLARATION
+		)
+	}
+
+	override fun getHighlighter() = ZigSyntaxHighlighter
+	override fun getAdditionalHighlightingTagToDescriptorMap() = ADDITIONAL_DESCRIPTIONS
+	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
+	override fun getAttributeDescriptors() = DESCRIPTION
+	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
+	override fun getDisplayName() = ZigFileType.name
+	@Language("Zig")
+	override fun getDemoText() =
+		"""
+			//Add Demo Code
+		""".trimIndent()
+
+}
