@@ -187,7 +187,7 @@ ifExprBlock ::=
 ifExprExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   exprOrBlock
- (ELSE_KEYWORD blockExpr)?
+ (ELSE_KEYWORD exprOrBlock)?
 
 //SuspendExpr(body) ::= "suspend" option((SEP_SYM symbol SEP_SYM body))
 suspendExprBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM block)?
