@@ -9,18 +9,23 @@ import org.ziglang.psi.*
 
 interface IZigSymbol : PsiNameIdentifierOwner {
 	val isFunctionName: Boolean
+	val isBuiltinFunctionName: Boolean
 	val isVariableName: Boolean
 	val isDeclaration: Boolean
 }
 
 abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
-	override val isFunctionName: Boolean
+	final override val isFunctionName: Boolean
 		get() = parent is ZigFnProto && prevSiblingTypeIgnoring(
 				ZigTypes.FN_KEYWORD,
 				TokenType.WHITE_SPACE,
 				ZigTokenType.LINE_COMMENT) != null
 
-	override val isVariableName: Boolean
+	/** usage, not declaration */
+	final override val isBuiltinFunctionName: Boolean
+		get() = parent is ZigMacroExpr
+
+	final override val isVariableName: Boolean
 		get() = parent is ZigVariableDeclaration && prevSiblingTypeIgnoring(
 				ZigTypes.CONST_KEYWORD,
 				TokenType.WHITE_SPACE,
