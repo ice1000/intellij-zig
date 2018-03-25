@@ -12,6 +12,10 @@ Travis CI (master, linux)|[![Build Status](https://travis-ci.org/ice1000/zig-int
 AppVeyor (newest, windows)|[![Build status](https://ci.appveyor.com/api/projects/status/cb5gl5rgsjv00nen?svg=true)](https://ci.appveyor.com/project/ice1000/zig-intellij)
 CircleCI (newest with tests, linux)|[![CircleCI](https://circleci.com/gh/ice1000/zig-intellij.svg?style=svg)](https://circleci.com/gh/ice1000/zig-intellij)
 
+## Screenshots
+
+![](https://plugins.jetbrains.com/files/10560/screenshot_17959.png)
+
 ## Installing Zig
 
 We're not planning to support Zig 0.2.0 or 0.1.1.

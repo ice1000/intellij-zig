@@ -26,6 +26,7 @@ class ZigCompletionContributor : CompletionContributor() {
 				"error",
 				"this",
 				"suspend",
+				"packed",
 				"null",
 				"true",
 				"false"
@@ -43,6 +44,7 @@ class ZigCompletionContributor : CompletionContributor() {
 				"union",
 				"struct",
 				"enum",
+				"return",
 				"try"
 		).map {
 			LookupElementBuilder.create("$it ")
