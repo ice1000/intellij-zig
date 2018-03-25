@@ -78,6 +78,8 @@ class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 		initExeComboBox(executablePath) {
 			version.text = versionOf(it.comboBox.selectedItem as? String ?: return@initExeComboBox)
 		}
+		installPathField.text = settings.installPath
+		version.text = settings.version
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 	}
@@ -97,6 +99,7 @@ class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 			if (!validateZigLib(installPath))
 				throw ConfigurationException(ZigBundle.message("zig.project.invalid-install-path"))
 			settings.installPath = installPathField.text
+			settings.version = version.text
 			settings.exePath = selected
 			zigGlobalSettings.knownZigExes += selected
 		}

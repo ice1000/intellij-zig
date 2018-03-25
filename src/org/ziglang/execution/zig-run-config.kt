@@ -22,14 +22,14 @@ import com.google.common.io.Files as GoogleFiles
 
 class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 		LocatableConfigurationBase(project, factory, ZigBundle.message("zig.name")), DumbAware {
-	var exePath = ""
+	var exePath: String
 	var targetFile = ""
 	var workingDir = ""
 	var additionalOptions = ""
 	var programArgs = ""
-	var installPath = ""
+	var installPath: String
 	var outputDir = ""
-	var releaseMode = ""
+	var releaseMode = "debug"
 
 	var static = false
 	var strip = false
@@ -42,8 +42,14 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 
 	var isBuildOnly = false      // Separate "Build" and "Run"
 
+	init {
+		val zigSettings = project.zigSettings.settings
+		exePath = zigSettings.exePath
+		installPath = zigSettings.installPath
+	}
+
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) =
-		ZigCommandLineState(this@ZigRunConfiguration, isBuildOnly, environment)
+			ZigCommandLineState(this@ZigRunConfiguration, isBuildOnly, environment)
 
 	override fun getIcon() = ZigIcons.ZIG_WEBSITE_ICON
 	override fun getConfigurationEditor() = ZigRunConfigurationEditorImpl(this)
@@ -103,11 +109,6 @@ object ZigRunConfigurationType : ConfigurationType, DumbAware {
 
 class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type), DumbAware {
 	override fun createTemplateConfiguration(project: Project) = ZigRunConfiguration(project, this).apply {
-		project.zigSettings.settings.let {
-			exePath = it.exePath
-			installPath = it.installPath
-			releaseMode = "fast"
-		}
 		project.baseDir.run {
 			workingDir = path
 			outputDir = Paths.get(canonicalPath, "out").toString()

@@ -14,8 +14,8 @@ interface ZigGlobalSettingsService {
 	val knownZigExes: MutableSet<String>
 }
 
-class ZigSettings(
-		var exePath: String = zigPath,
+class ZigSettings constructor(
+		var exePath: String = zigGlobalSettings.knownZigExes.firstOrNull() ?: zigPath,
 		var version: String = "",
 		var installPath: String = ""
 ) {
@@ -51,7 +51,7 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 class ZigGlobalSettingsServiceImpl :
 		ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {
 	override val knownZigExes: MutableSet<String> = hashSetOf()
-	private fun invalidate() = knownZigExes.retainAll { validateZigExe(it) }
+	private fun invalidate() = knownZigExes.retainAll(::validateZigExe)
 	override fun getState(): ZigGlobalSettings {
 		invalidate()
 		return ZigGlobalSettings(knownZigExes.joinToString(File.pathSeparator))
