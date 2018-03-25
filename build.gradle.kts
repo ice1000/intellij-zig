@@ -28,7 +28,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.0.2"
+val pluginComingVersion = "0.0.3"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 val kotlinVersion: String by extra
