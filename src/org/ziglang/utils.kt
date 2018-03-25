@@ -2,6 +2,7 @@ package org.ziglang
 
 import com.google.common.util.concurrent.SimpleTimeLimiter
 import com.intellij.psi.PsiElement
+import com.intellij.psi.SyntaxTraverser
 import java.util.concurrent.TimeUnit
 
 fun Boolean?.orFalse() = this == true
@@ -37,11 +38,8 @@ fun executeCommand(
 	return output to outputErr
 }
 
-// stupid code
+// very stupid code
 // TODO 改成 PsiTraverser
 fun PsiElement.forEach(forBody: (PsiElement) -> Unit) {
-	children.forEach {
-		forBody(it)
-		it.forEach(forBody)
-	}
+	SyntaxTraverser.psiTraverser(this).forEach(forBody)
 }
