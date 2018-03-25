@@ -14,20 +14,41 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.io.FileUtilRt
+import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.psi.PsiDirectory
 import icons.ZigIcons
-import org.ziglang.ZigBundle
+import org.ziglang.*
 import org.ziglang.editing.ZigNameValidator
 import org.ziglang.execution.ZigRunConfiguration
 import org.ziglang.execution.ZigRunConfigurationType
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
-import org.ziglang.trimPath
 
-class ZigTranslateToCAction : AnAction() {
+class ZigTranslateFromCAction : AnAction(
+		ZigBundle.message("zig.actions.c-translate.title"),
+		ZigBundle.message("zig.actions.c-translate.description"),
+		ZigIcons.ZIG_WEBSITE_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {
-		// TODO
+		// TODO make it sync
+		val project = e.project ?: return
+		val zigSettings = project.zigSettings.settings
+		val cFile = CommonDataKeys.VIRTUAL_FILE.getData(e.dataContext) ?: return
+		val zigFileName = "${cFile.nameWithoutExtension}.$ZIG_EXTENSION"
+		val (stdout, stderr) = executeCommand(arrayOf(
+				zigSettings.exePath,
+				"translate-c",
+				cFile.path,
+				ZIG_INSTALL_PREFIX,
+				zigSettings.installPath
+		), timeLimit = 10000L)
+		if (stderr.isNotEmpty()) Messages.showErrorDialog(
+				project,
+				stderr.joinToString("\n"),
+				ZigBundle.message("zig.actions.c-translate.error.title"))
+		val zigFile = cFile.parent.findOrCreateChildData(this, zigFileName)
+		VfsUtil.saveText(zigFile, stdout.joinToString("\n"))
 	}
 
 	override fun update(e: AnActionEvent) {
@@ -35,10 +56,10 @@ class ZigTranslateToCAction : AnAction() {
 			e.presentation.run {
 				val file = CommonDataKeys.VIRTUAL_FILE.getData(e.dataContext)
 				val fileType = file?.fileType as? LanguageFileType
-				isVisible = fileType != null && validateZigExe(zigSettings.settings.exePath)
+				isVisible = validateZigExe(zigSettings.settings.exePath)
 				val clang = Language.findLanguageByID("C")
-				isEnabled = (file != null && fileType != null) &&
-						(clang != null && fileType.language == clang || file.extension == "c")
+				isEnabled = file != null &&
+						(fileType != null && clang != null && fileType.language == clang || file.extension == "c")
 			}
 		}
 		super.update(e)

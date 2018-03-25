@@ -84,6 +84,9 @@
 			<action
 					id="Zig.Tools.ShowZen"
 					class="org.ziglang.action.ZigZenAction"/>
+			<action
+					id="Zig.Tools.TranslateC"
+					class="org.ziglang.action.ZigTranslateFromCAction"/>
 			<add-to-group group-id="ToolsMenu" anchor="last"/>
 		</group>
 

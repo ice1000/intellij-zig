@@ -44,7 +44,8 @@ localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
- (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? EQ_SYM expr
+ (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
+ (EQ_SYM expr)?
 
 containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)? COMMA_SYM
 containerMember ::=
@@ -331,7 +332,7 @@ structLiteralField ::= DOT_SYM symbol EQ_SYM expr
 
 prefixOp ::=
    NOT_SYM
- | MINUS
+ | MINUS_SYM
  | BITWISE_NOT_SYM
  | STAR_SYM
  | AND_SYM

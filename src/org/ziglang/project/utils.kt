@@ -24,7 +24,7 @@ val zigPath: String by lazy {
 			}
 }
 
-fun versionOf(path: String) = executeCommand("$path version")
+fun versionOf(path: String) = executeCommand(arrayOf(path, "version"))
 		.first
 		.firstOrNull()
 		?: ZigBundle.message("zig.version.unknown")
