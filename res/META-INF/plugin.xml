@@ -20,6 +20,7 @@
 		<directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>
 		<runConfigurationProducer implementation="org.ziglang.execution.ZigRunConfigurationProducer"/>
 		<configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
+		<consoleFilterProvider implementation="org.ziglang.execution.ZigConsoleFilterProvider"/>
 		<projectConfigurable
 				groupId="language"
 				instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
