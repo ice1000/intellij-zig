@@ -40,8 +40,8 @@ val zigGlobalSettings: ZigGlobalSettingsService
 class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSettings> {
 	override val settings = ZigSettings()
 	override fun getState(): ZigSettings? = XmlSerializerUtil.createCopy(settings)
-	override fun loadState(state: ZigSettings?) {
-		state?.let { XmlSerializerUtil.copyBean(it, settings) }
+	override fun loadState(state: ZigSettings) {
+		state.let { XmlSerializerUtil.copyBean(it, settings) }
 	}
 }
 

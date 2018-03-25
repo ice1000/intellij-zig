@@ -1,6 +1,7 @@
 package org.ziglang
 
 import com.google.common.util.concurrent.SimpleTimeLimiter
+import com.intellij.psi.PsiElement
 import java.util.concurrent.TimeUnit
 
 fun Boolean?.orFalse() = this == true
@@ -34,4 +35,12 @@ fun executeCommand(
 		processRef?.destroy()
 	}
 	return output to outputErr
+}
+
+// stupid code
+fun PsiElement.forEach(forBody: (PsiElement) -> Unit) {
+	children.forEach {
+		forBody(it)
+		it.forEach(forBody)
+	}
 }
