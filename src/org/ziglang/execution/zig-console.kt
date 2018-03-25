@@ -1,9 +1,6 @@
 package org.ziglang.execution
 
-import com.intellij.execution.filters.ConsoleFilterProviderEx
-import com.intellij.execution.filters.Filter
-import com.intellij.execution.filters.OpenFileHyperlinkInfo
-import com.intellij.execution.filters.UrlFilter
+import com.intellij.execution.filters.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
 import java.util.regex.Pattern
@@ -11,7 +8,7 @@ import java.util.regex.Pattern
 class ZigConsoleFilter(private val project: Project) : Filter {
 	companion object {
 		//后面那两个字符是保险用的。。。
-		private val ERROR_FILE_LOCATION = Pattern.compile("(.+\\.zig):([0-9]+):([0-9]+): ")
+		private val ERROR_FILE_LOCATION = Pattern.compile("(.+\\.zig):([0-9]+):([0-9]+):")
 	}
 
 	override fun applyFilter(line: String, entireLength: Int): Filter.Result? {
@@ -25,14 +22,14 @@ class ZigConsoleFilter(private val project: Project) : Filter {
 				val columnNumber = matcher.group(3).toIntOrNull() ?: return null
 
 				return Filter.Result(
-					startIndex,
-					startIndex + matcher.end() - 1,    //把冒号也扔进去吧emmmmm
-					OpenFileHyperlinkInfo(
-						project,
-						resultFile,
-						lineNumber.let { if (it > 0) it - 1 else it },
-						columnNumber
-					)
+						startIndex,
+						startIndex + matcher.end() - 2,
+						OpenFileHyperlinkInfo(
+								project,
+								resultFile,
+								lineNumber.coerceAtLeast(0),
+								columnNumber
+						)
 				)
 			}
 		}

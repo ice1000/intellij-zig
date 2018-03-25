@@ -10,4 +10,5 @@ pub fn main() void {
       // something
     } else {
     }
+    const a = if (1+1==2) 1 else 2;
 }
