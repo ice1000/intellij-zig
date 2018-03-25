@@ -14,7 +14,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		outputDirField.addBrowseFolderListener(TextBrowseFolderListener(
-			FileChooserDescriptorFactory.createSingleFolderDescriptor()))
+				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 	}
 
 	override fun createEditor() = mainPanel
@@ -42,9 +42,8 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.outputDir = outputDirField.text
 		configuration.exePath = executablePath.comboBox.selectedItem as? String ?: return
 
-		configuration.releaseMode = releaseMode.selectedItem.toString()
-
 		configuration.static = statically.isSelected
 		configuration.strip = strip.isSelected
+		configuration.releaseMode = releaseMode.selectedItem as? String ?: return
 	}
 }
