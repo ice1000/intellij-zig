@@ -39,7 +39,7 @@ fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib",
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 
-fun LinkLabel<*>.asLink() {
+fun LinkLabel<out Any>.asLink() {
 	setListener({ _, _ ->
 		BrowserLauncher.instance.browse(text)
 	}, null)

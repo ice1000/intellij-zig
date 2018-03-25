@@ -81,7 +81,9 @@ statement ::=
  | deferBlock
  | defer endOfLine
  | blockExprBlock
- | expr? endOfLine
+ | expr? endOfLine {
+	pin=1
+}
 
 private exprOrBlock ::= block | expr
 
