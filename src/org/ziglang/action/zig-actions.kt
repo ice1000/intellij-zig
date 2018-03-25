@@ -23,7 +23,7 @@ class ZigZenAction : AnAction(
 	override fun actionPerformed(e: AnActionEvent) {
 		val project = e.project ?: return
 		val zig = project.zigSettings.settings.exePath
-		val (stdout) = executeCommand("$zig zen")
+		val (stdout) = executeCommand(arrayOf(zig, "zen"))
 		showDialog(project,
 				"<html>${MarkdownProcessor().markdown(stdout.joinToString("\n"))}</html>",
 				ZigBundle.message("zig.actions.zen.dialog.title"),

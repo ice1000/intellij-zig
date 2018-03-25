@@ -85,6 +85,11 @@
 			<action
 					id="Zig.Tools.ShowZen"
 					class="org.ziglang.action.ZigZenAction"/>
+			<action
+					id="Zig.Tools.TranslateC"
+					class="org.ziglang.action.ZigTranslateFromCAction">
+				<keyboard-shortcut first-keystroke="ctrl alt shift k" keymap="$default"/>
+			</action>
 			<add-to-group group-id="ToolsMenu" anchor="last"/>
 		</group>
 

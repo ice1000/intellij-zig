@@ -15,7 +15,7 @@ fun String.trimPath() = trimEnd('/', '!')
  * @param timeLimit maximum execution time
  */
 fun executeCommand(
-		command: String, input: String? = null, timeLimit: Long = 1200L): Pair<List<String>, List<String>> {
+		command: Array<String>, input: String? = null, timeLimit: Long = 1200L): Pair<List<String>, List<String>> {
 	var processRef: Process? = null
 	var output: List<String> = emptyList()
 	var outputErr: List<String> = emptyList()

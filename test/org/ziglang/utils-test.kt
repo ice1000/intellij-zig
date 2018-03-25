@@ -9,7 +9,7 @@ class UtilsTest {
 	@Test(timeout = 1000L)
 	fun executeCommand() {
 		if (!System.getenv("CI").isNullOrBlank()) return
-		executeCommand("$zigPath version", timeLimit = 5000L)
+		executeCommand(arrayOf(zigPath, "version"), timeLimit = 5000L)
 				.also(::println)
 				.also(::assertNotNull)
 		// .also { (stdout, _) -> assertTrue(stdout.isNotEmpty()) }
