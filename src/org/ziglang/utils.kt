@@ -37,9 +37,3 @@ fun executeCommand(
 	}
 	return output to outputErr
 }
-
-// very stupid code
-// TODO 改成 PsiTraverser
-fun PsiElement.forEach(forBody: (PsiElement) -> Unit) {
-	SyntaxTraverser.psiTraverser(this).forEach(forBody)
-}

@@ -57,16 +57,17 @@ class ZigSpellcheckerStrategy : SpellcheckingStrategy() {
 }
 
 class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
-	class fold(element: PsiElement, private val holder: String)
+	class ZigFoldingDescriptor(element: PsiElement, private val holder: String)
 		: FoldingDescriptor(element.node, element.textRange) {
 		override fun getPlaceholderText() = holder
 	}
 
 	//树..树的遍历..?
-	override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
+	override fun buildFoldRegions(
+			root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
 			.psiTraverser(root)
 			.filterIsInstance<ZigBlock>()
-			.map { fold(it, "{…}") }
+			.map { ZigFoldingDescriptor(it, "{…}") }
 			.toTypedArray()
 
 	override fun isCollapsedByDefault(node: ASTNode) = true
