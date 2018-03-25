@@ -10,6 +10,7 @@ import org.ziglang.forEach
 import org.ziglang.psi.ZigBlock
 import org.ziglang.psi.ZigTypes
 
+// TODO 移动到 editing 里面
 class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
 	private fun fold(element: PsiElement, holder: String) =
 		object : FoldingDescriptor(element.node, element.textRange) {

@@ -50,9 +50,9 @@
 		<lang.parserDefinition
 				language="Zig"
 				implementationClass="org.ziglang.ZigParserDefinition"/>
-		<!--<lang.foldingBuilder-->
-				<!--language="Zig"-->
-				<!--implementationClass="org.ziglang.editing.ZigFolderBuilder"/>-->
+		<lang.foldingBuilder
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigFolderBuilder"/>
 	</extensions>
 
 	<project-components>

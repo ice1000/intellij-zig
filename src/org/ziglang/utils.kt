@@ -38,6 +38,7 @@ fun executeCommand(
 }
 
 // stupid code
+// TODO 改成 PsiTraverser
 fun PsiElement.forEach(forBody: (PsiElement) -> Unit) {
 	children.forEach {
 		forBody(it)

@@ -155,6 +155,9 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 	@JvmField val SEMICOLON_KEY = arrayOf(SEMICOLON)
 	@JvmField val UNDEFINED_KEY = arrayOf(UNDEFINED)
 	@JvmField val OPERATOR_KEY = arrayOf(OPERATOR)
+	@JvmField val PARENS_KEY = arrayOf(PAREN)
+	@JvmField val BRACKETS_KEY = arrayOf(BRACKET)
+	@JvmField val BRACES_KEY = arrayOf(BRACE)
 
 	override fun getHighlightingLexer() = ZigLexerAdapter()
 	override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> = when (tokenType) {
@@ -165,6 +168,9 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 		ZigTypes.INT_LITERAL,
 		ZigTypes.FLOAT_LITERAL -> NUMBER_KEY
 		ZigTypes.UNDEFINED_KEYWORD -> UNDEFINED_KEY
+		in PARENS -> PARENS_KEY
+		in BRACKETS -> BRACKETS_KEY
+		in BRACES -> BRACES_KEY
 		in KEYWORDS -> KEYWORD_KEY
 		in OPERATORS -> OPERATOR_KEY
 		else -> emptyArray()
