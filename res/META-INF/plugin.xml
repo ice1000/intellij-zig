@@ -75,5 +75,17 @@
 					relative-to-action="RunConfiguration"
 					anchor="before"/>
 		</action>
+		<group
+				id="Zig.Tools"
+				icon="ZigIcons.ZIG_BIG_ICON"
+				text="Zig"
+				description="Zig related tools"
+				popup="true">
+			<action
+					id="Zig.Tools.ShowZen"
+					class="org.ziglang.action.ZigZenAction"/>
+			<add-to-group group-id="ToolsMenu" anchor="last"/>
+		</group>
+
 	</actions>
 </idea-plugin>

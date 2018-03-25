@@ -10,11 +10,11 @@ class KotlinFeature {
 function main()
 	println("Shit!")
 end
-""".trimEnd('\n'),
+""".trim('\n'),
 				"""
 			function main()
 				println("Shit!")
 			end
-""".trimIndent().trimEnd('\n'))
+""".trimIndent().trim('\n'))
 	}
 }
