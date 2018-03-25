@@ -6,7 +6,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import java.util.regex.Pattern
 
 class ZigConsoleFilter(private val project: Project) : Filter {
-	companion object {
+	private companion object {
 		private val ERROR_FILE_LOCATION = Pattern.compile("(.+\\.zig):([0-9]+):([0-9]+):")
 	}
 
@@ -15,12 +15,13 @@ class ZigConsoleFilter(private val project: Project) : Filter {
 		if (startIndex == 0) return null
 		val matcher = ERROR_FILE_LOCATION.matcher(line)
 		if (!matcher.lookingAt()) return null
-		val resultFile = project.baseDir.fileSystem.findFileByPath(matcher.group(1)) ?: return null
+		val resultFilePath = matcher.group(1)
+		val resultFile = project.baseDir.fileSystem.findFileByPath(resultFilePath) ?: return null
 		val lineNumber = matcher.group(2).toIntOrNull() ?: return null
 		val columnNumber = matcher.group(3).toIntOrNull() ?: return null
 		return Filter.Result(
 				startIndex,
-				startIndex + matcher.end() - 1,
+				startIndex + resultFilePath.length,
 				OpenFileHyperlinkInfo(
 						project,
 						resultFile,
