@@ -3,14 +3,12 @@ package org.ziglang.project
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
 import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.ui.TextComponentAccessor
 import com.intellij.openapi.util.SystemInfo
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.ComboboxWithBrowseButton
 import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.ui.components.labels.LinkListener
 import org.ziglang.ZigBundle
 import org.ziglang.executeCommand
 import java.nio.file.Files
@@ -39,10 +37,12 @@ fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib",
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) or
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 
-fun LinkLabel<out Any>.asLink() {
-	setListener({ _, _ ->
+fun LinkLabel<Any>.asLink() {
+	// TODO workaround for KT-23421
+	val linkListener = LinkListener<Any> { _, _ ->
 		BrowserLauncher.instance.browse(text)
-	}, null)
+	}
+	setListener(linkListener, null)
 }
 
 inline fun initExeComboBox(
