@@ -50,6 +50,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.AND_KEYWORD,
 			ZigTypes.OR_KEYWORD,
 			ZigTypes.IF_KEYWORD,
+			ZigTypes.FOR_KEYWORD,
 			ZigTypes.ELSE_KEYWORD,
 			ZigTypes.WHILE_KEYWORD,
 			ZigTypes.SUSPEND_KEYWORD,

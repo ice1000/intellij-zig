@@ -18,9 +18,9 @@ class ZigRemoveElementIntention(
 	override fun startInWriteAction() = true
 	override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
 		if (element.isValid) ApplicationManager.getApplication().runWriteAction {
-			val file = element.containingFile.virtualFile
+			val virtualFile = element.containingFile.virtualFile
 			element.delete()
-			FileContentUtil.reparseFiles(file)
+			FileContentUtil.reparseFiles(virtualFile)
 		}
 	}
 }

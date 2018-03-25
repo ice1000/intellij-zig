@@ -5,12 +5,10 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
-import com.intellij.psi.TokenType
 import com.intellij.util.ProcessingContext
 import icons.ZigIcons
 import org.ziglang.ZigBundle
 import org.ziglang.builtinFunctions
-import org.ziglang.psi.ZigExpr
 import org.ziglang.psi.ZigTypes
 
 class ZigCompletionProvider(private val list: List<LookupElement>)
@@ -37,11 +35,29 @@ class ZigCompletionContributor : CompletionContributor() {
 					.withTypeText(ZigBundle.message("zig.completions.keywords"))
 					.bold()
 		}
+		private val EXPR_KEYWORDS = listOf(
+				"for",
+				"while",
+				"if",
+				"switch",
+				"union",
+				"struct",
+				"enum",
+				"try"
+		).map {
+			LookupElementBuilder.create("$it ")
+					.withPresentableText(it)
+					.withIcon(ZigIcons.ZIG_BIG_ICON)
+					.withTypeText(ZigBundle.message("zig.completions.keywords"))
+					.bold()
+		}
 		private val TOP_KEYWORDS = listOf(
 				"const",
 				"var",
 				"fn",
 				"comptime",
+				"inline",
+				"export",
 				"pub"
 		).map {
 			LookupElementBuilder.create("$it ")
@@ -69,9 +85,14 @@ class ZigCompletionContributor : CompletionContributor() {
 				ZigCompletionProvider(KEYWORD_LITERALS))
 		extend(CompletionType.BASIC,
 				psiElement(ZigTypes.SYM)
+						.andNot(psiElement().afterLeaf(".", "@"))
 						.andNot(psiElement()
-								.inside(ZigExpr::class.java)),
+								.beforeLeaf(psiElement(ZigTypes.SEMICOLON_SYM))),
 				ZigCompletionProvider(TOP_KEYWORDS))
+		extend(CompletionType.BASIC,
+				psiElement(ZigTypes.SYM)
+						.andNot(psiElement().afterLeaf(".", "@")),
+				ZigCompletionProvider(EXPR_KEYWORDS))
 		extend(CompletionType.BASIC,
 				psiElement()
 						.afterLeaf("@")
