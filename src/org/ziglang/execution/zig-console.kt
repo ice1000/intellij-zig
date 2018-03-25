@@ -12,28 +12,22 @@ class ZigConsoleFilter(private val project: Project) : Filter {
 
 	override fun applyFilter(line: String, entireLength: Int): Filter.Result? {
 		val startIndex = entireLength - line.length
-		if (startIndex != 0) {
-			val matcher = ERROR_FILE_LOCATION.matcher(line)
-
-			if (matcher.lookingAt()) {
-				val resultFile = project.baseDir.fileSystem.findFileByPath(matcher.group(1)) ?: return null
-				val lineNumber = matcher.group(2).toIntOrNull() ?: return null
-				val columnNumber = matcher.group(3).toIntOrNull() ?: return null
-
-				return Filter.Result(
-						startIndex,
-						startIndex + matcher.end() - 2,
-						OpenFileHyperlinkInfo(
-								project,
-								resultFile,
-								lineNumber.coerceAtLeast(0),
-								columnNumber
-						)
+		if (startIndex == 0) return null
+		val matcher = ERROR_FILE_LOCATION.matcher(line)
+		if (!matcher.lookingAt()) return null
+		val resultFile = project.baseDir.fileSystem.findFileByPath(matcher.group(1)) ?: return null
+		val lineNumber = matcher.group(2).toIntOrNull() ?: return null
+		val columnNumber = matcher.group(3).toIntOrNull() ?: return null
+		return Filter.Result(
+				startIndex,
+				startIndex + matcher.end() - 1,
+				OpenFileHyperlinkInfo(
+						project,
+						resultFile,
+						(lineNumber - 1).coerceAtLeast(0),
+						columnNumber
 				)
-			}
-		}
-
-		return null
+		)
 	}
 }
 
