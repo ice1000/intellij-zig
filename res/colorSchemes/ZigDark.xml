@@ -5,4 +5,9 @@
 			<option name="FOREGROUND" value="FF6972"/>
 		</value>
 	</option>
+	<option name="ZIG_BUILTIN_FUNCTION_CALL">
+		<value>
+			<option name="FOREGROUND" value="FFD125"/>
+		</value>
+	</option>
 </list>
