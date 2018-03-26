@@ -2,10 +2,16 @@ package org.ziglang.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import com.intellij.psi.PsiNameIdentifierOwner
-import com.intellij.psi.TokenType
+import com.intellij.psi.*
+import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.ZigTokenType
 import org.ziglang.psi.*
+
+abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
+	override fun getNameIdentifier() = PsiTreeUtil.findChildOfType(this, ZigSymbol::class.java)
+	override fun setName(name: String) = replace(ZigTokenType.fromText(name, project))
+	override fun getName() = text
+}
 
 interface IZigSymbol : PsiNameIdentifierOwner {
 	val isFunctionName: Boolean
@@ -14,7 +20,7 @@ interface IZigSymbol : PsiNameIdentifierOwner {
 	val isDeclaration: Boolean
 }
 
-abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
+abstract class ZigSymbolMixin(node: ASTNode) : TrivialDeclaration(node), ZigSymbol {
 	final override val isFunctionName: Boolean
 		get() = parent is ZigFnProto && prevSiblingTypeIgnoring(
 				ZigTypes.FN_KEYWORD,
@@ -39,6 +45,10 @@ abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSy
 				isVariableName
 
 	override fun getNameIdentifier() = this
-	override fun setName(name: String) = replace(ZigTokenType.fromText(name, project))
-	override fun getName() = text
+}
+
+abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
+}
+
+abstract class ZigFnProtoMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
 }

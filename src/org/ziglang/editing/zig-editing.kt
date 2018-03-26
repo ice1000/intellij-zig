@@ -8,8 +8,10 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.InputValidatorEx
 import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
+import com.intellij.ui.breadcrumbs.BreadcrumbsProvider
 import org.ziglang.*
 import org.ziglang.psi.*
 
@@ -72,4 +74,31 @@ class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
 
 	override fun isCollapsedByDefault(node: ASTNode) = true
 	override fun getPlaceholderText(node: ASTNode) = "…"
+}
+
+const val TEXT_MAX = 16
+const val LONG_TEXT_MAX = 24
+fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
+
+class ZigBreadcrumbsProvider : BreadcrumbsProvider {
+	private fun ZigFnProto?.text() = PsiTreeUtil.findChildOfType(this, ZigSymbol::class.java)?.run { "$text()" }
+	override fun getLanguages() = arrayOf(ZigLanguage.INSTANCE)
+	override fun getElementInfo(element: PsiElement) = cutText(when (element) {
+		is ZigFnDeclaration -> element.fnProto.text()
+		is ZigExternDeclaration -> PsiTreeUtil.findChildOfType(element, ZigFnProto::class.java).text()
+		is ZigTestDeclaration -> element.string.text
+		is ZigCompTimeBlock -> "comptime"
+		is ZigBlockBlock -> element.firstChild.text
+		is ZigBlockExpr -> "{…}"
+		is ZigGlobalVarDeclaration -> element.variableDeclaration
+		else -> null
+	}.orEmpty(), TEXT_MAX)
+
+	override fun acceptElement(element: PsiElement) = element is ZigFnDeclaration ||
+			element is ZigTestDeclaration ||
+			element is ZigExternDeclaration ||
+			element is ZigCompTimeBlock ||
+			element is ZigBlockBlock ||
+			element is ZigBlockExpr ||
+			element is ZigGlobalVarDeclaration
 }

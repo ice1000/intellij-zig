@@ -44,7 +44,10 @@ variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
- (EQ_SYM expr)?
+ (EQ_SYM expr)? {
+	implements=['com.intellij.psi.PsiNameIdentifierOwner']
+	mixin='org.ziglang.psi.impl.TrivialDeclaration'
+}
 
 containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)? COMMA_SYM
 containerMember ::=
@@ -65,6 +68,8 @@ fnProto ::=
  FN_KEYWORD symbol? parameterList (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)? NOT_SYM? (typeExpr | VAR_KEYWORD) {
 	extends=expr
+	implements=['com.intellij.psi.PsiNameIdentifierOwner']
+	mixin='org.ziglang.psi.impl.TrivialDeclaration'
 }
 
 fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
