@@ -2,7 +2,8 @@ package org.ziglang.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import com.intellij.psi.*
+import com.intellij.psi.PsiNameIdentifierOwner
+import com.intellij.psi.TokenType
 import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.ZigTokenType
 import org.ziglang.psi.*
@@ -10,7 +11,7 @@ import org.ziglang.psi.*
 abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
 	override fun getNameIdentifier() = PsiTreeUtil.findChildOfType(this, ZigSymbol::class.java)
 	override fun setName(name: String) = replace(ZigTokenType.fromText(name, project))
-	override fun getName() = text
+	override fun getName() = nameIdentifier?.text
 }
 
 interface IZigSymbol : PsiNameIdentifierOwner {
@@ -45,10 +46,4 @@ abstract class ZigSymbolMixin(node: ASTNode) : TrivialDeclaration(node), ZigSymb
 				isVariableName
 
 	override fun getNameIdentifier() = this
-}
-
-abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
-}
-
-abstract class ZigFnProtoMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
 }
