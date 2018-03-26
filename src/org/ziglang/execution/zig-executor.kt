@@ -61,26 +61,25 @@ class ZigCommandLineState(
 				.withWorkDirectory(configuration.workingDir))
 		val console = consoleBuilder.console
 		console.allowHeavyFilters()
-		if (!isBuildOnly) {
-			buildHandler.addProcessListener(object : ProcessAdapter() {
-				override fun processTerminated(event: ProcessEvent) {
-					if (event.exitCode == 0) {
-						console.clear()
-						val params = mutableListOf<String>()
-						with(configuration) {
-							params += outputFile
-							params += programArgs.split(' ', '\n').filter(String::isNotBlank)
-						}
-						val runHandler = OSProcessHandler(GeneralCommandLine(params)
-								.withWorkDirectory(configuration.workingDir))
-						ProcessTerminatedListener.attach(runHandler)
-						console.attachToProcess(runHandler)
-						runHandler.startNotify()
+		if (!isBuildOnly) buildHandler.addProcessListener(object : ProcessAdapter() {
+			override fun processTerminated(event: ProcessEvent) {
+				if (event.exitCode == 0) {
+					console.clear()
+					val params = mutableListOf<String>()
+					with(configuration) {
+						params += outputFile
+						params += programArgs.split(' ', '\n').filter(String::isNotBlank)
 					}
+					val runHandler = OSProcessHandler(GeneralCommandLine(params)
+							.withWorkDirectory(configuration.workingDir))
+					ProcessTerminatedListener.attach(runHandler)
+					console.attachToProcess(runHandler)
+					runHandler.startNotify()
 				}
-			})
-		}
+			}
+		})
 		console.attachToProcess(buildHandler)
+		ProcessTerminatedListener.attach(buildHandler)
 		buildHandler.startNotify()
 		return DefaultExecutionResult(console, buildHandler, PauseOutputAction(console, buildHandler))
 	}

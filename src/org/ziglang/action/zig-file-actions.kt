@@ -87,14 +87,18 @@ class ZigBuildAction : ZigAction(
 		val executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID)
 		val configuration = RunManager
 				.getInstance(project)
-				.createRunConfiguration(
-						"build${Files.getNameWithoutExtension(path)}",
-						ZigRunConfigurationType.configurationFactories[0])
-				.apply {
-					(configuration as ZigRunConfiguration).apply {
-						targetFile = path
-						isBuildOnly = true
+				.let {
+					it.createRunConfiguration(
+							"build${Files.getNameWithoutExtension(path)}",
+							ZigRunConfigurationType.configurationFactories[0]
+					).apply {
+						it.addConfiguration(this)
+						(configuration as ZigRunConfiguration).apply {
+							targetFile = path
+							isBuildOnly = true
+						}
 					}
+
 				}
 		ProgramRunnerUtil.executeConfiguration(configuration, executor)
 	}

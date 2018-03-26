@@ -65,6 +65,7 @@ idea {
 	module {
 		// https://github.com/gradle/kotlin-dsl/issues/537/
 		excludeDirs.add(file("pinpoint-piggy"))
+		generatedSourceDirs.add(file("gen"))
 	}
 }
 
