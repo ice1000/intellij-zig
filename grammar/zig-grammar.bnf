@@ -15,7 +15,6 @@
 
 zigFile ::= topLevelItem*
 
-private endOfLine ::= SEMICOLON_SYM
 symbol ::= SYM {
 	extends=expr
 	implements=['org.ziglang.psi.impl.IZigSymbol']
@@ -24,7 +23,7 @@ symbol ::= SYM {
 
 string ::= STR | RAW_STR { extends=expr }
 
-topLevelDeclaration ::=
+private topLevelDeclaration ::=
  PUB_KEYWORD?
  (
    fnDeclaration
@@ -33,13 +32,13 @@ topLevelDeclaration ::=
  | useDeclaration
  )
 
-topLevelItem ::=
+private topLevelItem ::=
    COMPTIME_KEYWORD block
  | topLevelDeclaration
  | testDeclaration
 
 testDeclaration ::= TEST_KEYWORD string block
-globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration endOfLine
+globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration SEMICOLON_SYM
 localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
@@ -53,8 +52,8 @@ containerMember ::=
  | fnDeclaration
  | globalVarDeclaration
 
-useDeclaration ::= USE_KEYWORD expr endOfLine
-externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) endOfLine
+useDeclaration ::= USE_KEYWORD expr SEMICOLON_SYM
+externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) SEMICOLON_SYM
 
 fnProto ::=
  (
@@ -78,11 +77,11 @@ paramDeclaration ::=
  (typeExpr | VAR_KEYWORD | RANGE_SYM)
 
 statement ::=
-   localVarDeclaration endOfLine
+   localVarDeclaration SEMICOLON_SYM
  | deferBlock
- | defer endOfLine
- | blockExprBlock
- | expr? endOfLine {
+ | defer SEMICOLON_SYM
+ | blockBlock
+ | expr? SEMICOLON_SYM {
 	pin=1
 }
 
@@ -118,31 +117,31 @@ assignOperator ::=
 
 //BlockExpr(body) ::= Block | IfExpr(body) | IfErrorExpr(body) | TestExpr(body) | WhileExpr(body) | ForExpr(body) | switchExpr | CompTimeExpr(body) | SuspendExpr(body)
 //Bnf泛型编程(雾
-blockExprBlock ::=
+blockBlock ::=
    block
- | ifExprBlock
- | ifErrorExprBlock
- | testExprBlock
- | whileExprBlock
- | forExprBlock
+ | ifBlock
+ | ifErrorBlock
+ | testBlock
+ | whileBlock
+ | forBlock
  | switchStatement
- | compTimeExprBlock
- | suspendExprBlock
+ | compTimeBlock
+ | suspendBlock
 
 blockExpr ::=
    block
- | ifExprExprOrBlock
- | ifErrorExprExprOrBlock
- | testExprExprOrBlock
- | whileExprExprOrBlock
- | forExprExprOrBlock
+ | ifExprOrBlock
+ | ifErrorExprOrBlock
+ | testExprOrBlock
+ | whileExprOrBlock
+ | forOrBlock
  | switchStatement
- | compTimeExprExprOrBlock
- | suspendExprExprOrBlock
+ | compTimeExprOrBlock
+ | suspendExprOrBlock
 
 //CompTimeExpr(body) ::= "comptime" body
-compTimeExprBlock ::= COMPTIME_KEYWORD block
-compTimeExprExprOrBlock ::= COMPTIME_KEYWORD exprOrBlock
+compTimeBlock ::= COMPTIME_KEYWORD block
+compTimeExprOrBlock ::= COMPTIME_KEYWORD exprOrBlock
 
 switchStatement ::=
  SWITCH_KEYWORD
@@ -162,14 +161,14 @@ switchProng ::=
 //   body
 //  option(ELSE_KEYWORD BlockExpr(body))
 
-forExprBlock ::=
+forBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  FOR_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol (COMMA_SYM symbol)? SEP_SYM)?
    block
-  (ELSE_KEYWORD blockExprBlock)?
+  (ELSE_KEYWORD blockBlock)?
 
-forExprExprOrBlock ::=
+forOrBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  FOR_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol (COMMA_SYM symbol)? SEP_SYM)?
@@ -180,53 +179,53 @@ defer ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) expr
 deferBlock ::= (DEFER_KEYWORD | DEFERROR_KEYWORD) block
 
 //IfExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN body option("else" BlockExpr(body))
-ifExprBlock ::=
+ifBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   block
- (ELSE_KEYWORD blockExprBlock)?
-ifExprExprOrBlock ::=
+ (ELSE_KEYWORD blockBlock)?
+ifExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   exprOrBlock
  (ELSE_KEYWORD exprOrBlock)?
 
 //SuspendExpr(body) ::= "suspend" option((SEP_SYM symbol SEP_SYM body))
-suspendExprBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM block)?
-suspendExprExprOrBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM exprOrBlock)?
+suspendBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM block)?
+suspendExprOrBlock ::= SUSPEND_KEYWORD (SEP_SYM symbol SEP_SYM exprOrBlock)?
 
 //IfErrorExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body "else" SEP_SYM symbol SEP_SYM BlockExpr(body)
-ifErrorExprBlock ::=
+ifErrorBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   block
- ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExprBlock
-ifErrorExprExprOrBlock ::=
+ ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockBlock
+ifErrorExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   exprOrBlock
  ELSE_KEYWORD SEP_SYM symbol SEP_SYM blockExpr
 
 //TestExpr(body) ::= "if" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) body option("else" BlockExpr(body))
-testExprBlock ::=
+testBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   block
- (ELSE_KEYWORD blockExprBlock)?
-testExprExprOrBlock ::=
+ (ELSE_KEYWORD blockBlock)?
+testExprOrBlock ::=
  IF_KEYWORD LEFT_PAREN expr RIGHT_PAREN
  (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   exprOrBlock
  (ELSE_KEYWORD blockExpr)?
 
 //WhileExpr(body) ::= option(symbol COLON_SYM) option("inline") "while" LEFT_PAREN expr RIGHT_PAREN option(SEP_SYM STAR_SYM? symbol SEP_SYM) option(COLON_SYM LEFT_PAREN expr RIGHT_PAREN) body option("else" (SEP_SYM symbol SEP_SYM)? BlockExpr(body))
-whileExprBlock ::=
+whileBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol SEP_SYM)?
   (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
    block
-  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockExprBlock)?
+  (ELSE_KEYWORD (SEP_SYM symbol SEP_SYM)? blockBlock)?
 
-whileExprExprOrBlock ::=
+whileExprOrBlock ::=
  (symbol COLON_SYM)? INLINE_KEYWORD?
  WHILE_KEYWORD LEFT_PAREN expr RIGHT_PAREN
   (SEP_SYM STAR_SYM? symbol SEP_SYM)?
