@@ -6,14 +6,22 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import org.ziglang.*
-import org.ziglang.psi.ZigSymbol
-import org.ziglang.psi.ZigTypes
+import org.ziglang.psi.*
 import org.ziglang.psi.impl.prevSiblingTypeIgnoring
 
 class ZigAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		when (element) {
+
 			is ZigSymbol -> symbol(element, holder)
+
+    //If, there are a lot of stupid code!
+      is ZigIfBlock -> ifExpr(element.expr, holder)
+      is ZigIfExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
+      is ZigIfErrorBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
+      is ZigIfErrorExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
+      is ZigTestBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
+      is ZigTestExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
 		}
 	}
 
@@ -41,4 +49,10 @@ class ZigAnnotator : Annotator {
 			}
 		}
 	}
+
+  private fun ifExpr(condition: ZigExpr, holder: AnnotationHolder) {
+    when {
+      condition is ZigBoolean -> holder.createWarningAnnotation(condition, "Condition always '${condition.text}'")
+    }
+  }
 }
