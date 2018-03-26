@@ -2,6 +2,8 @@ package org.ziglang.psi.impl
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.util.PsiTreeUtil
+import org.ziglang.psi.ZigExpr
 
 fun PsiElement.prevSiblingTypeIgnoring(
 		type: IElementType,
@@ -24,3 +26,5 @@ inline fun <reified Psi : PsiElement> PsiElement.prevSiblingIgnoring(vararg type
 		else localNext as? Psi
 	}
 }
+
+fun PsiElement.firstExprOrNull() = PsiTreeUtil.findChildOfType(this, ZigExpr::class.java)

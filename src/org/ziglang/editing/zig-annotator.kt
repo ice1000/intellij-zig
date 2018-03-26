@@ -7,21 +7,19 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import org.ziglang.*
 import org.ziglang.psi.*
+import org.ziglang.psi.impl.firstExprOrNull
 import org.ziglang.psi.impl.prevSiblingTypeIgnoring
 
 class ZigAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		when (element) {
-
 			is ZigSymbol -> symbol(element, holder)
-
-    //If, there are a lot of stupid code!
-      is ZigIfBlock -> ifExpr(element.expr, holder)
-      is ZigIfExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
-      is ZigIfErrorBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
-      is ZigIfErrorExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
-      is ZigTestBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
-      is ZigTestExprOrBlock -> ifExpr(element.exprList.firstOrNull() ?: return, holder)
+			is ZigIfBlock -> ifExpr(element.expr, holder)
+			is ZigIfExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
+			is ZigIfErrorBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
+			is ZigIfErrorExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
+			is ZigTestBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
+			is ZigTestExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
 		}
 	}
 
@@ -37,7 +35,6 @@ class ZigAnnotator : Annotator {
 							.textAttributes = ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL
 				else holder.createErrorAnnotation(element, ZigBundle.message("zig.lint.unknown-builtin-symbol")).run {
 					highlightType = ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
-					@Suppress("LocalVariableName")
 					val `@` = element.prevSiblingTypeIgnoring(
 							ZigTypes.AT_SYM,
 							ZigTokenType.LINE_COMMENT,
@@ -50,9 +47,10 @@ class ZigAnnotator : Annotator {
 		}
 	}
 
-  private fun ifExpr(condition: ZigExpr, holder: AnnotationHolder) {
-    when {
-      condition is ZigBoolean -> holder.createWarningAnnotation(condition, "Condition always '${condition.text}'")
-    }
-  }
+	private fun ifExpr(condition: ZigExpr, holder: AnnotationHolder) {
+		when {
+			condition is ZigBoolean ->
+				holder.createWarningAnnotation(condition, ZigBundle.message("zig.lint.const-condition", condition.text))
+		}
+	}
 }
