@@ -124,6 +124,7 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 test { return ZigTypes.TEST_KEYWORD; }
 pub { return ZigTypes.PUB_KEYWORD; }
 export { return ZigTypes.EXPORT_KEYWORD; }
+switch { return ZigTypes.SWITCH_KEYWORD; }
 comptime { return ZigTypes.COMPTIME_KEYWORD; }
 const { return ZigTypes.CONST_KEYWORD; }
 var { return ZigTypes.VAR_KEYWORD; }
