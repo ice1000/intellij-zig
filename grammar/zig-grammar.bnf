@@ -21,7 +21,11 @@ symbol ::= SYM {
 	mixin='org.ziglang.psi.impl.ZigSymbolMixin'
 }
 
-string ::= STR | RAW_STR { extends=expr }
+string ::= STR | RAW_STR {
+	extends=expr
+	implements=['com.intellij.psi.PsiLanguageInjectionHost']
+	mixin='org.ziglang.psi.impl.ZigStringMixin'
+}
 
 private topLevelDeclaration ::=
  PUB_KEYWORD?

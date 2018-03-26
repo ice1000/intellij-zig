@@ -15,11 +15,11 @@ class ZigAnnotator : Annotator {
 		when (element) {
 			is ZigSymbol -> symbol(element, holder)
 			is ZigIfBlock -> ifExpr(element.expr, holder)
-			is ZigIfExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
-			is ZigIfErrorBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
-			is ZigIfErrorExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
-			is ZigTestBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
-			is ZigTestExprOrBlock -> ifExpr(element.firstExprOrNull() ?: return, holder)
+			is ZigIfExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigIfErrorBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigIfErrorExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigTestBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigTestExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
 		}
 	}
 
@@ -47,7 +47,7 @@ class ZigAnnotator : Annotator {
 		}
 	}
 
-	private fun ifExpr(condition: ZigExpr, holder: AnnotationHolder) {
+	private fun ifExpr(condition: ZigExpr?, holder: AnnotationHolder) {
 		when {
 			condition is ZigBoolean ->
 				holder.createWarningAnnotation(condition, ZigBundle.message("zig.lint.const-condition", condition.text))
