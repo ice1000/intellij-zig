@@ -82,11 +82,11 @@ class ZigAnnotator : Annotator {
 
 			if (char in escapeChars) {
 				val nextCount = escapeChars[char] ?: return
-				val nextString = element.text.nextString(start + 2, nextCount).run {
-					isEmpty() or all { it.isLetterOrDigit() }
+				val accept = element.text.nextString(start + 2, nextCount).run {
+					isEmpty() or all { it in "0123456789ABCDEFabcdef" }
 				}
 
-				if (nextString) {
+				if (accept) {
 					holder.createInfoAnnotation(element.textRange.subRange(start, end + nextCount - 1), "Hello world!")
 							.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE
 
