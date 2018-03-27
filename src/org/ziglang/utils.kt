@@ -1,6 +1,7 @@
 package org.ziglang
 
 import com.google.common.util.concurrent.SimpleTimeLimiter
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.SyntaxTraverser
 import java.util.concurrent.TimeUnit
@@ -37,3 +38,6 @@ fun executeCommand(
 	}
 	return output to outputErr
 }
+
+fun TextRange.narrow(start: Int, end: Int) = TextRange(startOffset + start, endOffset - end)
+fun TextRange.subRange(start: Int, end: Int) = TextRange(startOffset + start, startOffset + end + 1)
