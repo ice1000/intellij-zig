@@ -4,11 +4,9 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
-import com.intellij.psi.TokenType
 import org.ziglang.*
 import org.ziglang.psi.*
 import org.ziglang.psi.impl.firstExprOrNull
-import org.ziglang.psi.impl.prevSiblingTypeIgnoring
 import java.util.regex.Pattern
 import kotlin.math.min
 
@@ -23,7 +21,7 @@ class ZigAnnotator : Annotator {
 				'U' to 6
 		)
 
-		private val escapeRegex = Pattern.compile("\\\\.")
+		private val escapeRegex = Pattern.compile("""\\.""")
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -75,7 +73,7 @@ class ZigAnnotator : Annotator {
 
 		while (matcher.find()) {
 			val start = matcher.start()
-			val end = matcher.end()
+			val end = matcher.end() - 1
 			val char = matcher.group()[1]
 
 			if (char in escapeChars) {
@@ -84,14 +82,14 @@ class ZigAnnotator : Annotator {
 					isEmpty() or all { it in "0123456789ABCDEFabcdef" }
 				}
 
-				val range = element.textRange.subRange(start, end + nextCount - 1)
-				if (accept) {
-					holder.createInfoAnnotation(range, "Hello world!")
-							.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE
-					continue
-				} else holder.createErrorAnnotation(range, "Goodbye world...")
-						.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
+				if (accept) holder.createInfoAnnotation(element.textRange.subRange(start, end + nextCount), null)
+						.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE
+				continue
 			}
+			holder.createErrorAnnotation(
+					element.textRange.subRange(start, end),
+					ZigBundle.message("zig.lint.illegal-escape")
+			).textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
 		}
 	}
 }
