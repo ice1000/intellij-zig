@@ -10,6 +10,7 @@ import org.ziglang.psi.*
 import org.ziglang.psi.impl.firstExprOrNull
 import org.ziglang.psi.impl.prevSiblingTypeIgnoring
 import java.util.regex.Pattern
+import kotlin.math.min
 
 class ZigAnnotator : Annotator {
 	companion object {
@@ -71,7 +72,7 @@ class ZigAnnotator : Annotator {
 
 	private fun string(element: ZigString, holder: AnnotationHolder) {
 		fun String.nextString(start: Int, length: Int) =
-				substring(start, kotlin.math.min(start + length, this.length))
+				substring(start, min(start + length, this.length))
 
 		val matcher = escapeRegex.matcher(element.text)
 
@@ -86,15 +87,14 @@ class ZigAnnotator : Annotator {
 					isEmpty() or all { it in "0123456789ABCDEFabcdef" }
 				}
 
+				val range = element.textRange.subRange(start, end + nextCount - 1)
 				if (accept) {
-					holder.createInfoAnnotation(element.textRange.subRange(start, end + nextCount - 1), "Hello world!")
+					holder.createInfoAnnotation(range, "Hello world!")
 							.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE
-
 					continue
-				}
+				} else holder.createErrorAnnotation(range, "Goodbye world...")
+						.textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
 			}
-
-			holder.createErrorAnnotation(element.textRange.subRange(start, end - 1), "Goodbye world...")
 		}
 	}
 }
