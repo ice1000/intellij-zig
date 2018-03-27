@@ -2,8 +2,7 @@ package org.ziglang.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import com.intellij.psi.PsiNameIdentifierOwner
-import com.intellij.psi.TokenType
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.ZigTokenType
 import org.ziglang.psi.*
@@ -46,4 +45,10 @@ abstract class ZigSymbolMixin(node: ASTNode) : TrivialDeclaration(node), ZigSymb
 				isVariableName
 
 	override fun getNameIdentifier() = this
+}
+
+abstract class ZigStringMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigString {
+	override fun isValidHost() = true
+	override fun updateText(text: String) = ElementManipulators.handleContentChange(this, text)
+	override fun createLiteralTextEscaper() = LiteralTextEscaper.createSimple(this)
 }

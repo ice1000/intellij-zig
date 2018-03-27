@@ -22,6 +22,9 @@
 		<configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
 		<consoleFilterProvider implementation="org.ziglang.execution.ZigConsoleFilterProvider"/>
 		<breadcrumbsInfoProvider implementation="org.ziglang.editing.ZigBreadcrumbsProvider"/>
+		<lang.elementManipulator
+				implementationClass="org.ziglang.psi.ZigStringManipulator"
+				forClass="org.ziglang.psi.ZigString"/>
 		<projectConfigurable
 				groupId="language"
 				instance="org.ziglang.project.ui.ZigConfigurableImpl"/>

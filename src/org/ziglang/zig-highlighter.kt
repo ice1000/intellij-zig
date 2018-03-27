@@ -62,6 +62,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.PACKED_KEYWORD,
 			ZigTypes.STRUCT_KEYWORD,
 			ZigTypes.UNION_KEYWORD,
+			ZigTypes.SWITCH_KEYWORD,
 			ZigTypes.UNDEFINED_KEYWORD
 	)
 
@@ -224,5 +225,4 @@ class ZigColorSettingsPage : ColorSettingsPage {
 		    std.debug.warn("This is a<escape>\n</escape>new line<escapeInvalid>\g</escapeInvalid>");
 		}
 		""".trimIndent()
-
 }

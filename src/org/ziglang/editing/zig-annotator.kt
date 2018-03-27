@@ -6,14 +6,20 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import org.ziglang.*
-import org.ziglang.psi.ZigSymbol
-import org.ziglang.psi.ZigTypes
+import org.ziglang.psi.*
+import org.ziglang.psi.impl.firstExprOrNull
 import org.ziglang.psi.impl.prevSiblingTypeIgnoring
 
 class ZigAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		when (element) {
 			is ZigSymbol -> symbol(element, holder)
+			is ZigIfBlock -> ifExpr(element.expr, holder)
+			is ZigIfExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigIfErrorBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigIfErrorExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigTestBlock -> ifExpr(element.firstExprOrNull(), holder)
+			is ZigTestExprOrBlock -> ifExpr(element.firstExprOrNull(), holder)
 		}
 	}
 
@@ -29,7 +35,6 @@ class ZigAnnotator : Annotator {
 							.textAttributes = ZigSyntaxHighlighter.BUILTIN_FUNCTION_CALL
 				else holder.createErrorAnnotation(element, ZigBundle.message("zig.lint.unknown-builtin-symbol")).run {
 					highlightType = ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
-					@Suppress("LocalVariableName")
 					val `@` = element.prevSiblingTypeIgnoring(
 							ZigTypes.AT_SYM,
 							ZigTokenType.LINE_COMMENT,
@@ -39,6 +44,13 @@ class ZigAnnotator : Annotator {
 							ZigBundle.message("zig.lint.un-builtin")))
 				}
 			}
+		}
+	}
+
+	private fun ifExpr(condition: ZigExpr?, holder: AnnotationHolder) {
+		when {
+			condition is ZigBoolean ->
+				holder.createWarningAnnotation(condition, ZigBundle.message("zig.lint.const-condition", condition.text))
 		}
 	}
 }
