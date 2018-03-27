@@ -73,6 +73,10 @@ class ZigCompletionContributor : CompletionContributor() {
 					.withIcon(ZigIcons.ZIG_BIG_ICON)
 					.withTypeText(ZigBundle.message("zig.completions.built-in"))
 					.withItemTextUnderlined(true)
+					.withInsertHandler { context, item ->
+						context.document.insertString(context.editor.caretModel.offset, "()")
+						context.editor.caretModel.moveCaretRelatively(1, 0, false, false, false)
+					}
 		}
 	}
 

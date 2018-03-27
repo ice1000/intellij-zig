@@ -15,6 +15,7 @@ CircleCI (newest with tests, linux)|[![CircleCI](https://circleci.com/gh/ice1000
 ## Screenshots
 
 ![](https://plugins.jetbrains.com/files/10560/screenshot_17959.png)
+![](https://plugins.jetbrains.com/files/10560/screenshot_17965.png)
 
 ## Installing Zig
 
