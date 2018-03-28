@@ -3,9 +3,11 @@ package org.ziglang.project
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil
 import com.intellij.ide.browsers.BrowserLauncher
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextComponentAccessor
 import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.ComboboxWithBrowseButton
 import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
@@ -28,6 +30,9 @@ fun versionOf(path: String) = executeCommand(arrayOf(path, "version"))
 		.first
 		.firstOrNull()
 		?: ZigBundle.message("zig.version.unknown")
+
+fun findOrCreate(baseDir: VirtualFile, dir: String, module: Module) =
+		baseDir.findChild(dir) ?: baseDir.createChildDirectory(module, dir)
 
 fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
 
