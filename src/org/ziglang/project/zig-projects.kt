@@ -50,11 +50,6 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 		}
 	}
 
-	private fun findOrCreate(
-			baseDir: VirtualFile,
-			dir: String,
-			module: Module) = baseDir.findChild(dir) ?: baseDir.createChildDirectory(module, dir)
-
 	/**
 	 * Codes for CLion, write zig information in CMakeLists.txt
 	 */
