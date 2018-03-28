@@ -1,8 +1,10 @@
 package org.ziglang
 
 import com.google.common.util.concurrent.SimpleTimeLimiter
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.SyntaxTraverser
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 fun Boolean?.orFalse() = this == true
@@ -19,21 +21,26 @@ fun executeCommand(
 	var processRef: Process? = null
 	var output: List<String> = emptyList()
 	var outputErr: List<String> = emptyList()
+	val executor = Executors.newCachedThreadPool()
+	val future = executor.submit {
+		val process: Process = Runtime.getRuntime().exec(command)
+		processRef = process
+		process.outputStream.use {
+			if (input != null) it.write(input.toByteArray())
+			it.flush()
+		}
+		process.waitFor()
+		output = process.inputStream.use { it.reader().useLines { it.toList() } }
+		outputErr = process.errorStream.use { it.reader().useLines { it.toList() } }
+		process.destroy()
+	}
 	try {
-		SimpleTimeLimiter().callWithTimeout({
-			val process: Process = Runtime.getRuntime().exec(command)
-			processRef = process
-			process.outputStream.use {
-				if (input != null) it.write(input.toByteArray())
-				it.flush()
-			}
-			process.waitFor()
-			output = process.inputStream.use { it.reader().useLines { it.toList() } }
-			outputErr = process.errorStream.use { it.reader().useLines { it.toList() } }
-			process.destroy()
-		}, timeLimit + 100, TimeUnit.MILLISECONDS, true)
-	} catch (e: Throwable) {
+		future.get(timeLimit, TimeUnit.MILLISECONDS)
+	} finally {
 		processRef?.destroy()
 	}
 	return output to outputErr
 }
+
+fun TextRange.narrow(start: Int, end: Int) = TextRange(startOffset + start, endOffset - end)
+fun TextRange.subRange(start: Int, end: Int) = TextRange(startOffset + start, startOffset + end + 1)

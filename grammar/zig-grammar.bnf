@@ -364,7 +364,7 @@ arrayExpr ::=
 	extends=expr
 }
 
-macroExpr ::= AT_SYM (symbol | EXPORT_KEYWORD) fnCallSuffix { pin=1 }
+macroExpr ::= AT_SYM BUILTIN_FUNCTION fnCallSuffix { pin=1 }
 groupedExpr ::= LEFT_PAREN expr RIGHT_PAREN
 continueExpr ::= CONTINUE_KEYWORD (COLON_SYM symbol)?
 integer ::= INT_LITERAL { extends=expr }

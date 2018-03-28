@@ -15,7 +15,6 @@ abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), P
 
 interface IZigSymbol : PsiNameIdentifierOwner {
 	val isFunctionName: Boolean
-	val isBuiltinFunctionName: Boolean
 	val isVariableName: Boolean
 	val isDeclaration: Boolean
 }
@@ -26,10 +25,6 @@ abstract class ZigSymbolMixin(node: ASTNode) : TrivialDeclaration(node), ZigSymb
 				ZigTypes.FN_KEYWORD,
 				TokenType.WHITE_SPACE,
 				ZigTokenType.LINE_COMMENT) != null
-
-	/** usage, not declaration */
-	final override val isBuiltinFunctionName: Boolean
-		get() = parent is ZigMacroExpr
 
 	final override val isVariableName: Boolean
 		get() = parent is ZigVariableDeclaration && prevSiblingTypeIgnoring(

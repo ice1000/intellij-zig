@@ -45,10 +45,15 @@ STRING_LITERAL={INCOMPLETE_STRING}\"
 INCOMPLETE_CHAR='([^'\\\n]|\\[^])*
 CHAR_LITERAL={INCOMPLETE_CHAR}'
 
+%state AFTER_AT
+
 %%
 
 {COMMENT} { return ZigTokenType.LINE_COMMENT; }
 {WHITESPACE} { return TokenType.WHITE_SPACE; }
+
+<AFTER_AT> {SYMBOL} { yybegin(YYINITIAL); return ZigTypes.BUILTIN_FUNCTION; }
+<AFTER_AT> [^] { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 
 \<\<= { return ZigTypes.SHL_ASSIGN_SYM; } // <<=
 >>= { return ZigTypes.SHR_ASSIGN_SYM; }
@@ -100,7 +105,7 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 & { return ZigTypes.AND_SYM; }
 % { return ZigTypes.MOD_SYM; }
 = { return ZigTypes.EQ_SYM; }
-@ { return ZigTypes.AT_SYM; }
+@ { yybegin(AFTER_AT); return ZigTypes.AT_SYM; }
 
 , { return ZigTypes.COMMA_SYM; }
 {SEMICOLON} { return ZigTypes.SEMICOLON_SYM; }
