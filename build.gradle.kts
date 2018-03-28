@@ -28,7 +28,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.0.3"
+val pluginComingVersion = "0.0.4"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 val kotlinVersion: String by extra
@@ -64,7 +64,7 @@ plugins {
 idea {
 	module {
 		// https://github.com/gradle/kotlin-dsl/issues/537/
-		excludeDirs.add(file("pinpoint-piggy"))
+		excludeDirs = excludeDirs + file("pinpoint_piggy") + file("zig")
 		generatedSourceDirs.add(file("gen"))
 	}
 }
