@@ -57,7 +57,7 @@ buildscript {
 plugins {
 	idea
 	java
-	id("org.jetbrains.intellij") version "0.2.18"
+	id("org.jetbrains.intellij") version "0.3.1"
 	kotlin("jvm") version "1.2.31"
 }
 
@@ -80,12 +80,12 @@ allprojects {
 		when (System.getProperty("user.name")) {
 			"ice1000" -> {
 				val root = "/home/ice1000/.local/share/JetBrains/Toolbox/apps"
-				localPath = "$root/IDEA-U/ch-0/173.4548.28"
+				localPath = "$root/IDEA-U/ch-0/181.4203.550"
 				alternativeIdePath = "$root/PyCharm-C/ch-0/173.4674.37"
 			}
 
 			"hoshino" -> localPath = ext["ideaC_path"].toString()
-			else -> version = "2017.3"
+			else -> version = "2018.1"
 		}
 	}
 }
