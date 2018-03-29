@@ -10,12 +10,14 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		resetEditorFrom(configuration)
 
 		listOf("fast", "safe", "debug").forEach(releaseMode::addItem)
-    listOf("auto", "off", "on").forEach(coloredMode::addItem)
+		listOf("auto", "off", "on").forEach(coloredMode::addItem)
 
 		initExeComboBox(executablePath)
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		outputDirField.addBrowseFolderListener(TextBrowseFolderListener(
+				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
+		workingDirField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		targetFileField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFileDescriptor(ZigFileType)))
@@ -32,7 +34,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		outputDirField.text = configuration.outputDir
 
 		releaseMode.selectedItem = configuration.releaseMode
-    coloredMode.selectedItem = configuration.coloredMode
+		coloredMode.selectedItem = configuration.coloredMode
 		statically.isSelected = configuration.static
 		strip.isSelected = configuration.strip
 
@@ -56,7 +58,7 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 		configuration.static = statically.isSelected
 		configuration.strip = strip.isSelected
 		configuration.releaseMode = releaseMode.selectedItem as String
-    configuration.coloredMode = coloredMode.selectedItem as String
+		configuration.coloredMode = coloredMode.selectedItem as String
 
 		configuration.verboseTokenize = verboseTokenize.isSelected
 		configuration.verboseParsing = verboseParsing.isSelected

@@ -21,7 +21,7 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		zigWebsite.asLink()
 		iceZigRelease.asLink()
-		setupLater.addActionListener {
+		setupLater.addChangeListener {
 			executablePath.isEnabled = !setupLater.isSelected
 		}
 		val listener = ItemListener {
