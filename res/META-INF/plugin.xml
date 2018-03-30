@@ -58,6 +58,9 @@
 		<lang.foldingBuilder
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigFolderBuilder"/>
+		<lang.psiStructureViewFactory
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigStructureViewFactory"/>
 	</extensions>
 
 	<project-components>
