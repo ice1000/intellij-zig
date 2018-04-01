@@ -47,3 +47,19 @@ abstract class ZigStringMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSt
 	override fun updateText(text: String) = ElementManipulators.handleContentChange(this, text)
 	override fun createLiteralTextEscaper() = LiteralTextEscaper.createSimple(this)
 }
+
+abstract class ZigAbstractSymbol(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner, ZigExpr {
+	private var referenceImpl: ZigSymbolRef? = null
+
+	/** For [ZigSymbolMixin], we cannot have a reference if it's a declaration. */
+	override fun getReference() = referenceImpl ?: ZigSymbolRef(this).also { referenceImpl = it }
+
+	override fun getNameIdentifier(): ZigAbstractSymbol? = this
+	override fun setName(name: String) = ZigTokenType.fromText(name, project)
+	override fun getName() = text
+	override fun subtreeChanged() {
+//		type = null  TODO ZigExpr implements IZigExpr
+		referenceImpl = null
+		super.subtreeChanged()
+	}
+}

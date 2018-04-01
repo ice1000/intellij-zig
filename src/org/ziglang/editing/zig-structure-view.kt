@@ -53,8 +53,7 @@ class ZigStructureViewElement(private val root: NavigatablePsiElement) :
 			.filter {
 				if (it is ZigSymbol/* || it is JuliaTypeOp*/) it.isFieldInTypeDeclaration
 				else it.treeViewTokens
-			}
-			.map { ZigStructureViewElement(it as NavigatablePsiElement) }
+			}.map { ZigStructureViewElement(it as NavigatablePsiElement) }
 			.toTypedArray()
 }
 
