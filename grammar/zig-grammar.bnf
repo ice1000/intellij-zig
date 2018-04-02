@@ -51,7 +51,7 @@ variableDeclaration ::=
  (SECTION_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
  (EQ_SYM expr)? {
 	implements=['com.intellij.psi.PsiNameIdentifierOwner']
-	mixin='org.ziglang.psi.impl.TrivialDeclaration'
+	mixin='org.ziglang.psi.impl.ZigVariableDeclarationMixin'
 }
 
 containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)? COMMA_SYM

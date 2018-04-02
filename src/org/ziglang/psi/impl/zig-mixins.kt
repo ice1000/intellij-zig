@@ -43,7 +43,12 @@ interface IZigSymbol : PsiNameIdentifierOwner {
 	val isDeclaration: Boolean
 }
 
-abstract class ZigSymbolMixin(node: ASTNode) : TrivialDeclaration(node), ZigSymbol {
+abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
+	final override val startPoint: PsiElement
+		get() = parent.parent
+}
+
+abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
 	final override val isFunctionName: Boolean
 		get() = parent is ZigFnProto && prevSiblingTypeIgnoring(
 				ZigTypes.FN_KEYWORD,
