@@ -14,7 +14,10 @@ fun PsiElement.presentText() = when (this) {
 
 val PsiElement.treeViewTokens
 	get() = this is ZigFile ||
-			this is ZigIfBlock ||
+			this is ZigFnDeclaration ||
+			this is ZigExternDeclaration ||
+			this is ZigGlobalVarDeclaration ||
+			this is ZigUseDeclaration ||
 			this is ZigIfExprOrBlock ||
 			this is ZigIfErrorBlock ||
 			this is ZigIfExprOrBlock ||

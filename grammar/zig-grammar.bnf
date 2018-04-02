@@ -27,22 +27,24 @@ string ::= STR | RAW_STR {
 	mixin='org.ziglang.psi.impl.ZigStringMixin'
 }
 
-private topLevelDeclaration ::=
- PUB_KEYWORD?
- (
-   fnDeclaration
+private topLevelItem ::=
+   COMPTIME_KEYWORD block
+ | fnDeclaration
  | externDeclaration
  | globalVarDeclaration
  | useDeclaration
- )
-
-private topLevelItem ::=
-   COMPTIME_KEYWORD block
- | topLevelDeclaration
  | testDeclaration
 
 testDeclaration ::= TEST_KEYWORD string block
-globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration SEMICOLON_SYM
+globalVarDeclaration ::=
+ PUB_KEYWORD? EXPORT_KEYWORD?
+  variableDeclaration
+ SEMICOLON_SYM
+
+localVariableDeclaration ::=
+ COMPTIME_KEYWORD? variableDeclaration
+ SEMICOLON_SYM
+
 variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
@@ -58,8 +60,14 @@ containerMember ::=
  | fnDeclaration
  | globalVarDeclaration
 
-useDeclaration ::= USE_KEYWORD expr SEMICOLON_SYM
-externDeclaration ::= EXTERN_KEYWORD string? (fnProto | variableDeclaration) SEMICOLON_SYM
+useDeclaration ::=
+ PUB_KEYWORD? USE_KEYWORD expr
+ SEMICOLON_SYM
+
+externDeclaration ::=
+ PUB_KEYWORD? EXTERN_KEYWORD string?
+  (fnProto | variableDeclaration)
+ SEMICOLON_SYM
 
 fnProto ::=
  (
@@ -75,7 +83,9 @@ fnProto ::=
 	mixin='org.ziglang.psi.impl.TrivialDeclaration'
 }
 
-fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
+fnDeclaration ::=
+ PUB_KEYWORD? (INLINE_KEYWORD | EXPORT_KEYWORD)?
+  fnProto block
 
 private parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
@@ -85,7 +95,7 @@ paramDeclaration ::=
  (typeExpr | VAR_KEYWORD | RANGE_SYM)
 
 statement ::=
-   COMPTIME_KEYWORD? variableDeclaration SEMICOLON_SYM
+   localVariableDeclaration
  | deferBlock
  | defer SEMICOLON_SYM
  | blockBlock

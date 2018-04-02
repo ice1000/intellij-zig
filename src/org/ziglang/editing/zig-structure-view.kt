@@ -16,6 +16,10 @@ class ZigStructureViewModel(root: PsiFile, editor: Editor?) :
 		StructureViewModel.ElementInfoProvider {
 	init {
 		withSuitableClasses(
+				ZigFnDeclaration::class.java,
+				ZigExternDeclaration::class.java,
+				ZigGlobalVarDeclaration::class.java,
+				ZigUseDeclaration::class.java,
 				ZigIfBlock::class.java,
 				ZigIfExprOrBlock::class.java,
 				ZigIfErrorBlock::class.java,
@@ -27,7 +31,7 @@ class ZigStructureViewModel(root: PsiFile, editor: Editor?) :
 
 	override fun shouldEnterElement(element: Any?) = true
 	override fun isAlwaysShowsPlus(element: StructureViewTreeElement?) = false
-	override fun isAlwaysLeaf(element: StructureViewTreeElement?) = element is Any    //TODO replace `Any` with `ZigFunction`
+	override fun isAlwaysLeaf(element: StructureViewTreeElement?) = element is ZigFnDeclaration
 }
 
 class ZigStructureViewElement(private val root: NavigatablePsiElement) :
@@ -47,7 +51,6 @@ class ZigStructureViewElement(private val root: NavigatablePsiElement) :
 	override fun getAlphaSortKey() = (root as? PsiNamedElement)?.name.orEmpty()
 	override fun getChildren() = root
 			.children
-			.flatMap { (it as? ZigBlock)?.children?.toList() ?: listOf(it) }
 			.filter { it.treeViewTokens }
 			.map { ZigStructureViewElement(it as NavigatablePsiElement) }
 			.toTypedArray()
