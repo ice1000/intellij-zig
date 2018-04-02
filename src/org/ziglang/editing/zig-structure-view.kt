@@ -6,9 +6,7 @@ import com.intellij.lang.PsiStructureViewFactory
 import com.intellij.navigation.ItemPresentation
 import com.intellij.openapi.editor.Editor
 import com.intellij.pom.Navigatable
-import com.intellij.psi.NavigatablePsiElement
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiNamedElement
+import com.intellij.psi.*
 import icons.ZigIcons
 import org.ziglang.ZigFile
 import org.ziglang.psi.*
@@ -35,7 +33,7 @@ class ZigStructureViewModel(root: PsiFile, editor: Editor?) :
 class ZigStructureViewElement(private val root: NavigatablePsiElement) :
 		StructureViewTreeElement, ItemPresentation, SortableTreeElement, Navigatable by root {
 	override fun getLocationString() = ""
-	//提供icon用的, 还得做图标呜呜呜
+	// TODO 提供icon用的, 还得做图标呜呜呜
 	override fun getIcon(open: Boolean) = when (root) {
 		is ZigFile -> ZigIcons.ZIG_FILE
 		else -> ZigIcons.ZIG_BIG_ICON
@@ -50,18 +48,14 @@ class ZigStructureViewElement(private val root: NavigatablePsiElement) :
 	override fun getChildren() = root
 			.children
 			.flatMap { (it as? ZigBlock)?.children?.toList() ?: listOf(it) }
-			.filter {
-				if (it is ZigSymbol/* || it is JuliaTypeOp*/) it.isFieldInTypeDeclaration
-				else it.treeViewTokens
-			}.map { ZigStructureViewElement(it as NavigatablePsiElement) }
+			.filter { it.treeViewTokens }
+			.map { ZigStructureViewElement(it as NavigatablePsiElement) }
 			.toTypedArray()
 }
 
 class ZigStructureViewFactory : PsiStructureViewFactory {
-	override fun getStructureViewBuilder(file: PsiFile): StructureViewBuilder? {
-		return object : TreeBasedStructureViewBuilder() {
-			override fun isRootNodeShown() = true
-			override fun createStructureViewModel(editor: Editor?) = ZigStructureViewModel(file, editor)
-		}
+	override fun getStructureViewBuilder(file: PsiFile) = object : TreeBasedStructureViewBuilder() {
+		override fun isRootNodeShown() = true
+		override fun createStructureViewModel(editor: Editor?) = ZigStructureViewModel(file, editor)
 	}
 }

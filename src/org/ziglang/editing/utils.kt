@@ -12,15 +12,11 @@ fun PsiElement.presentText() = when (this) {
 	else -> text
 }
 
-val PsiElement.isFieldInTypeDeclaration
-	get() = parent is ZigBlock //&& parent.parent is ZigTypeDeclaration   TODO?
-
 val PsiElement.treeViewTokens
-	get() =
-		this is ZigFile ||
-				this is ZigIfBlock ||
-				this is ZigIfExprOrBlock ||
-				this is ZigIfErrorBlock ||
-				this is ZigIfExprOrBlock ||
-				this is ZigTestBlock ||
-				this is ZigTestExprOrBlock
+	get() = this is ZigFile ||
+			this is ZigIfBlock ||
+			this is ZigIfExprOrBlock ||
+			this is ZigIfErrorBlock ||
+			this is ZigIfExprOrBlock ||
+			this is ZigTestBlock ||
+			this is ZigTestExprOrBlock
