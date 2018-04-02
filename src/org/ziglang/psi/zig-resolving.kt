@@ -21,8 +21,7 @@ class ZigSymbolRef(
 	private val range = TextRange(0, element.textLength)
 	private val isDeclaration = (element as? ZigSymbol)?.isDeclaration.orFalse()
 	private val resolver by lazy {
-		if (element is ZigMacroExpr) macroResolver
-		else symbolResolver
+		symbolResolver
 	}
 
 	override fun equals(other: Any?) = (other as? ZigSymbolRef)?.element == element
@@ -51,10 +50,6 @@ class ZigSymbolRef(
 	private companion object ResolverHolder {
 		private val symbolResolver = ResolveCache.PolyVariantResolver<ZigSymbolRef> { ref, incompleteCode ->
 			resolveWith(SymbolResolveProcessor(ref, incompleteCode), ref)
-		}
-
-		private val macroResolver = ResolveCache.PolyVariantResolver<ZigSymbolRef> { ref, incompleteCode ->
-			resolveWith(MacroSymbolResolveProcessor(ref, incompleteCode), ref)
 		}
 
 		private inline fun <reified T> resolveWith(processor: ResolveProcessor<T>, ref: ZigSymbolRef): Array<T> {
@@ -94,13 +89,6 @@ open class SymbolResolveProcessor(
 		}
 		else -> true
 	}
-}
-
-class MacroSymbolResolveProcessor(name: String, place: PsiElement, incompleteCode: Boolean) :
-		SymbolResolveProcessor(name, place, incompleteCode) {
-	constructor(ref: ZigSymbolRef, incompleteCode: Boolean) : this(ref.canonicalText, ref.element, incompleteCode)
-
-	override fun accessible(element: PsiElement) = "@${element.text}" == name && isInScope(element)
 }
 
 class CompletionProcessor(place: PsiElement, private val incompleteCode: Boolean) :
