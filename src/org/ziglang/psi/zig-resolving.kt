@@ -19,7 +19,7 @@ class ZigSymbolRef(
 		private var refTo: PsiElement? = null
 ) : PsiPolyVariantReference {
 	private val range = TextRange(0, element.textLength)
-	private val isDeclaration = (element as? ZigSymbol)?.isDeclaration.orFalse()
+	private val isDeclaration = symbol.isDeclaration
 
 	override fun equals(other: Any?) = (other as? ZigSymbolRef)?.element == element
 	override fun getElement(): PsiElement = symbol
@@ -35,7 +35,9 @@ class ZigSymbolRef(
 	}
 
 	override fun getCanonicalText(): String = element.text
-	override fun handleElementRename(newName: String) = ZigTokenType.fromText(newName, element.project).let(element::replace)
+	override fun handleElementRename(newName: String) =
+			ZigTokenType.fromText(newName, element.project).let(element::replace)
+
 	override fun bindToElement(element: PsiElement) = element.also { refTo = element }
 	override fun multiResolve(incompleteCode: Boolean): Array<out ResolveResult> {
 		val file = element.containingFile ?: return emptyArray()
@@ -61,8 +63,12 @@ abstract class ResolveProcessor<ResolveResult>(private val place: PsiElement) : 
 	protected val PsiElement.hasNoError get() = (this as? StubBasedPsiElement<*>)?.stub != null || !PsiTreeUtil.hasErrorElements(this)
 	fun isInScope(element: PsiElement) = when {
 		element !is ZigSymbol -> false
-		element.isParameter -> PsiTreeUtil.isAncestor(element.parent.parent.parent, place, true)
-		element.isFunctionName -> PsiTreeUtil.isAncestor(element.parent.parent, place, true)
+		element.isVariableName -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(
+				element, ZigBlock::class.java), place, true)
+		element.isParameter -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(
+				element, ZigFnDeclaration::class.java), place, true)
+		element.isFunctionName -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(
+				element, ZigFnDeclaration::class.java)?.parent, place, true)
 		else -> false
 	}
 }
@@ -79,8 +85,9 @@ open class SymbolResolveProcessor(
 	override fun execute(element: PsiElement, resolveState: ResolveState) = when {
 		candidateSet.isNotEmpty() -> false
 		element is ZigSymbol -> {
-			val accessible = accessible(element) and element.isDeclaration
-			if (accessible) candidateSet += PsiElementResolveResult(element, element.hasNoError)
+			val accessible = accessible(element)
+			if (accessible)
+				candidateSet += PsiElementResolveResult(element, element.hasNoError)
 			!accessible
 		}
 		else -> true
@@ -96,10 +103,11 @@ class CompletionProcessor(place: PsiElement, private val incompleteCode: Boolean
 		if (element is ZigSymbol) {
 			val (icon, value, tail, type) = when {
 				element.isFunctionName -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "()", "")
-				element.isParameter -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "", "")
+				element.isVariableName or
+						element.isParameter -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "", "")
 				else -> return true
 			}
-			if (element.isDeclaration and element.hasNoError and isInScope(element)) candidateSet += LookupElementBuilder
+			if (element.hasNoError and isInScope(element)) candidateSet += LookupElementBuilder
 					.create(value)
 					.withIcon(icon)
 					// tail text, it will not be completed by Enter Key press

@@ -5,10 +5,13 @@ import org.ziglang.ZigFile
 import org.ziglang.psi.*
 
 fun PsiElement.presentText() = when (this) {
-//TODO something?
 	is ZigFile -> name
 	is ZigIfBlock,
 	is ZigIfExprOrBlock -> "if ${children.getOrNull(1)?.text ?: ""}"
+	is ZigFnDeclaration -> "fn ${fnProto.name}()"
+	is ZigExternDeclaration -> "extern ${variableDeclaration?.name}"
+	is ZigGlobalVarDeclaration -> "global ${variableDeclaration.name}"
+	is ZigUseDeclaration -> "use ${expr.text}"
 	else -> text
 }
 
