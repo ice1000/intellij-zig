@@ -23,3 +23,7 @@ fun treeWalkUp(
 	}
 	return true
 }
+
+fun <A, B, C, D> quadOf(a: A, b: B, c: C, d: D) = Quad(a, b, c, d)
+
+data class Quad<out A, out B, out C, out D>(val a: A, val b: B, val c: C, val d: D)

@@ -7,22 +7,19 @@ import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
+import icons.ZigIcons
 import org.ziglang.ZigTokenType
 import org.ziglang.orFalse
-import org.ziglang.psi.impl.ZigAbstractSymbol
 
 /**
  * 今天就要成为吊打冰酱的人（超大雾
  */
 class ZigSymbolRef(
-		private val symbol: ZigAbstractSymbol,
+		private val symbol: ZigSymbol,
 		private var refTo: PsiElement? = null
 ) : PsiPolyVariantReference {
 	private val range = TextRange(0, element.textLength)
 	private val isDeclaration = (element as? ZigSymbol)?.isDeclaration.orFalse()
-	private val resolver by lazy {
-		symbolResolver
-	}
 
 	override fun equals(other: Any?) = (other as? ZigSymbolRef)?.element == element
 	override fun getElement(): PsiElement = symbol
@@ -44,18 +41,15 @@ class ZigSymbolRef(
 		val file = element.containingFile ?: return emptyArray()
 		if (isDeclaration or !element.isValid or element.project.isDisposed) return emptyArray()
 		return ResolveCache.getInstance(element.project)
-				.resolveWithCaching(this, resolver, true, incompleteCode, file)
+				.resolveWithCaching(this, symbolResolver, true, incompleteCode, file)
 	}
 
 	private companion object ResolverHolder {
 		private val symbolResolver = ResolveCache.PolyVariantResolver<ZigSymbolRef> { ref, incompleteCode ->
-			resolveWith(SymbolResolveProcessor(ref, incompleteCode), ref)
-		}
-
-		private inline fun <reified T> resolveWith(processor: ResolveProcessor<T>, ref: ZigSymbolRef): Array<T> {
-			val file = ref.element.containingFile ?: return emptyArray()
+			val processor = SymbolResolveProcessor(ref, incompleteCode)
+			val file = ref.element.containingFile ?: return@PolyVariantResolver emptyArray()
 			treeWalkUp(processor, ref.element, file)
-			return processor.candidateSet.toTypedArray()
+			return@PolyVariantResolver processor.candidateSet.toTypedArray()
 		}
 	}
 }
@@ -66,7 +60,9 @@ abstract class ResolveProcessor<ResolveResult>(private val place: PsiElement) : 
 	override fun <T : Any?> getHint(hintKey: Key<T>): T? = null
 	protected val PsiElement.hasNoError get() = (this as? StubBasedPsiElement<*>)?.stub != null || !PsiTreeUtil.hasErrorElements(this)
 	fun isInScope(element: PsiElement) = when {
-	//TODO impl
+		element !is ZigSymbol -> false
+		element.isParameter -> PsiTreeUtil.isAncestor(element.parent.parent.parent, place, true)
+		element.isFunctionName -> PsiTreeUtil.isAncestor(element.parent.parent, place, true)
 		else -> false
 	}
 }
@@ -97,19 +93,21 @@ class CompletionProcessor(place: PsiElement, private val incompleteCode: Boolean
 
 	override val candidateSet = ArrayList<LookupElementBuilder>(20)
 	override fun execute(element: PsiElement, resolveState: ResolveState): Boolean {
-//		if (element is JuliaSymbol) {
-//			val (icon, value, tail, type) = when {
-//				TODO impl QAQ
-//				else -> return true
-//			}
-//			if (element.isDeclaration and element.hasNoError and isInScope(element)) candidateSet += LookupElementBuilder
-//					.create(value)
-//					.withIcon(icon)
-//					// tail text, it will not be completed by Enter Key press
-//					.withTailText(tail, true)
-//					// the type of return value,show at right of popup
-//					.withTypeText(type, true)
+		if (element is ZigSymbol) {
+			val (icon, value, tail, type) = when {
+				element.isFunctionName -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "()", "")
+				element.isParameter -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "", "")
+				else -> return true
+			}
+			if (element.isDeclaration and element.hasNoError and isInScope(element)) candidateSet += LookupElementBuilder
+					.create(value)
+					.withIcon(icon)
+					// tail text, it will not be completed by Enter Key press
+					.withTailText(tail, true)
+					// the type of return value,show at right of popup
+					.withTypeText(type, true)
 //		}
+		}
 		return true
 	}
 }

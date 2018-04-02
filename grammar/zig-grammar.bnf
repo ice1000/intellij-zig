@@ -43,7 +43,6 @@ private topLevelItem ::=
 
 testDeclaration ::= TEST_KEYWORD string block
 globalVarDeclaration ::= EXPORT_KEYWORD? variableDeclaration SEMICOLON_SYM
-localVarDeclaration ::= COMPTIME_KEYWORD? variableDeclaration
 variableDeclaration ::=
  (VAR_KEYWORD | CONST_KEYWORD) symbol (COLON_SYM (typeExpr | primary))?
  (ALIGN_KEYWORD LEFT_PAREN expr RIGHT_PAREN)?
@@ -78,7 +77,7 @@ fnProto ::=
 
 fnDeclaration ::= (INLINE_KEYWORD | EXPORT_KEYWORD)? fnProto block
 
-parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
+private parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
 paramDeclaration ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?
@@ -86,7 +85,7 @@ paramDeclaration ::=
  (typeExpr | VAR_KEYWORD | RANGE_SYM)
 
 statement ::=
-   localVarDeclaration SEMICOLON_SYM
+   COMPTIME_KEYWORD? variableDeclaration SEMICOLON_SYM
  | deferBlock
  | defer SEMICOLON_SYM
  | blockBlock
@@ -96,7 +95,9 @@ statement ::=
 
 private exprOrBlock ::= block | expr
 
-block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE
+block ::= (symbol COLON_SYM)? LEFT_BRACE statement* RIGHT_BRACE {
+	mixin='org.ziglang.psi.impl.ZigBlockMixin'
+}
 
 asmOutput ::= COLON_SYM (asmOutputItem (COMMA_SYM asmOutputItem)*)? asmInput?
 asmInput ::= COLON_SYM (asmInputItem (COMMA_SYM asmInputItem)*)? asmClobbers?

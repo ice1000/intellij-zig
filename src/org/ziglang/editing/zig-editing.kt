@@ -91,7 +91,7 @@ class ZigBreadcrumbsProvider : BreadcrumbsProvider {
 		is ZigBlockBlock -> element.firstChild.text
 		is ZigBlockExpr -> "{…}"
 		is ZigGlobalVarDeclaration -> element.variableDeclaration.name
-		is ZigLocalVarDeclaration -> element.variableDeclaration.name
+		is ZigVariableDeclaration -> element.name
 		else -> null
 	}.orEmpty(), TEXT_MAX)
 
@@ -102,5 +102,5 @@ class ZigBreadcrumbsProvider : BreadcrumbsProvider {
 			element is ZigBlockBlock ||
 			element is ZigBlockExpr ||
 			element is ZigGlobalVarDeclaration ||
-			element is ZigLocalVarDeclaration
+			element is ZigVariableDeclaration
 }
