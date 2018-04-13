@@ -119,11 +119,6 @@ java.sourceSets {
 	}
 }
 
-// TODO workaround for KT-23077
-inline fun <reified TheTask : BaseTask>
-		Project.genTask(name: String, noinline configuration: TheTask.() -> Unit) =
-		task(name, TheTask::class, configuration)
-
 repositories {
 	mavenCentral()
 }
@@ -158,8 +153,8 @@ task("isCI") {
 	}
 }
 
-val genParser = genTask<GenerateParser>("genParser") {
-	group = "build setup"
+val genParser = task<GenerateParser>("genParser") {
+	group = tasks["init"].group
 	description = "Generate the Parser and PsiElement classes"
 	source = "grammar/zig-grammar.bnf"
 	targetRoot = "gen/"
@@ -168,8 +163,8 @@ val genParser = genTask<GenerateParser>("genParser") {
 	purgeOldFiles = true
 }
 
-val genLexer = genTask<GenerateLexer>("genLexer") {
-	group = "build setup"
+val genLexer = task<GenerateLexer>("genLexer") {
+	group = genParser.group
 	description = "Generate the Lexer"
 	source = "grammar/zig-lexer.flex"
 	targetDir = "gen/org/ziglang"
@@ -177,9 +172,8 @@ val genLexer = genTask<GenerateLexer>("genLexer") {
 	purgeOldFiles = true
 }
 
-val
-		cleanGenerated = task("cleanGenerated") {
-	group = "build"
+val cleanGenerated = task("cleanGenerated") {
+	group = tasks["clean"].group
 	description = "Remove all generated codes"
 	doFirst {
 		delete("gen")
