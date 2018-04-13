@@ -95,20 +95,6 @@ java {
 	targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks.withType<KotlinCompile> {
-	dependsOn("genParser")
-	dependsOn("genLexer")
-	kotlinOptions {
-		jvmTarget = "1.8"
-		languageVersion = "1.2"
-		apiVersion = "1.2"
-	}
-}
-
-tasks.withType<Delete> {
-	dependsOn("cleanGenerated")
-}
-
 tasks.withType<PatchPluginXmlTask> {
 	changeNotes(file("res/META-INF/change-notes.html").readText())
 	pluginDescription(file("res/META-INF/description.html").readText())
@@ -117,23 +103,21 @@ tasks.withType<PatchPluginXmlTask> {
 	println(pluginId)
 }
 
-val SourceSet.kotlin
-	get() = (this as HasConvention)
-			.convention
-			.getPlugin(KotlinSourceSet::class.java)
-			.kotlin
-
 java.sourceSets {
 	"main" {
-		java.srcDirs("src", "gen")
-		kotlin.srcDirs("src", "gen")
 		resources.srcDirs("res")
+		java.srcDirs("src", "gen")
+		withConvention(KotlinSourceSet::class) {
+			kotlin.srcDirs("src", "gen")
+		}
 	}
 
 	"test" {
-		java.srcDirs("test")
-		kotlin.srcDirs("test")
 		resources.srcDirs("testData")
+		java.srcDirs("test")
+		withConvention(KotlinSourceSet::class) {
+			kotlin.srcDirs("test")
+		}
 	}
 }
 
@@ -176,7 +160,7 @@ task("isCI") {
 	}
 }
 
-genTask<GenerateParser>("genParser") {
+val genParser = genTask<GenerateParser>("genParser") {
 	group = "build setup"
 	description = "Generate the Parser and PsiElement classes"
 	source = "grammar/zig-grammar.bnf"
@@ -186,7 +170,7 @@ genTask<GenerateParser>("genParser") {
 	purgeOldFiles = true
 }
 
-genTask<GenerateLexer>("genLexer") {
+val genLexer = genTask<GenerateLexer>("genLexer") {
 	group = "build setup"
 	description = "Generate the Lexer"
 	source = "grammar/zig-lexer.flex"
@@ -195,10 +179,24 @@ genTask<GenerateLexer>("genLexer") {
 	purgeOldFiles = true
 }
 
-task("cleanGenerated") {
+val cleanGenerated = task("cleanGenerated") {
 	group = "build"
 	description = "Remove all generated codes"
 	doFirst {
 		delete("gen")
 	}
+}
+
+tasks.withType<KotlinCompile> {
+	dependsOn(genParser)
+	dependsOn(genLexer)
+	kotlinOptions {
+		jvmTarget = "1.8"
+		languageVersion = "1.2"
+		apiVersion = "1.2"
+	}
+}
+
+tasks.withType<Delete> {
+	dependsOn(cleanGenerated)
 }
