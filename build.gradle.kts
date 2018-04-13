@@ -1,5 +1,4 @@
 import groovy.lang.Closure
-import org.gradle.api.internal.HasConvention
 import org.gradle.language.base.internal.plugins.CleanRule
 import org.jetbrains.grammarkit.GrammarKitPluginExtension
 import org.jetbrains.grammarkit.tasks.BaseTask
@@ -10,13 +9,12 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.*
 import java.nio.file.*
-import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
 val commitHash by lazy {
 	val output: String
 	val process: Process = Runtime.getRuntime().exec("git rev-parse --short HEAD")
-	process.waitFor(2000L, TimeUnit.MILLISECONDS)
+	process.waitFor()
 	output = process.inputStream.use {
 		it.bufferedReader().use {
 			it.readText()
@@ -179,7 +177,8 @@ val genLexer = genTask<GenerateLexer>("genLexer") {
 	purgeOldFiles = true
 }
 
-val cleanGenerated = task("cleanGenerated") {
+val
+		cleanGenerated = task("cleanGenerated") {
 	group = "build"
 	description = "Remove all generated codes"
 	doFirst {
