@@ -7,12 +7,8 @@ import org.ziglang.project.initExeComboBox
 
 class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
 	init {
-		resetEditorFrom(configuration)
-
 		listOf("fast", "safe", "debug").forEach(releaseMode::addItem)
 		listOf("auto", "off", "on").forEach(coloredMode::addItem)
-
-		initExeComboBox(executablePath)
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		outputDirField.addBrowseFolderListener(TextBrowseFolderListener(
@@ -21,6 +17,8 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		targetFileField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFileDescriptor(ZigFileType)))
+		initExeComboBox(executablePath)
+		resetEditorFrom(configuration)
 	}
 
 	override fun createEditor() = mainPanel

@@ -16,7 +16,10 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 	private val listeners = ArrayList<ProjectGeneratorPeer.SettingsListener>()
 
 	init {
-		initExeComboBox(executablePath)
+		initExeComboBox(executablePath) {
+			executablePath.comboBox.selectedItem = settings.exePath
+			version.text = versionOf(it.comboBox.selectedItem as? String ?: return@initExeComboBox)
+		}
 		installPathField.addBrowseFolderListener(TextBrowseFolderListener(
 				FileChooserDescriptorFactory.createSingleFolderDescriptor()))
 		zigWebsite.asLink()
@@ -74,6 +77,7 @@ class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
 
 	init {
 		initExeComboBox(executablePath) {
+			executablePath.comboBox.selectedItem = settings.exePath
 			version.text = versionOf(it.comboBox.selectedItem as? String ?: return@initExeComboBox)
 		}
 		zigWebsite.asLink()
