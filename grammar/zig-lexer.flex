@@ -21,7 +21,7 @@ import org.ziglang.ZigTokenType;
 %eof}
 
 OTHERWISE=[^]
-WHITESPACE=[\s\n\f\r\t\v]
+WHITESPACE=[\s\n\f\r\t]+
 SEMICOLON=;
 COMMENT=\/\/[^\n]*
 
