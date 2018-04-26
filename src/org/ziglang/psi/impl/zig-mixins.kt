@@ -32,7 +32,7 @@ abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), P
 
 	override fun processDeclarations(
 			processor: PsiScopeProcessor, substitutor: ResolveState, lastParent: PsiElement?, place: PsiElement) =
-			nameIdentifier?.run { processDeclarations(processor, substitutor, lastParent, place) }.orFalse() &&
+			nameIdentifier?.processDeclarations(processor, substitutor, lastParent, place).orFalse() &&
 					processDeclTrivial(processor, substitutor, lastParent, place)
 }
 
@@ -97,5 +97,9 @@ abstract class ZigStringMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSt
 abstract class ZigBlockMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigBlock {
 	override fun processDeclarations(
 			processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement) =
-			statementList.all { processDeclTrivial(processor, state, lastParent, place) }
+			statementList.all {
+				it.firstChild
+						.let { (it as? ZigLocalVariableDeclaration)?.variableDeclaration ?: it }
+						.processDeclarations(processor, state, lastParent, place)
+			}
 }
