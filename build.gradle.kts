@@ -26,7 +26,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.0.4"
+val pluginComingVersion = "0.1.1"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 val kotlinVersion: String by extra
@@ -125,7 +125,7 @@ repositories {
 
 dependencies {
 	compileOnly(kotlin("stdlib-jdk8", kotlinVersion))
-	compile(kotlin("script-util", kotlinVersion))
+	compileOnly(kotlin("script-util", kotlinVersion))
 	compile(kotlin("stdlib-jdk8", kotlinVersion).toString()) {
 		exclude(module = "kotlin-runtime")
 		exclude(module = "kotlin-reflect")
