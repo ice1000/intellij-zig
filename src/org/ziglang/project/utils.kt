@@ -43,11 +43,9 @@ fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
 
 fun LinkLabel<Any>.asLink() {
-	// TODO workaround for KT-23421
-	val linkListener = LinkListener<Any> { _, _ ->
+	setListener({ _, _ ->
 		BrowserLauncher.instance.browse(text)
-	}
-	setListener(linkListener, null)
+	}, null)
 }
 
 inline fun initExeComboBox(
