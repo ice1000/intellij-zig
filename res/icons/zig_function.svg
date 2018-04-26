@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="14" fill="#f98b9e" data-name="Group" opacity=".5"/>
+    <path d="M16.716 13.27h-6.21v-2.764h8.982L25.612 8.5 15.336 18.798h6.225v2.764h-8.983l-6.123 1.939z"
+          fill="#f7a41d"/>
+    <path d="M3.165 18.798v-8.292H9.31v2.764H5.93v5.528h4.146L7.31 21.562H3.165v-2.764zm22.906-5.528h-4.146l2.765-2.764h4.145v11.056H22.69v-2.764h3.381V13.27z"
+          fill="#f7a41d"/>
+    <path d="M15.249 9H10v2h3.87l.984 2.049L10 23h2.342L16 15.229 19.658 23H22z" style="isolation:isolate" opacity=".6"
+          fill="#231f20"/>
+</svg>

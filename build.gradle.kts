@@ -125,6 +125,7 @@ repositories {
 
 dependencies {
 	compileOnly(kotlin("stdlib-jdk8", kotlinVersion))
+	compile(kotlin("script-util", kotlinVersion))
 	compile(kotlin("stdlib-jdk8", kotlinVersion).toString()) {
 		exclude(module = "kotlin-runtime")
 		exclude(module = "kotlin-reflect")
