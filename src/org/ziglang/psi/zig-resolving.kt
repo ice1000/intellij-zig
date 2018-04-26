@@ -63,8 +63,9 @@ abstract class ResolveProcessor<ResolveResult>(private val place: PsiElement) : 
 	protected val PsiElement.hasNoError get() = (this as? StubBasedPsiElement<*>)?.stub != null || !PsiTreeUtil.hasErrorElements(this)
 	fun isInScope(element: PsiElement) = when {
 		element !is ZigSymbol -> false
-		element.isVariableName -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(
-				element, ZigBlock::class.java), place, true)
+		element.isVariableName -> PsiTreeUtil.isAncestor(
+				PsiTreeUtil.getParentOfType(element, ZigBlock::class.java)
+						?: element.parent.parent?.parent, place, true)
 		element.isParameter -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(
 				element, ZigFnDeclaration::class.java), place, true)
 		element.isFunctionName -> PsiTreeUtil.isAncestor(PsiTreeUtil.getParentOfType(

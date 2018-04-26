@@ -47,6 +47,10 @@ abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(n
 	final override val startPoint: PsiElement get() = parent.parent
 }
 
+abstract class ZigFnDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigFnDeclaration {
+	final override val startPoint: PsiElement get() = parent.parent
+}
+
 abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
 	final override val isFunctionName: Boolean
 		get() = parent is ZigFnProto && prevSiblingTypeIgnoring(

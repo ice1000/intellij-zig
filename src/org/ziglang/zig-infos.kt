@@ -13,6 +13,8 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import icons.ZigIcons
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
+import org.ziglang.psi.ZigGlobalVarDeclaration
+import org.ziglang.psi.ZigLocalVariableDeclaration
 import java.util.*
 
 object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
@@ -31,7 +33,10 @@ class ZigFileTypeFactory : FileTypeFactory() {
 class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLanguage.INSTANCE) {
 	override fun getFileType() = ZigFileType
 	override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean =
-			children.all { it.processDeclarations(processor, state, lastParent, place) }
+			children.all {
+				((it as? ZigGlobalVarDeclaration)?.variableDeclaration ?: it)
+						.processDeclarations(processor, state, lastParent, place)
+			}
 }
 
 class ZigContext : TemplateContextType(ZIG_CONTEXT_ID, ZIG_NAME) {
@@ -48,7 +53,8 @@ class ZigLiveTemplateProvider : DefaultLiveTemplatesProvider {
 }
 
 object ZigBundle {
-	@NonNls private const val BUNDLE = "org.ziglang.zig-bundle"
+	@NonNls
+	private const val BUNDLE = "org.ziglang.zig-bundle"
 	private val bundle: ResourceBundle by lazy { ResourceBundle.getBundle(BUNDLE) }
 
 	@JvmStatic

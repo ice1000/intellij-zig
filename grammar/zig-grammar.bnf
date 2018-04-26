@@ -86,7 +86,9 @@ fnProto ::=
 
 fnDeclaration ::=
  PUB_KEYWORD? (INLINE_KEYWORD | EXPORT_KEYWORD)?
-  fnProto block
+  fnProto block {
+	mixin='org.ziglang.psi.impl.ZigFnDeclarationMixin'
+}
 
 parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
