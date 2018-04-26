@@ -34,6 +34,9 @@
 		<applicationService
 				serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
 				serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
+		<lang.refactoringSupport
+				language="Zig"
+				implementationClass="org.ziglang.editing.ZigRefactoringSupportProvider"/>
 		<completion.contributor
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigCompletionContributor"/>

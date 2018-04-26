@@ -3,6 +3,7 @@ package org.ziglang.editing
 import com.intellij.lang.*
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
+import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.InputValidatorEx
@@ -103,4 +104,8 @@ class ZigBreadcrumbsProvider : BreadcrumbsProvider {
 			element is ZigBlockExpr ||
 			element is ZigGlobalVarDeclaration ||
 			element is ZigVariableDeclaration
+}
+
+class ZigRefactoringSupportProvider : RefactoringSupportProvider() {
+	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) = true
 }
