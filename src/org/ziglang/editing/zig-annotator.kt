@@ -79,7 +79,7 @@ class ZigAnnotator : Annotator {
 			if (char in escapeChars) {
 				val nextCount = escapeChars[char] ?: return
 				val accept = element.text.nextString(start + 2, nextCount).run {
-					isEmpty() or all { it in "0123456789ABCDEFabcdef" }
+					isEmpty() || all { it in "0123456789ABCDEFabcdef" }
 				}
 
 				if (accept) holder.createInfoAnnotation(element.textRange.subRange(start, end + nextCount), null)

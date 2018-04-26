@@ -41,7 +41,7 @@ class ZigSymbolRef(
 	override fun bindToElement(element: PsiElement) = element.also { refTo = element }
 	override fun multiResolve(incompleteCode: Boolean): Array<out ResolveResult> {
 		val file = element.containingFile ?: return emptyArray()
-		if (isDeclaration or !element.isValid or element.project.isDisposed) return emptyArray()
+		if (isDeclaration || !element.isValid || element.project.isDisposed) return emptyArray()
 		return ResolveCache.getInstance(element.project)
 				.resolveWithCaching(this, symbolResolver, true, incompleteCode, file)
 	}

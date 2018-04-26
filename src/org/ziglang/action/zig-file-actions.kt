@@ -50,11 +50,11 @@ class ZigTranslateFromCAction : AnAction(
 			), timeLimit = 10000L)
 		})
 		ApplicationManager.getApplication().runWriteAction {
-			if (stderr.isNotEmpty() and stderr.all(String::isNotEmpty)) Messages.showErrorDialog(
+			if (stderr.isNotEmpty() && stderr.all(String::isNotEmpty)) Messages.showErrorDialog(
 					project,
 					stderr.joinToString("\n"),
 					ZigBundle.message("zig.actions.c-translate.error.title"))
-			if (stdout.isNotEmpty() and stdout.all(String::isNotEmpty)) {
+			if (stdout.isNotEmpty() && stdout.all(String::isNotEmpty)) {
 				val zigFile = cFile.parent.findOrCreateChildData(this, zigFileName)
 				VfsUtil.saveText(zigFile, stdout.joinToString("\n"))
 				OpenFileDescriptor(project, zigFile).navigate(true)
