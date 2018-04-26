@@ -105,12 +105,12 @@ class CompletionProcessor(place: PsiElement, private val incompleteCode: Boolean
 	override fun execute(element: PsiElement, resolveState: ResolveState): Boolean {
 		if (element is ZigSymbol) {
 			val (icon, value, tail, type) = when {
-				element.isFunctionName -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "()", "")
-				element.isVariableName or
-						element.isParameter -> quadOf(ZigIcons.ZIG_BIG_ICON, element.text, "", "")
+				element.isFunctionName -> quadOf(ZigIcons.ZIG_FUN, element.text, "()", "")
+				element.isVariableName ||
+						element.isParameter -> quadOf(ZigIcons.ZIG_VAR, element.text, "", "")
 				else -> return true
 			}
-			if (element.hasNoError and isInScope(element)) candidateSet += LookupElementBuilder
+			if (element.hasNoError && isInScope(element)) candidateSet += LookupElementBuilder
 					.create(value)
 					.withIcon(icon)
 					// tail text, it will not be completed by Enter Key press
