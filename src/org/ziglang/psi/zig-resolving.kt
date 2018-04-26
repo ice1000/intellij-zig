@@ -82,15 +82,17 @@ open class SymbolResolveProcessor(
 
 	override val candidateSet = ArrayList<PsiElementResolveResult>(3)
 	protected open fun accessible(element: PsiElement) = name == element.text && isInScope(element)
-	override fun execute(element: PsiElement, resolveState: ResolveState) = when {
-		candidateSet.isNotEmpty() -> false
-		element is ZigSymbol -> {
-			val accessible = accessible(element)
-			if (accessible)
-				candidateSet += PsiElementResolveResult(element, element.hasNoError)
-			!accessible
+	override fun execute(element: PsiElement, resolveState: ResolveState): Boolean {
+		return when {
+			candidateSet.isNotEmpty() -> false
+			element is ZigSymbol -> {
+				val accessible = accessible(element)
+				if (accessible)
+					candidateSet += PsiElementResolveResult(element, element.hasNoError)
+				!accessible
+			}
+			else -> true
 		}
-		else -> true
 	}
 }
 
