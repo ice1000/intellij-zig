@@ -87,7 +87,7 @@ fnDeclaration ::=
  PUB_KEYWORD? (INLINE_KEYWORD | EXPORT_KEYWORD)?
   fnProto block
 
-private parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
+parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? RIGHT_PAREN
 
 paramDeclaration ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?

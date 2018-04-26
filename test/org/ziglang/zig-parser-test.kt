@@ -36,6 +36,11 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		doTest(true)
 	}
 
+	fun testParameters() {
+		println(name)
+		doTest(true)
+	}
+
 	fun testfloat_mode() {
 		println(name)
 		doTest(true)
