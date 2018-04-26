@@ -37,9 +37,10 @@ class ZigStructureViewModel(root: PsiFile, editor: Editor?) :
 class ZigStructureViewElement(private val root: NavigatablePsiElement) :
 		StructureViewTreeElement, ItemPresentation, SortableTreeElement, Navigatable by root {
 	override fun getLocationString() = ""
-	// TODO 提供icon用的, 还得做图标呜呜呜
 	override fun getIcon(open: Boolean) = when (root) {
 		is ZigFile -> ZigIcons.ZIG_FILE
+		is ZigFnDeclaration -> ZigIcons.ZIG_FUN
+		is ZigGlobalVarDeclaration -> ZigIcons.ZIG_VAR
 		else -> ZigIcons.ZIG_BIG_ICON
 	}
 
