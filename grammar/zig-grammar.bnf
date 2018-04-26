@@ -34,6 +34,7 @@ private topLevelItem ::=
  | globalVarDeclaration
  | useDeclaration
  | testDeclaration
+ | expr // for `fromText`
 
 testDeclaration ::= TEST_KEYWORD string block
 globalVarDeclaration ::=

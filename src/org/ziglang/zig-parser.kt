@@ -5,6 +5,7 @@ import com.intellij.lang.ParserDefinition
 import com.intellij.lexer.FlexAdapter
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.tree.*
 import org.ziglang.psi.ZigTypes
@@ -38,6 +39,7 @@ class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INST
 				.getInstance(project)
 				.createFileFromText(ZigLanguage.INSTANCE, string)
 				.firstChild
+				.let { (it as? PsiErrorElement)?.firstChild ?: it }
 	}
 }
 

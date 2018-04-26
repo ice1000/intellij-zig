@@ -1,5 +1,6 @@
 package org.ziglang
 
+import com.intellij.testFramework.LightPlatformTestCase
 import com.intellij.testFramework.ParsingTestCase
 
 class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition()) {
@@ -66,3 +67,11 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		doTest(true)
 	}
 }
+
+class ZigBasicParsingTest : LightPlatformTestCase() {
+	fun testParse() {
+		ZigTokenType.fromText("abc", ourProject).javaClass
+				.let(::println)
+	}
+}
+
