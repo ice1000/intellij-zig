@@ -26,6 +26,7 @@ object ZigSyntaxHighlighter : SyntaxHighlighter {
 			ZigTypes.EXTERN_KEYWORD,
 			ZigTypes.NAKEDCC_KEYWORD,
 			ZigTypes.STDCALLCC_KEYWORD,
+			ZigTypes.ORELSE_KEYWORD,
 			ZigTypes.ASYNC_KEYWORD,
 			ZigTypes.FN_KEYWORD,
 			ZigTypes.SECTION_KEYWORD,

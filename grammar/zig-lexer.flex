@@ -140,6 +140,7 @@ use { return ZigTypes.USE_KEYWORD; }
 extern { return ZigTypes.EXTERN_KEYWORD; }
 nakedcc { return ZigTypes.NAKEDCC_KEYWORD; }
 stdcallcc { return ZigTypes.STDCALLCC_KEYWORD; }
+orelse { return ZigTypes.ORELSE_KEYWORD; }
 async { return ZigTypes.ASYNC_KEYWORD; }
 fn { return ZigTypes.FN_KEYWORD; }
 section { return ZigTypes.SECTION_KEYWORD; }
@@ -157,7 +158,7 @@ cancel { return ZigTypes.CANCEL_KEYWORD; }
 resume { return ZigTypes.RESUME_KEYWORD; }
 catch { return ZigTypes.CATCH_KEYWORD; }
 defer { return ZigTypes.DEFER_KEYWORD; }
-deferror { return ZigTypes.DEFERROR_KEYWORD; }
+errdefer { return ZigTypes.DEFERROR_KEYWORD; }
 true { return ZigTypes.TRUE_KEYWORD; }
 false { return ZigTypes.FALSE_KEYWORD; }
 null { return ZigTypes.NULL_KEYWORD; }

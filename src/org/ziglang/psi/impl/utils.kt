@@ -7,19 +7,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.psi.ZigExpr
 import org.ziglang.psi.ZigSymbol
 
-fun PsiElement.processDeclTrivial(
-		processor: PsiScopeProcessor,
-		substitutor: ResolveState,
-		lastParent: PsiElement?,
-		place: PsiElement): Boolean {
-	var run: PsiElement? = lastParent?.prevSibling ?: lastChild
-	while (run != null) {
-		if (!run.processDeclarations(processor, substitutor, null, place)) return false
-		run = run.prevSibling
-	}
-	return true
-}
-
 /**
  * @param self The declaration itself
  */

@@ -95,7 +95,10 @@ parameterList ::= LEFT_PAREN (paramDeclaration (COMMA_SYM paramDeclaration)*)? R
 paramDeclaration ::=
  (NOALIAS_KEYWORD | COMPTIME_KEYWORD)?
  (symbol COLON_SYM)?
- (typeExpr | VAR_KEYWORD | RANGE_SYM)
+ (typeExpr | VAR_KEYWORD | RANGE_SYM) {
+	implements=['com.intellij.psi.PsiNameIdentifierOwner']
+	mixin='org.ziglang.psi.impl.ZigParamDeclarationMixin'
+}
 
 statement ::=
    localVariableDeclaration
@@ -267,6 +270,7 @@ expr ::=
  | boolOrExpr
  | boolAndExpr
  | comparisonExpr
+ | orElseExpr
  | binaryOrExpr
  | binaryXorExpr
  | binaryAndExpr
@@ -310,6 +314,7 @@ unwrapExpr ::= expr (unwrapNullable | unwrapError)
 boolOrExpr ::= expr OR_KEYWORD expr
 boolAndExpr ::= expr AND_KEYWORD expr
 comparisonExpr ::= expr comparisonOperator expr
+orElseExpr ::= expr ORELSE_KEYWORD expr
 binaryOrExpr ::= expr SEP_SYM expr
 binaryXorExpr ::= expr EXPONENT_SYM expr
 binaryAndExpr ::= expr AND_SYM expr
@@ -327,9 +332,13 @@ suffixOpExpr ::=
  | arrayAccessSuffix
  | fieldAccessSuffix
  | sliceSuffix
+ | pointerSuffix
+ | optionalSuffix
  )
 
 fieldAccessSuffix ::= DOT_SYM symbol
+pointerSuffix ::= DOT_SYM STAR_SYM
+optionalSuffix ::= DOT_SYM QUESTION_SYM
 fnCallSuffix ::= LEFT_PAREN (expr (COMMA_SYM expr)*)? RIGHT_PAREN
 arrayAccessSuffix ::= LEFT_BRACKET expr RIGHT_BRACKET
 sliceSuffix ::= LEFT_BRACKET expr SLICE_SYM expr? RIGHT_BRACKET

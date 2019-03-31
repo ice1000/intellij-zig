@@ -11,30 +11,13 @@ import org.ziglang.orTrue
 import org.ziglang.psi.*
 
 abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
-	private var refCache: Array<PsiReference>? = null
 	override fun getNameIdentifier() = PsiTreeUtil.findChildOfType(this, ZigSymbol::class.java)
 	override fun setName(name: String) = also { nameIdentifier?.replace(ZigTokenType.fromText(name, project)) }
 	override fun getName() = nameIdentifier?.text
 
-	open val startPoint: PsiElement
-	// TODO workaround for KT-22916
-		get() = PsiTreeUtil.getParentOfType(this, ZigBlock::class.java) ?: parent
-
-	override fun getReferences() = refCache
-			?: nameIdentifier
-					?.let { collectFrom(startPoint, it.text, it) }
-					?.also { refCache = it }
-			?: emptyArray()
-
-	override fun subtreeChanged() {
-		refCache = null
-		super.subtreeChanged()
-	}
-
 	override fun processDeclarations(
 			processor: PsiScopeProcessor, substitutor: ResolveState, lastParent: PsiElement?, place: PsiElement) =
-			nameIdentifier?.processDeclarations(processor, substitutor, lastParent, place).orTrue() &&
-					processDeclTrivial(processor, substitutor, lastParent, place)
+			nameIdentifier?.processDeclarations(processor, substitutor, lastParent, place).orTrue()
 }
 
 interface IZigSymbol : PsiNameIdentifierOwner {
@@ -44,12 +27,12 @@ interface IZigSymbol : PsiNameIdentifierOwner {
 	val isDeclaration: Boolean
 }
 
-abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration {
-	final override val startPoint: PsiElement get() = parent.parent
-}
-
+abstract class ZigVariableDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigVariableDeclaration
+abstract class ZigParamDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigParamDeclaration
 abstract class ZigFnDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), ZigFnDeclaration {
-	final override val startPoint: PsiElement get() = parent.parent
+	override fun processDeclarations(processor: PsiScopeProcessor, substitutor: ResolveState, lastParent: PsiElement?, place: PsiElement) =
+			fnProto.parameterList.paramDeclarationList.all { it.processDeclarations(processor, substitutor, lastParent, place) }
+					&& super.processDeclarations(processor, substitutor, lastParent, place)
 }
 
 abstract class ZigSymbolMixin(node: ASTNode) : ZigExprImpl(node), ZigSymbol {
