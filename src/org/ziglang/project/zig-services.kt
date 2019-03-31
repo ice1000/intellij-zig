@@ -28,7 +28,8 @@ class ZigSettings constructor(
 class ZigGlobalSettings(
 		var allZigExePath: String = "")
 
-val Project.zigSettings: ZigProjectService
+val Project.zigSettings: ZigProjectService get() = zigSettingsNullable!!
+val Project.zigSettingsNullable: ZigProjectService?
 	get() = ServiceManager.getService(this, ZigProjectService::class.java)
 
 val zigGlobalSettings: ZigGlobalSettingsService

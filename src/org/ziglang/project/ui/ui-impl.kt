@@ -73,7 +73,7 @@ class ZigProjectGeneratorPeerImpl : ZigProjectGeneratorPeer() {
 }
 
 class ZigConfigurableImpl(project: Project) : ZigConfigurable() {
-	private val settings = project.zigSettings.settings
+	private val settings = project.zigSettingsNullable?.settings ?: ZigSettings()
 
 	init {
 		initExeComboBox(executablePath) {
