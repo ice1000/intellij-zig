@@ -1,6 +1,8 @@
 package org.ziglang.editing
 
 import com.intellij.lang.*
+import com.intellij.lang.cacheBuilder.DefaultWordsScanner
+import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.lang.refactoring.RefactoringSupportProvider
@@ -104,6 +106,15 @@ class ZigBreadcrumbsProvider : BreadcrumbsProvider {
 			element is ZigBlockExpr ||
 			element is ZigGlobalVarDeclaration ||
 			element is ZigVariableDeclaration
+}
+
+class ZigFindUsagesProvider : FindUsagesProvider {
+	override fun canFindUsagesFor(element: PsiElement) = element is PsiNameIdentifierOwner
+	override fun getHelpId(psiElement: PsiElement): String? = null
+	override fun getType(element: PsiElement) = ""
+	override fun getDescriptiveName(element: PsiElement) = (element as? PsiNamedElement)?.name ?: ""
+	override fun getNodeText(element: PsiElement, useFullName: Boolean) = getDescriptiveName(element)
+	override fun getWordsScanner() = DefaultWordsScanner(ZigLexerAdapter(), ZigTokenType.IDENTIFIERS, ZigTokenType.COMMENTS, ZigTokenType.STRINGS)
 }
 
 class ZigRefactoringSupportProvider : RefactoringSupportProvider() {

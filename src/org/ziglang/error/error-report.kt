@@ -19,37 +19,45 @@
  * THE SOFTWARE.
  */
 
-package de.halirutan.mathematica.errorreporting.zig
+package org.ziglang.error
 
 import com.intellij.CommonBundle
-import com.intellij.diagnostic.*
-import com.intellij.errorreport.bean.ErrorBean
+import com.intellij.diagnostic.AbstractMessage
+import com.intellij.diagnostic.IdeErrorsDialog
+import com.intellij.diagnostic.ReportMessages
 import com.intellij.ide.DataManager
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.idea.IdeaLogger
 import com.intellij.notification.NotificationListener
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ex.ApplicationInfoEx
 import com.intellij.openapi.diagnostic.*
 import com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus
-import com.intellij.openapi.progress.*
+import com.intellij.openapi.extensions.PluginId
+import com.intellij.openapi.progress.EmptyProgressIndicator
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.Consumer
-import com.intellij.util.SystemProperties
 import org.apache.commons.codec.binary.Base64
-import org.eclipse.egit.github.core.*
+import org.eclipse.egit.github.core.Issue
+import org.eclipse.egit.github.core.Label
+import org.eclipse.egit.github.core.RepositoryId
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.IssueService
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
+import org.ziglang.ZIG_PLUGIN_ID
 import org.ziglang.project.zigSettings
 import java.awt.Component
 import java.io.IOException
 import java.io.ObjectInputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -112,32 +120,19 @@ private object AnonymousFeedback {
 	private fun createNewGibHubIssue(details: MutableMap<String, String>) = Issue().apply {
 		val errorMessage = details.remove("error.message")?.takeIf(String::isNotBlank) ?: "Unspecified error"
 		title = ErrorReportBundle.message("git.issue.title", details.remove("error.hash").orEmpty(), errorMessage)
+		details["title"] = title
 		body = generateGitHubIssueBody(details, true)
 		labels = listOf(Label().apply { name = issueLabel })
 	}
 
-	private fun generateGitHubIssueBody(details: MutableMap<String, String>, includeStacktrace: Boolean): String {
-		val errorDescription = details.remove("error.description").orEmpty()
-		val stackTrace = details.remove("error.stacktrace")?.takeIf(String::isNotBlank) ?: "invalid stacktrace"
-		val result = StringBuilder()
-		if (!errorDescription.isEmpty()) {
-			result.append(errorDescription)
-			result.append("\n\n----------------------\n\n")
-		}
-		for ((key, value) in details) {
-			result.append("- ")
-			result.append(key)
-			result.append(": ")
-			result.append(value)
-			result.append("\n")
-		}
-		if (includeStacktrace) {
-			result.append("\n```\n")
-			result.append(stackTrace)
-			result.append("\n```\n")
-		}
-		return result.toString()
-	}
+	private fun generateGitHubIssueBody(details: MutableMap<String, String>, includeStacktrace: Boolean) =
+			buildString {
+				val errorDescription = details.remove("error.description").orEmpty()
+				val stackTrace = details.remove("error.stacktrace")?.takeIf(String::isNotBlank) ?: "invalid stacktrace"
+				if (errorDescription.isNotEmpty()) append(errorDescription).appendln("\n\n----------------------\n")
+				for ((key, value) in details) append("- ").append(key).append(": ").appendln(value)
+				if (includeStacktrace) appendln("\n```").appendln(stackTrace).appendln("```")
+			}
 }
 
 private const val initVector = "RandomInitVector"
@@ -169,35 +164,41 @@ private fun encrypt(value: String): String {
 class GitHubErrorReporter : ErrorReportSubmitter() {
 	override fun getReportActionText() = ErrorReportBundle.message("report.error.to.plugin.vendor")
 	override fun submit(
-			events: Array<IdeaLoggingEvent>, info: String?, parent: Component, consumer: Consumer<SubmittedReportInfo>) =
-			doSubmit(events[0], parent, consumer, GitHubErrorBean(events.first().throwable, IdeaLogger.ourLastActionId), info)
+			events: Array<IdeaLoggingEvent>,
+			info: String?,
+			parent: Component,
+			consumer: Consumer<SubmittedReportInfo>): Boolean {
+		// TODO improve
+		val event = events.firstOrNull { it.throwable != null } ?: return false
+		return doSubmit(event, parent, consumer, info)
+	}
 
 	private fun doSubmit(
 			event: IdeaLoggingEvent,
 			parent: Component,
 			callback: Consumer<SubmittedReportInfo>,
-			bean: GitHubErrorBean,
 			description: String?): Boolean {
 		val dataContext = DataManager.getInstance().getDataContext(parent)
-		bean.description = description
-		bean.message = event.message
-		event.throwable?.let { throwable ->
-			IdeErrorsDialog.findPluginId(throwable)?.let { pluginId ->
-				PluginManager.getPlugin(pluginId)?.let { ideaPluginDescriptor ->
-					if (!ideaPluginDescriptor.isBundled) {
-						bean.pluginName = ideaPluginDescriptor.name
-						bean.pluginVersion = ideaPluginDescriptor.version
-					}
+		val bean = GitHubErrorBean(
+				event.throwable,
+				IdeaLogger.ourLastActionId.orEmpty(),
+				description ?: "<No description>",
+				event.message ?: event.throwable.message.toString())
+		IdeErrorsDialog.findPluginId(event.throwable)?.let { pluginId ->
+			PluginManager.getPlugin(pluginId)?.let { ideaPluginDescriptor ->
+				if (!ideaPluginDescriptor.isBundled) {
+					bean.pluginName = ideaPluginDescriptor.name
+					bean.pluginVersion = ideaPluginDescriptor.version
 				}
 			}
 		}
 
-		(event.data as? LogMessageEx)?.let { bean.attachments = it.includedAttachments }
+		(event.data as? AbstractMessage)?.let { bean.attachments = it.includedAttachments }
 		val project = CommonDataKeys.PROJECT.getData(dataContext)
 		val reportValues = getKeyValuePairs(
 				project,
 				bean,
-				ApplicationInfo.getInstance() as ApplicationInfoEx,
+				ApplicationInfoEx.getInstanceEx(),
 				ApplicationNamesInfo.getInstance())
 		val notifyingCallback = CallbackWithNotification(callback, project)
 		val task = AnonymousFeedbackTask(project, ErrorReportBundle.message(
@@ -224,8 +225,24 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
  *
  * @author patrick (17.06.17).
  */
-class GitHubErrorBean(throwable: Throwable, lastAction: String?) : ErrorBean(throwable, lastAction) {
-	val exceptionHash = Arrays.hashCode(throwable.stackTrace).toString()
+class GitHubErrorBean(
+		throwable: Throwable,
+		val lastAction: String,
+		val description: String,
+		val message: String) {
+	val exceptionHash: String
+	val stackTrace: String
+	init {
+		val trace = throwable.stackTrace
+		exceptionHash = Arrays.hashCode(trace).toString()
+		val sw = StringWriter()
+		throwable.printStackTrace(PrintWriter(sw))
+		stackTrace = sw.toString()
+	}
+
+	var pluginName = ""
+	var pluginVersion = ""
+	var attachments: List<Attachment> = emptyList()
 }
 
 /**
@@ -258,14 +275,17 @@ private fun getKeyValuePairs(
 		error: GitHubErrorBean,
 		appInfo: ApplicationInfoEx,
 		namesInfo: ApplicationNamesInfo): MutableMap<String, String> {
+	PluginManager.getPlugin(PluginId.findId(ZIG_PLUGIN_ID))?.run {
+		if (error.pluginName.isBlank()) error.pluginName = name
+		if (error.pluginVersion.isBlank()) error.pluginVersion = version
+	}
 	val params = mutableMapOf(
 			"error.description" to error.description,
 			"Zig Version" to (project?.run { zigSettings.settings.version } ?: "Unknown"),
 			"Plugin Name" to error.pluginName,
 			"Plugin Version" to error.pluginVersion,
 			"OS Name" to SystemInfo.OS_NAME,
-			"Java version" to SystemInfo.JAVA_VERSION,
-			"Java vm vendor" to SystemInfo.JAVA_VENDOR,
+			"Java Version" to SystemInfo.JAVA_VERSION,
 			"App Name" to namesInfo.productName,
 			"App Full Name" to namesInfo.fullProductName,
 			"App Version name" to appInfo.versionName,
@@ -276,9 +296,6 @@ private fun getKeyValuePairs(
 			"error.message" to error.message,
 			"error.stacktrace" to error.stackTrace,
 			"error.hash" to error.exceptionHash)
-	for (attachment in error.attachments) {
-		params["attachment.name"] = attachment.name
-		params["attachment.value"] = attachment.encodedBytes
-	}
+	for (attachment in error.attachments) params["Attachment ${attachment.name}"] = attachment.encodedBytes
 	return params
 }

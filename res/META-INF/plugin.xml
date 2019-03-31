@@ -12,7 +12,7 @@
 		<additionalTextAttributes scheme="Darcula" file="/colorSchemes/ZigDark.xml"/>
 		<additionalTextAttributes scheme="Default" file="/colorSchemes/Zig.xml"/>
 		<colorSettingsPage implementation="org.ziglang.ZigColorSettingsPage"/>
-		<errorHandler implementation="de.halirutan.mathematica.errorreporting.zig.GitHubErrorReporter"/>
+		<errorHandler implementation="org.ziglang.error.GitHubErrorReporter"/>
 		<fileTypeFactory implementation="org.ziglang.ZigFileTypeFactory"/>
 		<sdkType implementation="org.ziglang.project.ZigSdkType"/>
 		<liveTemplateContext implementation="org.ziglang.ZigContext"/>
@@ -22,6 +22,7 @@
 		<configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
 		<consoleFilterProvider implementation="org.ziglang.execution.ZigConsoleFilterProvider"/>
 		<breadcrumbsInfoProvider implementation="org.ziglang.editing.ZigBreadcrumbsProvider"/>
+		<lang.findUsagesProvider language="Zig" implementationClass="org.ziglang.editing.ZigFindUsagesProvider"/>
 		<lang.elementManipulator
 				implementationClass="org.ziglang.psi.ZigStringManipulator"
 				forClass="org.ziglang.psi.ZigString"/>

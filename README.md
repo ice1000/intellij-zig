@@ -17,7 +17,3 @@ CircleCI (newest with tests, linux)|[![CircleCI](https://circleci.com/gh/ice1000
 ![](https://plugins.jetbrains.com/files/10560/screenshot_17959.png)
 ![](https://plugins.jetbrains.com/files/10560/screenshot_17965.png)
 
-## Installing Zig
-
-We're not planning to support Zig 0.2.0 or 0.1.1.
-Instead, we start directly from 0.3.0, which is unpublished yet.
