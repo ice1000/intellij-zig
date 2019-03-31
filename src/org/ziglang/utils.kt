@@ -5,6 +5,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 fun Boolean?.orFalse() = this == true
+fun Boolean?.orTrue() = this != false
 
 fun String.trimPath() = trimEnd('/', '!')
 

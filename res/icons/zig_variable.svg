@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 32 32">
-    <circle cx="16" cy="16" r="14" fill="#f4af3d" data-name="Group" opacity=".6"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="14" fill="#f4af3d" opacity=".6"/>
     <path d="M14.587 22L10 10h2.3l2.434 6.678q.135.36.318.929.183.568.367 1.158.183.59.336 1.115.153.524.202.798h.086q.061-.274.208-.798.147-.525.33-1.115.183-.59.367-1.158.184-.569.318-.93L19.7 10H22l-4.587 12z"
           style="isolation:isolate" opacity=".6" fill="#231f20"/>
     <path d="M23.446 24.623h-3.87v-1.722h5.598l3.817-1.251-6.405 6.419h3.88v1.723h-5.599L17.051 31z" fill="#f7a41d"/>

@@ -21,7 +21,7 @@ import java.nio.file.Paths
 import com.google.common.io.Files as GoogleFiles
 
 class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
-		LocatableConfigurationBase(project, factory, ZigBundle.message("zig.name")), DumbAware {
+		LocatableConfigurationBase<ZigCommandLineState>(project, factory, ZigBundle.message("zig.name")), DumbAware {
 	var exePath: String
 	var targetFile = ""
 	var workingDir = ""

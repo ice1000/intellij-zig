@@ -36,7 +36,7 @@ val zigGlobalSettings: ZigGlobalSettingsService
 
 @State(
 		name = "ZigProjectSettings",
-		storages = [Storage(file = "zigConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
+		storages = [Storage(file = "zigConfig.xml")])
 class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSettings> {
 	override val settings = ZigSettings()
 	override fun getState(): ZigSettings? = XmlSerializerUtil.createCopy(settings)
@@ -47,7 +47,7 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 
 @State(
 		name = "ZigGlobalSettings",
-		storages = [Storage(file = "zigGlobalConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
+		storages = [Storage(file = "zigGlobalConfig.xml")])
 class ZigGlobalSettingsServiceImpl :
 		ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {
 	override val knownZigExes: MutableSet<String> = hashSetOf()

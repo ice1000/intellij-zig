@@ -7,6 +7,7 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.ZigTokenType
 import org.ziglang.orFalse
+import org.ziglang.orTrue
 import org.ziglang.psi.*
 
 abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
@@ -32,7 +33,7 @@ abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), P
 
 	override fun processDeclarations(
 			processor: PsiScopeProcessor, substitutor: ResolveState, lastParent: PsiElement?, place: PsiElement) =
-			nameIdentifier?.processDeclarations(processor, substitutor, lastParent, place).orFalse() &&
+			nameIdentifier?.processDeclarations(processor, substitutor, lastParent, place).orTrue() &&
 					processDeclTrivial(processor, substitutor, lastParent, place)
 }
 
@@ -51,7 +52,7 @@ abstract class ZigFnDeclarationMixin(node: ASTNode) : TrivialDeclaration(node), 
 	final override val startPoint: PsiElement get() = parent.parent
 }
 
-abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSymbol {
+abstract class ZigSymbolMixin(node: ASTNode) : ZigExprImpl(node), ZigSymbol {
 	final override val isFunctionName: Boolean
 		get() = parent is ZigFnProto && prevSiblingTypeIgnoring(
 				ZigTypes.FN_KEYWORD,
@@ -92,7 +93,7 @@ abstract class ZigSymbolMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigSy
 	}
 }
 
-abstract class ZigStringMixin(node: ASTNode) : ASTWrapperPsiElement(node), ZigString {
+abstract class ZigStringMixin(node: ASTNode) : ZigExprImpl(node), ZigString {
 	override fun isValidHost() = true
 	override fun updateText(text: String) = ElementManipulators.handleContentChange(this, text)
 	override fun createLiteralTextEscaper() = LiteralTextEscaper.createSimple(this)

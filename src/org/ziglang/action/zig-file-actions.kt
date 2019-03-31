@@ -116,7 +116,7 @@ class NewZigFile : CreateFileFromTemplateAction(
 				}
 	}
 
-	override fun getActionName(dir: PsiDirectory?, name: String?, templateName: String?) =
+	override fun getActionName(dir: PsiDirectory, name: String, templateName: String) =
 			ZigBundle.message("zig.actions.new-file.title")
 
 	override fun buildDialog(project: Project?, dir: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {

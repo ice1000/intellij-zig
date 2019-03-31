@@ -29,63 +29,58 @@ val isCI = !System.getenv("CI").isNullOrBlank()
 val pluginComingVersion = "0.1.1"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
-val kotlinVersion: String by extra
 
 group = packageName
 version = pluginVersion
-
-buildscript {
-	var kotlinVersion: String by extra
-	var grammarKitVersion: String by extra
-
-	grammarKitVersion = "2018.1.1"
-	kotlinVersion = "1.2.40"
-
-	repositories {
-		mavenCentral()
-		maven("https://jitpack.io")
-	}
-
-	dependencies {
-		classpath(kotlin("gradle-plugin", kotlinVersion))
-		classpath("com.github.JetBrains:gradle-grammar-kit-plugin:$grammarKitVersion")
-	}
-}
-
 plugins {
-	idea
-	java
-	id("org.jetbrains.intellij") version "0.3.1"
-	kotlin("jvm") version "1.2.40"
+    java
+    id("org.jetbrains.intellij") version "0.4.6"
+    id("org.jetbrains.grammarkit") version "2018.3.1"
+    kotlin("jvm") version "1.2.40"
 }
 
-idea {
-	module {
-		// https://github.com/gradle/kotlin-dsl/issues/537/
-		excludeDirs = excludeDirs + file("pinpoint_piggy") + file("zig")
-		generatedSourceDirs.add(file("gen"))
-	}
+fun fromToolbox(path: String) = file(path).listFiles().orEmpty().filter { it.isDirectory }.maxBy {
+    val (major, minor, patch) = it.name.split('.')
+    String.format("%5s%5s%5s", major, minor, patch)
 }
 
 allprojects {
-	apply {
-		plugin("org.jetbrains.grammarkit")
-	}
+    apply { plugin("org.jetbrains.grammarkit") }
 
-	intellij {
-		updateSinceUntilBuild = false
-		instrumentCode = true
-		when (System.getProperty("user.name")) {
-			"ice1000" -> {
-				val root = "/home/ice1000/.local/share/JetBrains/Toolbox/apps"
-				localPath = "$root/IDEA-U/ch-0/181.4668.68"
-				alternativeIdePath = "$root/PyCharm-C/ch-0/181.4668.75"
-			}
-
-			"hoshino" -> localPath = ext["ideaC_path"].toString()
-			else -> version = "2018.1"
-		}
-	}
+    intellij {
+        updateSinceUntilBuild = false
+        instrumentCode = true
+        val user = System.getProperty("user.name")
+        val os = System.getProperty("os.name")
+        when {
+            os.startsWith("Windows") -> {
+                val root = "C:\\Users\\ice10\\AppData\\Local\\JetBrains\\Toolbox\\apps";
+                val intellijPath = fromToolbox("$root\\IDEA-C-JDK11\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-C\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-JDK11\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-U\\ch-0")
+                intellijPath?.absolutePath?.let { localPath = it }
+                val pycharmPath = fromToolbox("$root\\PyCharm-C\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-C\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-C-JDK11\\ch-0")
+                    ?: fromToolbox("$root\\IDEA-U\\ch-0")
+                pycharmPath?.absolutePath?.let { alternativeIdePath = it }
+            }
+            os == "Linux" -> {
+                val root = "/home/$user/.local/share/JetBrains/Toolbox/apps"
+                val intellijPath = fromToolbox("$root/IDEA-C-JDK11/ch-0")
+                    ?: fromToolbox("$root/IDEA-C/ch-0")
+                    ?: fromToolbox("$root/IDEA-JDK11/ch-0")
+                    ?: fromToolbox("$root/IDEA-U/ch-0")
+                intellijPath?.absolutePath?.let { localPath = it }
+                val pycharmPath = fromToolbox("$root/PyCharm-C/ch-0")
+                    ?: fromToolbox("$root/IDEA-C/ch-0")
+                    ?: fromToolbox("$root/IDEA-C-JDK11/ch-0")
+                    ?: fromToolbox("$root/IDEA-U/ch-0")
+                pycharmPath?.absolutePath?.let { alternativeIdePath = it }
+            }
+        }
+    }
 }
 
 java {
@@ -124,9 +119,9 @@ repositories {
 }
 
 dependencies {
-	compileOnly(kotlin("stdlib-jdk8", kotlinVersion))
-	compileOnly(kotlin("script-util", kotlinVersion))
-	compile(kotlin("stdlib-jdk8", kotlinVersion).toString()) {
+	compileOnly(kotlin("stdlib-jdk8"))
+	compileOnly(kotlin("script-util"))
+	compile(kotlin("stdlib-jdk8").toString()) {
 		exclude(module = "kotlin-runtime")
 		exclude(module = "kotlin-reflect")
 		exclude(module = "kotlin-stdlib")
@@ -134,7 +129,7 @@ dependencies {
 	compile("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
 		exclude(module = "gson")
 	}
-	testCompile(kotlin("test-junit", kotlinVersion))
+	testCompile(kotlin("test-junit"))
 	testCompile("junit", "junit", "4.12")
 }
 

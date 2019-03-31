@@ -1,2 +1,2 @@
-rootProject.name = "zig-intellij"
+rootProject.name = "intellij-zig"
 
