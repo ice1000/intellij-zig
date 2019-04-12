@@ -37,7 +37,7 @@ fun findOrCreate(baseDir: VirtualFile, dir: String, module: Module) =
 fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
 
 // https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
-fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib", "zig", "std", "index.zig"))
+fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib", "zig", "std", "zig.zig"))
 
 fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) ||
 		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
