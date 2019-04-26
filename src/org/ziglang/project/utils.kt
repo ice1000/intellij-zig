@@ -34,13 +34,15 @@ fun versionOf(path: String) = executeCommand(arrayOf(path, "version"))
 fun findOrCreate(baseDir: VirtualFile, dir: String, module: Module) =
 		baseDir.findChild(dir) ?: baseDir.createChildDirectory(module, dir)
 
-fun validateZigExe(exePath: String) = Files.isExecutable(Paths.get(exePath))
+fun validateZigExe(exePath: String) = Files.exists(Paths.get(exePath))
 
 // https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
-fun validateZigLib(libPath: String) = Files.isReadable(Paths.get(libPath, "lib", "zig", "std", "zig.zig"))
+fun validateZigLib(libPath: String) = sequenceOf("zig.zig", "index.zig", "std.zig").any { file ->
+	Files.exists(Paths.get(libPath, "lib", "zig", "std", file))
+}
 
-fun validateZigSDK(sdkHome: String) = Files.isExecutable(Paths.get(sdkHome, "bin", "zig")) ||
-		Files.isExecutable(Paths.get(sdkHome, "bin", "zig.exe"))
+fun validateZigSDK(sdkHome: String) = Files.exists(Paths.get(sdkHome, "bin", "zig")) ||
+		Files.exists(Paths.get(sdkHome, "bin", "zig.exe"))
 
 fun LinkLabel<Any>.asLink() {
 	setListener({ _, _ ->
