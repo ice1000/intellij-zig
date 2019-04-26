@@ -67,7 +67,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 private object AnonymousFeedback {
-	private const val tokenFile = "de/halirutan/mathematica/errorreporting-zig/token.bin"
+	private const val tokenFile = "org/ziglang/error/token.bin"
 	private const val gitRepoUser = "ice1000"
 	private const val gitRepo = "zig-intellij"
 	private const val issueLabel = "pending"
@@ -249,7 +249,7 @@ class GitHubErrorBean(
  * Messages and strings used by the error reporter
  */
 private object ErrorReportBundle {
-	@NonNls private const val BUNDLE = "de.halirutan.mathematica.errorreporting-zig.report-bundle"
+	@NonNls private const val BUNDLE = "org.ziglang.error.report-bundle"
 	private val bundle: ResourceBundle by lazy { ResourceBundle.getBundle(BUNDLE) }
 
 	@JvmStatic
@@ -281,7 +281,7 @@ private fun getKeyValuePairs(
 	}
 	val params = mutableMapOf(
 			"error.description" to error.description,
-			"Zig Version" to (project?.run { zigSettings.settings.version } ?: "Unknown"),
+			"Zig Version" to (project?.run { zigSettings.settings.version } ?: "Not properly configured"),
 			"Plugin Name" to error.pluginName,
 			"Plugin Version" to error.pluginVersion,
 			"OS Name" to SystemInfo.OS_NAME,
