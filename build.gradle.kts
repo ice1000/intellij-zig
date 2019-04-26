@@ -34,53 +34,46 @@ group = packageName
 version = pluginVersion
 plugins {
     java
-    id("org.jetbrains.intellij") version "0.4.6"
-    id("org.jetbrains.grammarkit") version "2018.3.1"
-    kotlin("jvm") version "1.2.40"
+    id("org.jetbrains.intellij") version "0.4.8"
+    id("org.jetbrains.grammarkit") version "2019.1"
+    kotlin("jvm") version "1.3.30"
 }
 
-fun fromToolbox(path: String) = file(path).listFiles().orEmpty().filter { it.isDirectory }.maxBy {
-    val (major, minor, patch) = it.name.split('.')
-    String.format("%5s%5s%5s", major, minor, patch)
-}
+fun fromToolbox(root: String, ide: String) = file(root)
+	.resolve(ide)
+	.takeIf { it.exists() }
+	?.resolve("ch-0")
+	?.listFiles()
+	.orEmpty()
+	.filterNotNull()
+	.filter { it.isDirectory }
+	.maxBy {
+		val (major, minor, patch) = it.name.split('.')
+		String.format("%5s%5s%5s", major, minor, patch)
+	}
+	?.also { println("Picked: $it") }
 
 allprojects {
-    apply { plugin("org.jetbrains.grammarkit") }
+	apply { plugin("org.jetbrains.grammarkit") }
 
-    intellij {
-        updateSinceUntilBuild = false
-        instrumentCode = true
-        val user = System.getProperty("user.name")
-        val os = System.getProperty("os.name")
-        when {
-            os.startsWith("Windows") -> {
-                val root = "C:\\Users\\ice10\\AppData\\Local\\JetBrains\\Toolbox\\apps";
-                val intellijPath = fromToolbox("$root\\IDEA-C-JDK11\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-C\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-JDK11\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-U\\ch-0")
-                intellijPath?.absolutePath?.let { localPath = it }
-                val pycharmPath = fromToolbox("$root\\PyCharm-C\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-C\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-C-JDK11\\ch-0")
-                    ?: fromToolbox("$root\\IDEA-U\\ch-0")
-                pycharmPath?.absolutePath?.let { alternativeIdePath = it }
-            }
-            os == "Linux" -> {
-                val root = "/home/$user/.local/share/JetBrains/Toolbox/apps"
-                val intellijPath = fromToolbox("$root/IDEA-C-JDK11/ch-0")
-                    ?: fromToolbox("$root/IDEA-C/ch-0")
-                    ?: fromToolbox("$root/IDEA-JDK11/ch-0")
-                    ?: fromToolbox("$root/IDEA-U/ch-0")
-                intellijPath?.absolutePath?.let { localPath = it }
-                val pycharmPath = fromToolbox("$root/PyCharm-C/ch-0")
-                    ?: fromToolbox("$root/IDEA-C/ch-0")
-                    ?: fromToolbox("$root/IDEA-C-JDK11/ch-0")
-                    ?: fromToolbox("$root/IDEA-U/ch-0")
-                pycharmPath?.absolutePath?.let { alternativeIdePath = it }
-            }
-        }
-    }
+	intellij {
+		updateSinceUntilBuild = false
+		instrumentCode = true
+		val user = System.getProperty("user.name")
+		val os = System.getProperty("os.name")
+		val root = when {
+			os.startsWith("Windows") -> "C:\\Users\\$user\\AppData\\Local\\JetBrains\\Toolbox\\apps"
+			os == "Linux" -> "/home/$user/.local/share/JetBrains/Toolbox/apps"
+			else -> return@intellij
+		}
+		val intellijPath = sequenceOf("IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
+			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
+		intellijPath?.absolutePath?.let { localPath = it }
+		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
+			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
+		pycharmPath?.absolutePath?.let { alternativeIdePath = it }
+
+	}
 }
 
 java {
@@ -96,21 +89,19 @@ tasks.withType<PatchPluginXmlTask> {
 	println(pluginId)
 }
 
-java.sourceSets {
-	"main" {
-		resources.srcDirs("res")
-		java.srcDirs("src", "gen")
+sourceSets {
+	main {
 		withConvention(KotlinSourceSet::class) {
-			kotlin.srcDirs("src", "gen")
+			listOf(java, kotlin).forEach { it.srcDirs("src", "gen") }
 		}
+		resources.srcDir("res")
 	}
 
-	"test" {
-		resources.srcDirs("testData")
-		java.srcDirs("test")
+	test {
 		withConvention(KotlinSourceSet::class) {
-			kotlin.srcDirs("test")
+			listOf(java, kotlin).forEach { it.srcDirs("test") }
 		}
+		resources.srcDir("testData")
 	}
 }
 
@@ -119,13 +110,7 @@ repositories {
 }
 
 dependencies {
-	compileOnly(kotlin("stdlib-jdk8"))
-	compileOnly(kotlin("script-util"))
-	compile(kotlin("stdlib-jdk8").toString()) {
-		exclude(module = "kotlin-runtime")
-		exclude(module = "kotlin-reflect")
-		exclude(module = "kotlin-stdlib")
-	}
+	compile(kotlin("stdlib-jdk8"))
 	compile("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
 		exclude(module = "gson")
 	}
@@ -181,8 +166,8 @@ tasks.withType<KotlinCompile> {
 	dependsOn(genLexer)
 	kotlinOptions {
 		jvmTarget = "1.8"
-		languageVersion = "1.2"
-		apiVersion = "1.2"
+		languageVersion = "1.3"
+		apiVersion = "1.3"
 	}
 }
 
