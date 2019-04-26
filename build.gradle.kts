@@ -1,15 +1,8 @@
-import groovy.lang.Closure
-import org.gradle.language.base.internal.plugins.CleanRule
-import org.jetbrains.grammarkit.GrammarKitPluginExtension
-import org.jetbrains.grammarkit.tasks.BaseTask
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 import org.jetbrains.grammarkit.tasks.GenerateParser
 import org.jetbrains.intellij.tasks.PatchPluginXmlTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.io.*
-import java.nio.file.*
-import java.util.stream.Collectors
 
 val commitHash by lazy {
 	val output: String
@@ -26,7 +19,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.1.2"
+val pluginComingVersion = "0.1.3"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 
