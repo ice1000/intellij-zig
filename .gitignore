@@ -84,7 +84,6 @@ fabric.properties
 
 gen/
 idea-flex.skeleton
-resources
 build
 .gradle/
 exportToHTML
