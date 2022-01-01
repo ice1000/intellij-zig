@@ -27,7 +27,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.psi.PsiDirectory
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.ziglang.*
 import org.ziglang.editing.ZigNameValidator
 import org.ziglang.execution.ZigRunConfiguration

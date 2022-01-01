@@ -1,6 +1,6 @@
 <idea-plugin>
-	<name>Zig</name>
-	<vendor email="ice1000kotlin@foxmail.com" url="https://ziglang.org/">ice1000</vendor>
+    <name>Zig</name>
+    <vendor email="ice1000kotlin@foxmail.com" url="https://ziglang.org/">ice1000</vendor>
 
     <idea-version since-build="173.0"/>
 
@@ -13,8 +13,8 @@
         <additionalTextAttributes scheme="Default" file="/colorSchemes/Zig.xml"/>
         <colorSettingsPage implementation="org.ziglang.ZigColorSettingsPage"/>
         <errorHandler implementation="org.ziglang.error.GitHubErrorReporter"/>
-        <fileTypeFactory implementation="org.ziglang.ZigFileTypeFactory"/>
         <sdkType implementation="org.ziglang.project.ZigSdkType"/>
+        <fileType name="Zig File" implementationClass="org.ziglang.ZigFileType" fieldName="INSTANCE" language="Zig" extensions="zig"/>
         <liveTemplateContext implementation="org.ziglang.ZigContext"/>
         <defaultLiveTemplatesProvider implementation="org.ziglang.ZigLiveTemplateProvider"/>
         <directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>
@@ -23,86 +23,42 @@
         <consoleFilterProvider implementation="org.ziglang.execution.ZigConsoleFilterProvider"/>
         <breadcrumbsInfoProvider implementation="org.ziglang.editing.ZigBreadcrumbsProvider"/>
         <lang.findUsagesProvider language="Zig" implementationClass="org.ziglang.editing.ZigFindUsagesProvider"/>
-        <lang.elementManipulator
-                implementationClass="org.ziglang.psi.ZigStringManipulator"
-                forClass="org.ziglang.psi.ZigString"/>
-        <projectConfigurable
-                groupId="language"
-                instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
-        <projectService
-                serviceInterface="org.ziglang.project.ZigProjectService"
-                serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
-        <applicationService
-                serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
-                serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
-        <lang.refactoringSupport
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigRefactoringSupportProvider"/>
-        <completion.contributor
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigCompletionContributor"/>
-        <spellchecker.support
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigSpellcheckerStrategy"/>
-        <annotator
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigAnnotator"/>
-        <lang.braceMatcher
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigBraceMatcher"/>
-        <lang.commenter
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigCommenter"/>
-        <lang.syntaxHighlighterFactory
-                language="Zig"
-                implementationClass="org.ziglang.ZigSyntaxHighlighterFactory"/>
-        <lang.parserDefinition
-                language="Zig"
-                implementationClass="org.ziglang.ZigParserDefinition"/>
-        <lang.foldingBuilder
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigFolderBuilder"/>
-        <lang.psiStructureViewFactory
-                language="Zig"
-                implementationClass="org.ziglang.editing.ZigStructureViewFactory"/>
+        <lang.elementManipulator implementationClass="org.ziglang.psi.ZigStringManipulator" forClass="org.ziglang.psi.ZigString"/>
+        <projectConfigurable groupId="language" instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
+        <projectService serviceInterface="org.ziglang.project.ZigProjectService" serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
+        <applicationService serviceInterface="org.ziglang.project.ZigGlobalSettingsService" serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
+        <lang.refactoringSupport language="Zig" implementationClass="org.ziglang.editing.ZigRefactoringSupportProvider"/>
+        <completion.contributor language="Zig" implementationClass="org.ziglang.editing.ZigCompletionContributor"/>
+        <spellchecker.support language="Zig" implementationClass="org.ziglang.editing.ZigSpellcheckerStrategy"/>
+        <annotator language="Zig" implementationClass="org.ziglang.editing.ZigAnnotator"/>
+        
+        <lang.braceMatcher language="Zig" implementationClass="org.ziglang.editing.ZigBraceMatcher"/>
+        <lang.commenter language="Zig" implementationClass="org.ziglang.editing.ZigCommenter"/>
+        <lang.syntaxHighlighterFactory language="Zig" implementationClass="org.ziglang.ZigSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="Zig" implementationClass="org.ziglang.ZigParserDefinition"/>
+        <lang.foldingBuilder language="Zig" implementationClass="org.ziglang.editing.ZigFolderBuilder"/>
+        <lang.psiStructureViewFactory language="Zig" implementationClass="org.ziglang.editing.ZigStructureViewFactory"/>
     </extensions>
 
     <project-components>
     </project-components>
 
     <actions>
-        <action
-                class="org.ziglang.action.NewZigFile"
-                icon="ZigIcons.ZIG_FILE"
-                id="Zig.NewZigFile">
+        <action class="org.ziglang.action.NewZigFile" icon="/icons/zig_file.png" id="Zig.NewZigFile">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
         </action>
-        <action
-                class="org.ziglang.action.ZigBuildAction"
-                id="Zig.Build"
-                icon="AllIcons.Actions.Compile"
+        <action class="org.ziglang.action.ZigBuildAction" id="Zig.Build" icon="AllIcons.Actions.Compile"
                 use-shortcut-of="CompileDirty">
-            <add-to-group
-                    group-id="ToolbarRunGroup"
-                    relative-to-action="RunConfiguration"
-                    anchor="before"/>
+            <add-to-group group-id="ToolbarRunGroup" relative-to-action="RunConfiguration" anchor="before"/>
         </action>
-        <group
-                id="Zig.Tools"
-                icon="ZigIcons.ZIG_BIG_ICON"
-                text="Zig"
-                description="Zig related tools"
-                popup="true">
-            <action
-                    id="Zig.Tools.ShowZen"
-                    class="org.ziglang.action.ZigZenAction"/>
-            <action
-                    id="Zig.Tools.TranslateC"
-                    class="org.ziglang.action.ZigTranslateFromCAction">
+        <group id="Zig.Tools" icon="/icons/zig_icon.png" text="Zig" description="Zig related tools" popup="true">
+            <action id="Zig.Tools.ShowZen" class="org.ziglang.action.ZigZenAction"/>
+            <action id="Zig.Tools.TranslateC" class="org.ziglang.action.ZigTranslateFromCAction">
                 <keyboard-shortcut first-keystroke="ctrl alt shift k" keymap="$default"/>
             </action>
+
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
-
     </actions>
+
 </idea-plugin>

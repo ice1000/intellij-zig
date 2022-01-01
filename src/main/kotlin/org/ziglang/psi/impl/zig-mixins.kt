@@ -58,15 +58,10 @@ abstract class ZigSymbolMixin(node: ASTNode) : ZigExprImpl(node), ZigSymbol {
     final override val isParameter: Boolean
         get() = parent is ZigParamDeclaration
     final override val isVariableName: Boolean
-        get() = parent is ZigVariableDeclaration && prevSiblingTypeIgnoring(
-            ZigTypes.CONST_KEYWORD,
-            TokenType.WHITE_SPACE,
-            ZigTokenType.LINE_COMMENT
-        ) ?: prevSiblingTypeIgnoring(
-            ZigTypes.VAR_KEYWORD,
-            TokenType.WHITE_SPACE,
-            ZigTokenType.LINE_COMMENT
-        ) != null
+        get() = (parent is ZigVariableDeclaration) && (
+                    prevSiblingTypeIgnoring(ZigTypes.CONST_KEYWORD, TokenType.WHITE_SPACE, ZigTokenType.LINE_COMMENT )?: 
+                    prevSiblingTypeIgnoring(ZigTypes.VAR_KEYWORD, TokenType.WHITE_SPACE, ZigTokenType.LINE_COMMENT)
+                ) != null
 
     override val isDeclaration: Boolean
         get() = isFunctionName ||

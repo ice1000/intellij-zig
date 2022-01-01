@@ -7,7 +7,7 @@ import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.ziglang.ZigTokenType
 
 /**

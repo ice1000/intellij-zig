@@ -12,7 +12,7 @@ import com.intellij.pom.Navigatable
 import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiNamedElement
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.ziglang.ZigFile
 import org.ziglang.psi.*
 

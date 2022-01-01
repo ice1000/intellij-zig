@@ -43,14 +43,14 @@ class ZigAnnotator : Annotator {
 
     @Suppress("RemoveRedundantBackticks", "LocalVariableName")
     private fun macroExpr(macroExpr: ZigMacroExpr, holder: AnnotationHolder) {
-        val `@` = macroExpr.firstChild?.takeIf { it.node.elementType == ZigTypes.AT_SYM } ?: return
-        val element = `@`.nextSibling?.takeIf { it.node.elementType == ZigTypes.BUILTIN_FUNCTION } ?: return
+        val atElemenet = macroExpr.firstChild?.takeIf { it.node.elementType == ZigTypes.AT_SYM } ?: return
+        val element = atElemenet.nextSibling?.takeIf { it.node.elementType == ZigTypes.BUILTIN_FUNCTION } ?: return
         if (element.text !in builtinFunctions)
             holder.createErrorAnnotation(element, ZigBundle.message("zig.lint.unknown-builtin-symbol")).apply {
                 highlightType = ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
                 registerFix(
                     ZigRemoveElementIntention(
-                        `@`,
+                        atElemenet,
                         ZigBundle.message("zig.lint.un-builtin")
                     )
                 )

@@ -85,7 +85,7 @@ class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
 }
 
 const val TEXT_MAX = 16
-const val LONG_TEXT_MAX = 24
+
 fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
 
 class ZigBreadcrumbsProvider : BreadcrumbsProvider {

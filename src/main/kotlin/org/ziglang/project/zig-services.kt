@@ -1,7 +1,7 @@
 package org.ziglang.project
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.Project
@@ -34,14 +34,14 @@ class ZigGlobalSettings(
 
 val Project.zigSettings: ZigProjectService get() = zigSettingsNullable!!
 val Project.zigSettingsNullable: ZigProjectService?
-    get() = ServiceManager.getService(this, ZigProjectService::class.java)
+    get() = getServiceIfCreated(ZigProjectService::class.java)
 
 val zigGlobalSettings: ZigGlobalSettingsService
-    get() = ServiceManager.getService(ZigGlobalSettingsService::class.java)
+    get() = ApplicationManager.getApplication().getService(ZigGlobalSettingsService::class.java)
 
 @State(
     name = "ZigProjectSettings",
-    storages = [Storage(file = "zigConfig.xml")]
+    storages = [Storage("zigConfig.xml")]
 )
 class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSettings> {
     override val settings = ZigSettings()
@@ -53,7 +53,7 @@ class ZigProjectServiceImpl : ZigProjectService, PersistentStateComponent<ZigSet
 
 @State(
     name = "ZigGlobalSettings",
-    storages = [Storage(file = "zigGlobalConfig.xml")]
+    storages = [Storage("zigGlobalConfig.xml")]
 )
 class ZigGlobalSettingsServiceImpl :
     ZigGlobalSettingsService, PersistentStateComponent<ZigGlobalSettings> {

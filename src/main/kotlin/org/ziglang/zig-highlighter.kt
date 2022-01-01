@@ -11,7 +11,7 @@ import com.intellij.openapi.options.colors.ColorSettingsPage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.tree.IElementType
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.ziglang.psi.ZigTypes
 
 object ZigSyntaxHighlighter : SyntaxHighlighter {

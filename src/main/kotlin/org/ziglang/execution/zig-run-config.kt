@@ -16,7 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.jdom.Element
 import org.ziglang.ZIG_RUN_CONFIG_ID
 import org.ziglang.ZigBundle

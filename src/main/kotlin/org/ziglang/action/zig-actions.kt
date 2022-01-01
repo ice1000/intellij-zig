@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.ui.Messages.showDialog
 import com.petebevin.markdown.MarkdownProcessor
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.ziglang.ZigBundle
 import org.ziglang.executeCommand
 import org.ziglang.project.validateZigExe

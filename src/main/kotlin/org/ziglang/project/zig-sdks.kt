@@ -1,7 +1,7 @@
 package org.ziglang.project
 
 import com.intellij.openapi.projectRoots.*
-import icons.ZigIcons
+import org.ziglang.icons.ZigIcons
 import org.jdom.Element
 import org.ziglang.ZIG_WEBSITE
 import org.ziglang.ZigBundle
@@ -11,7 +11,7 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
     override fun getPresentableName() = ZigBundle.message("zig.sdk.name")
     override fun getIcon() = ZigIcons.ZIG_BIG_ICON
     override fun getIconForAddAction() = ZigIcons.ZIG_ADD_SDK_ICON
-    override fun isValidSdkHome(path: String): Boolean = validateZigSDK(path.orEmpty())
+    override fun isValidSdkHome(path: String): Boolean = validateZigSDK(path)
     override fun suggestSdkName(currentSdkName: String?, sdkHome: String): String = ZigBundle.message("zig.sdk.name")
     override fun suggestHomePath() = Paths.get(zigPath).parent?.parent?.toString()
     override fun getDownloadSdkUrl() = ZIG_WEBSITE
@@ -26,6 +26,6 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
     }
 
     companion object InstanceHolder {
-        val instance get() = SdkType.findInstance(ZigSdkType::class.java)
+        val instance get() = findInstance(ZigSdkType::class.java)
     }
 }
