@@ -21,7 +21,3 @@ class UtilsTest {
 		versionOf(zigPath).let(::println)
 	}
 }
-
-fun main(args: Array<String>) {
-	versionOf("/home/ice1000/SDK/zig").let(::println)
-}

@@ -25,6 +25,7 @@ dependencies {
 
 	testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.6.0")
 	testImplementation(group = "junit", name = "junit", version = "4.13.2")
+	testImplementation(kotlin("test-junit"))
 }
 
 sourceSets {

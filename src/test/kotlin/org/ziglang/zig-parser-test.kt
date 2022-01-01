@@ -70,7 +70,7 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 
 class ZigBasicParsingTest : LightPlatformTestCase() {
 	fun testParse() {
-		ZigTokenType.fromText("abc", ourProject).javaClass
+		ZigTokenType.fromText("abc", project).javaClass
 				.let(::println)
 	}
 }
