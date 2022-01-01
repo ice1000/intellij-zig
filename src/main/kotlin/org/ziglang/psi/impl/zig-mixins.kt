@@ -82,8 +82,8 @@ abstract class ZigSymbolMixin(node: ASTNode) : ZigExprImpl(node), ZigSymbol {
     ) =
         processor.execute(this, state)
 
-    override fun setName(name: String) = replace(ZigTokenType.fromText(name, project))
-    override fun getName() = text
+    override fun setName(name: String): PsiElement = replace(ZigTokenType.fromText(name, project))
+    override fun getName(): String = text
     override fun subtreeChanged() {
 //		type = null  TODO ZigExpr implements IZigExpr
         referenceImpl = null
@@ -93,7 +93,7 @@ abstract class ZigSymbolMixin(node: ASTNode) : ZigExprImpl(node), ZigSymbol {
 
 abstract class ZigStringMixin(node: ASTNode) : ZigExprImpl(node), ZigString {
     override fun isValidHost() = true
-    override fun updateText(text: String) = ElementManipulators.handleContentChange(this, text)
+    override fun updateText(text: String): ZigStringMixin = ElementManipulators.handleContentChange(this, text)
     override fun createLiteralTextEscaper() = LiteralTextEscaper.createSimple(this)
 }
 

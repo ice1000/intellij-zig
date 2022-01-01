@@ -34,7 +34,7 @@ class ZigSymbolRef(
     }
 
     override fun getCanonicalText(): String = element.text
-    override fun handleElementRename(newName: String) =
+    override fun handleElementRename(newName: String): PsiElement =
         ZigTokenType.fromText(newName, element.project).let(element::replace)
 
     override fun bindToElement(element: PsiElement) = element.also { refTo = element }

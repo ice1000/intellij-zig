@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement
 import org.ziglang.ZigFile
 import org.ziglang.psi.*
 
-fun PsiElement.presentText() = when (this) {
+fun PsiElement.presentText(): String = when (this) {
     is ZigFile -> name
     is ZigIfBlock,
     is ZigIfExprOrBlock -> "if ${children.getOrNull(1)?.text ?: ""}"

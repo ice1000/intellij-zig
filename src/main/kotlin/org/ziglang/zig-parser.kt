@@ -5,6 +5,7 @@ import com.intellij.lang.ParserDefinition
 import com.intellij.lexer.FlexAdapter
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.tree.IElementType
@@ -18,11 +19,11 @@ class ZigParserDefinition : ParserDefinition {
     override fun createParser(project: Project?) = ZigParser()
     override fun createLexer(project: Project?) = ZigLexerAdapter()
     override fun createFile(viewProvider: FileViewProvider) = ZigFile(viewProvider)
-    override fun createElement(node: ASTNode?) = ZigTypes.Factory.createElement(node)
+    override fun createElement(node: ASTNode?): PsiElement = ZigTypes.Factory.createElement(node)
     override fun getStringLiteralElements() = ZigTokenType.STRINGS
     override fun getCommentTokens() = ZigTokenType.COMMENTS
     override fun getFileNodeType() = FILE
-    override fun getWhitespaceTokens() = TokenSet.WHITE_SPACE
+    override fun getWhitespaceTokens(): TokenSet = TokenSet.WHITE_SPACE
     override fun spaceExistanceTypeBetweenTokens(left: ASTNode?, right: ASTNode?) =
         ParserDefinition.SpaceRequirements.MAY
 
@@ -42,7 +43,7 @@ class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INST
         @JvmField
         val IDENTIFIERS = TokenSet.create(ZigTypes.SYM, ZigTypes.SYMBOL)
 
-        fun fromText(string: String, project: Project) = PsiFileFactory
+        fun fromText(string: String, project: Project): PsiElement = PsiFileFactory
             .getInstance(project)
             .createFileFromText(ZigLanguage.INSTANCE, string)
             .firstChild
