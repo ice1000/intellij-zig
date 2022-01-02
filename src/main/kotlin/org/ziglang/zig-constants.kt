@@ -19,9 +19,6 @@ const val ZIG_RUN_CONFIG_ID = "ZIG_RUN_CONFIG_ID"
 @NonNls
 const val ZIG_COMMENT_START = "//"
 
-@NonNls
-const val ZIG_INSTALL_PREFIX = "--zig-install-prefix"
-
 @JvmField
 val builtinFunctions = listOf(
     "addWithOverflow",

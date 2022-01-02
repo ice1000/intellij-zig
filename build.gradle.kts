@@ -2,6 +2,7 @@ group = "org.ziglang"
 version = "0.1.4"
 
 plugins {
+	java
 	idea
 	id("org.jetbrains.intellij") version "1.3.0"
 	id("org.jetbrains.grammarkit") version "2021.2.1"

@@ -1,11 +1,8 @@
 package org.ziglang.execution
 
-import com.intellij.execution.filters.ConsoleFilterProviderEx
 import com.intellij.execution.filters.Filter
 import com.intellij.execution.filters.OpenFileHyperlinkInfo
-import com.intellij.execution.filters.UrlFilter
 import com.intellij.openapi.project.Project
-import com.intellij.psi.search.GlobalSearchScope
 import java.util.regex.Pattern
 
 class ZigConsoleFilter(private val project: Project) : Filter {
@@ -35,7 +32,3 @@ class ZigConsoleFilter(private val project: Project) : Filter {
     }
 }
 
-class ZigConsoleFilterProvider : ConsoleFilterProviderEx {
-    override fun getDefaultFilters(project: Project, scope: GlobalSearchScope) = getDefaultFilters(project)
-    override fun getDefaultFilters(project: Project) = arrayOf(ZigConsoleFilter(project), UrlFilter())
-}

@@ -53,9 +53,7 @@ class ZigTranslateFromCAction : AnAction(
                 arrayOf(
                     zigSettings.exePath,
                     "translate-c",
-                    cFile.path,
-                    ZIG_INSTALL_PREFIX,
-                    zigSettings.installPath
+                    cFile.path
                 ), timeLimit = 10000L
             )
         })

@@ -14,7 +14,7 @@
         <colorSettingsPage implementation="org.ziglang.ZigColorSettingsPage"/>
         <errorHandler implementation="org.ziglang.error.GitHubErrorReporter"/>
         <sdkType implementation="org.ziglang.project.ZigSdkType"/>
-        <fileType name="Zig File" implementationClass="org.ziglang.ZigFileType" fieldName="INSTANCE" language="Zig" extensions="zig"/>
+        <fileType name="Zig" implementationClass="org.ziglang.ZigFileType" fieldName="INSTANCE" language="Zig" extensions="zig"/>
         <liveTemplateContext implementation="org.ziglang.ZigContext"/>
         <defaultLiveTemplatesProvider implementation="org.ziglang.ZigLiveTemplateProvider"/>
         <directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>

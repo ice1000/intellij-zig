@@ -71,9 +71,7 @@ class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
     }
 
     //Tree... Traversal of trees...?
-    override fun buildFoldRegions(
-        root: PsiElement, document: Document, quick: Boolean
-    ) = SyntaxTraverser
+    override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
         .psiTraverser(root)
         .filter { it is ZigBlock || it is ZigErrorSetExpr }
         .map { ZigFoldingDescriptor(it, if (it is ZigErrorSetExpr) "error …" else "{…}") }

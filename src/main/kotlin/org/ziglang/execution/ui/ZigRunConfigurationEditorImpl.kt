@@ -1,41 +1,31 @@
 package org.ziglang.execution
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFolderDescriptor
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import org.ziglang.ZigFileType
+import org.ziglang.execution.ui.ZigRunConfigurationEditor
 import org.ziglang.project.initExeComboBox
+import org.ziglang.project.zigGlobalSettings
 
-class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRunConfigurationEditor() {
+class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration, project: Project) :
+    ZigRunConfigurationEditor() {
     init {
-        listOf("fast", "safe", "debug").forEach(releaseMode::addItem)
-        listOf("auto", "off", "on").forEach(coloredMode::addItem)
-        installPathField.addBrowseFolderListener(
-            TextBrowseFolderListener(
-                FileChooserDescriptorFactory.createSingleFolderDescriptor()
-            )
-        )
-        outputDirField.addBrowseFolderListener(
-            TextBrowseFolderListener(
-                FileChooserDescriptorFactory.createSingleFolderDescriptor()
-            )
-        )
-        workingDirField.addBrowseFolderListener(
-            TextBrowseFolderListener(
-                FileChooserDescriptorFactory.createSingleFolderDescriptor()
-            )
-        )
-        targetFileField.addBrowseFolderListener(
-            TextBrowseFolderListener(
-                FileChooserDescriptorFactory.createSingleFileDescriptor(ZigFileType)
-            )
-        )
-        initExeComboBox(executablePath)
+        installPathField.addBrowseFolderListener(TextBrowseFolderListener(createSingleFolderDescriptor()))
+        outputDirField.addBrowseFolderListener(TextBrowseFolderListener(createSingleFolderDescriptor()))
+        workingDirField.addBrowseFolderListener(TextBrowseFolderListener(createSingleFolderDescriptor()))
+        targetFileField.addBrowseFolderListener(TextBrowseFolderListener(createSingleFileDescriptor(ZigFileType)))
+
+        initExeComboBox(executablePath, project)
+
         resetEditorFrom(configuration)
     }
 
     override fun createEditor() = mainPanel
+
     override fun resetEditorFrom(configuration: ZigRunConfiguration) {
-        executablePath.comboBox.selectedItem = configuration.exePath
+        executablePath.selectedItem = configuration.exePath
         targetFileField.text = configuration.targetFile
         workingDirField.text = configuration.workingDir
         compilerArgsField.text = configuration.additionalOptions
@@ -63,7 +53,6 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
         configuration.programArgs = programArgsField.text
         configuration.installPath = installPathField.text
         configuration.outputDir = outputDirField.text
-        configuration.exePath = executablePath.comboBox.selectedItem as String
 
         configuration.static = statically.isSelected
         configuration.strip = strip.isSelected
@@ -76,5 +65,12 @@ class ZigRunConfigurationEditorImpl(configuration: ZigRunConfiguration) : ZigRun
         configuration.verboseCImports = verboseCImports.isSelected
         configuration.verboseZigIR = verboseZigIR.isSelected
         configuration.verboseLlvmIR = verboseLlvmIR.isSelected
+
+        val executablePath = executablePath.selectedItem as String
+        if (!zigGlobalSettings.knownZigExes.contains(executablePath)) {
+            zigGlobalSettings.knownZigExes.add(executablePath)
+        }
+
+        configuration.exePath = executablePath
     }
 }

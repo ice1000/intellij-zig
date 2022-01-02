@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public abstract class ZigProjectGeneratorPeer implements ProjectGeneratorPeer<ZigSettings> {
     protected @NotNull JPanel mainPanel;
-    protected @NotNull com.intellij.ui.ComboboxWithBrowseButton executablePath;
+    protected com.intellij.openapi.ui.ComboBox<String> executablePath;
     protected @NotNull LinkLabel<Object> zigWebsite;
     protected @NotNull JLabel version;
     protected @NotNull JCheckBox setupLater;

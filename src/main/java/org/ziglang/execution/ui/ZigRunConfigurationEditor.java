@@ -1,18 +1,18 @@
-package org.ziglang.execution;
+package org.ziglang.execution.ui;
 
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.components.JBCheckBox;
 import org.jetbrains.annotations.NotNull;
+import org.ziglang.execution.ZigRunConfiguration;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public abstract class ZigRunConfigurationEditor extends SettingsEditor<ZigRunConfiguration> {
     protected @NotNull JPanel mainPanel;
-    protected @NotNull ComboboxWithBrowseButton executablePath;
+    protected @NotNull ComboBox<String> executablePath;
     protected @NotNull TextFieldWithBrowseButton targetFileField;
     protected @NotNull TextFieldWithBrowseButton workingDirField;
     protected @NotNull RawCommandLineEditor compilerArgsField;
