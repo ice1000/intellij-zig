@@ -276,6 +276,7 @@ expr ::=
  | bitShiftExpr
  | additionExpr
  | multiplyExpr
+ | anonStructExpr
  | curlySuffixExpr
  | typeExpr
  | prefixOpExpr
@@ -321,6 +322,7 @@ bitShiftExpr ::= expr bitShiftOperator expr
 additionExpr ::= expr additionOperator expr
 multiplyExpr ::= expr multiplyOperator expr
 curlySuffixExpr ::= expr containerInitSuffix
+anonStructExpr ::= DOT_SYM containerInitSuffix // Anonymous struct: .{"world"}
 typeExpr ::= expr NOT_SYM expr
 prefixOpExpr ::= prefixOp expr
 asyncExpr ::= ASYNC_KEYWORD (LT_SYM primary GT_SYM)? primary fnCallSuffix
