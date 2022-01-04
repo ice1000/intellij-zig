@@ -1,12 +1,13 @@
 package org.ziglang
 
-import com.intellij.testFramework.LightPlatformTestCase
 import com.intellij.testFramework.ParsingTestCase
+import kotlin.test.Test
 
 class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition()) {
-	override fun getTestDataPath() = "testData/parsing"
+	override fun getTestDataPath() = "src/test/resources/parsing"
 	override fun skipSpaces() = true
 
+	@Test
 	fun testComments() {
 		println(name)
 		doTest(true)
@@ -66,12 +67,10 @@ class ZigParserTests : ParsingTestCase("", ZIG_EXTENSION, ZigParserDefinition())
 		println(name)
 		doTest(true)
 	}
-}
 
-class ZigBasicParsingTest : LightPlatformTestCase() {
-	fun testParse() {
-		ZigTokenType.fromText("abc", project).javaClass
-				.let(::println)
+	fun testHelloWorld() {
+		println(name)
+		doTest(true)
 	}
 }
 

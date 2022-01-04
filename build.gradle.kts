@@ -36,6 +36,19 @@ sourceSets {
 }
 
 tasks {
+
+	compileKotlin {
+		kotlinOptions {
+			jvmTarget = "11"
+		}
+	}
+
+	compileTestKotlin {
+		kotlinOptions {
+			jvmTarget = "11"
+		}
+	}
+
 	generateLexer {
 		// source flex file
 		source.set("grammar/zig-lexer.flex")

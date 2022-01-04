@@ -3,6 +3,7 @@ package org.ziglang.editing
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import org.ziglang.ZigBundle
 import org.ziglang.ZigSyntaxHighlighter
@@ -43,32 +44,35 @@ class ZigAnnotator : Annotator {
 
     @Suppress("RemoveRedundantBackticks", "LocalVariableName")
     private fun macroExpr(macroExpr: ZigMacroExpr, holder: AnnotationHolder) {
-        val atElemenet = macroExpr.firstChild?.takeIf { it.node.elementType == ZigTypes.AT_SYM } ?: return
-        val element = atElemenet.nextSibling?.takeIf { it.node.elementType == ZigTypes.BUILTIN_FUNCTION } ?: return
+        val atElement = macroExpr.firstChild?.takeIf { it.node.elementType == ZigTypes.AT_SYM } ?: return
+        val element = atElement.nextSibling?.takeIf { it.node.elementType == ZigTypes.BUILTIN_FUNCTION } ?: return
         if (element.text !in builtinFunctions)
-            holder.createErrorAnnotation(element, ZigBundle.message("zig.lint.unknown-builtin-symbol")).apply {
-                highlightType = ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
-                registerFix(
-                    ZigRemoveElementIntention(
-                        atElemenet,
-                        ZigBundle.message("zig.lint.un-builtin")
-                    )
-                )
-            }
+            holder.newAnnotation(HighlightSeverity.ERROR, ZigBundle.message("zig.lint.unknown-builtin-symbol")).apply {
+                range(element)
+                highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+                newFix(ZigRemoveElementIntention(atElement, ZigBundle.message("zig.lint.un-builtin")))
+            }.create()
     }
 
     private fun symbol(element: ZigSymbol, holder: AnnotationHolder) {
         when {
             element.isFunctionName ->
-                holder.createInfoAnnotation(element, null)
-                    .textAttributes = ZigSyntaxHighlighter.FUNCTION_DECLARATION
+                holder.newAnnotation(HighlightSeverity.INFORMATION, "").apply {
+                    textAttributes(ZigSyntaxHighlighter.FUNCTION_DECLARATION)
+                    range(element)
+                }.create()
         }
     }
 
     private fun ifExpr(condition: ZigExpr?, holder: AnnotationHolder) {
         when {
             condition is ZigBoolean ->
-                holder.createWarningAnnotation(condition, ZigBundle.message("zig.lint.const-condition", condition.text))
+                holder.newAnnotation(
+                    HighlightSeverity.WARNING,
+                    ZigBundle.message("zig.lint.const-condition", condition.text)
+                ).apply {
+                    range(condition)
+                }.create()
         }
     }
 
@@ -89,14 +93,20 @@ class ZigAnnotator : Annotator {
                     isEmpty() || all { it in "0123456789ABCDEFabcdef" }
                 }
 
-                if (accept) holder.createInfoAnnotation(element.textRange.subRange(start, end + nextCount), null)
-                    .textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE
+                if (accept) {
+                    holder.newAnnotation(HighlightSeverity.INFORMATION, "").apply {
+                        range(element.textRange.subRange(start, end + nextCount))
+                        textAttributes(ZigSyntaxHighlighter.STRING_ESCAPE)
+                    }.create()
+                }
+
                 continue
             }
-            holder.createErrorAnnotation(
-                element.textRange.subRange(start, end),
-                ZigBundle.message("zig.lint.illegal-escape")
-            ).textAttributes = ZigSyntaxHighlighter.STRING_ESCAPE_INVALID
+
+            holder.newAnnotation(HighlightSeverity.ERROR, ZigBundle.message("zig.lint.illegal-escape")).apply {
+                textAttributes(ZigSyntaxHighlighter.STRING_ESCAPE_INVALID)
+                range(element.textRange.subRange(start, end))
+            }.create()
         }
     }
 }

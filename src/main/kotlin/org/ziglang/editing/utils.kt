@@ -26,3 +26,7 @@ val PsiElement.treeViewTokens
             this is ZigIfExprOrBlock ||
             this is ZigTestBlock ||
             this is ZigTestExprOrBlock
+
+const val TEXT_MAX = 16
+
+fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"

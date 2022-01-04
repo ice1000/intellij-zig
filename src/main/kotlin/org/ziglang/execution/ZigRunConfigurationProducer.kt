@@ -3,7 +3,6 @@ package org.ziglang.execution
 import com.google.common.io.Files
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.LazyRunConfigurationProducer
-import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.util.Ref
