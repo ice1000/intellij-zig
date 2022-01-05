@@ -1,4 +1,4 @@
-package org.ziglang
+package org.ziglang.util
 
 import com.intellij.openapi.util.TextRange
 import java.util.concurrent.Executors

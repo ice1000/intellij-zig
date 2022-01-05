@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.util.FileContentUtil
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 
 class ZigRemoveElementIntention(
     private val element: PsiElement,

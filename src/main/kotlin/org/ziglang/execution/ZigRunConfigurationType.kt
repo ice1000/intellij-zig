@@ -3,7 +3,7 @@ package org.ziglang.execution
 import com.intellij.execution.configurations.ConfigurationType
 import com.intellij.openapi.project.DumbAware
 import org.ziglang.ZIG_RUN_CONFIG_ID
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.icons.ZigIcons
 
 object ZigRunConfigurationType : ConfigurationType, DumbAware {

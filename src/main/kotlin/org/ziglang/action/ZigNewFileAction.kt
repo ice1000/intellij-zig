@@ -10,7 +10,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.PsiDirectory
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.editing.ZigNameValidator
 import org.ziglang.icons.ZigIcons
 import org.ziglang.project.zigSettings

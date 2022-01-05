@@ -44,7 +44,7 @@ class ZigCommandLineState(
             buildHandler.addProcessListener(object : ProcessAdapter() {
                 override fun processTerminated(event: ProcessEvent) {
                     if (event.exitCode == 0) {
-                        console.clear()
+//                        console.clear()
                         val params = mutableListOf<String>()
                         with(configuration) {
                             params += outputFile
@@ -73,7 +73,7 @@ class ZigCommandLineState(
         
         with(configuration) {
             buildParams += exePath
-            buildParams += "build-exe"
+            buildParams += "run"
             buildParams += targetFile
             buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 

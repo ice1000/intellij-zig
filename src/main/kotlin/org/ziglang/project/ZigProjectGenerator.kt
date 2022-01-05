@@ -18,7 +18,7 @@ import com.intellij.platform.DirectoryProjectGenerator
 import com.intellij.platform.DirectoryProjectGeneratorBase
 import com.intellij.psi.PsiManager
 import com.intellij.util.PlatformUtils
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.action.ZigNewFileAction
 import org.ziglang.icons.ZigIcons
 import org.ziglang.project.ui.ZigProjectGeneratorPeerImpl

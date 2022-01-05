@@ -6,7 +6,7 @@ import com.intellij.psi.*
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
 import org.ziglang.ZigTokenType
-import org.ziglang.orTrue
+import org.ziglang.util.orTrue
 import org.ziglang.psi.*
 
 abstract class TrivialDeclaration(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {

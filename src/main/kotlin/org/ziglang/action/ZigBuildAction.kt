@@ -7,10 +7,10 @@ import com.intellij.execution.RunManager
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.execution.ZigRunConfiguration
 import org.ziglang.execution.ZigRunConfigurationType
-import org.ziglang.trimPath
+import org.ziglang.util.trimPath
 
 class ZigBuildAction : ZigAction(
     ZigBundle.message("zig.actions.build.title"),

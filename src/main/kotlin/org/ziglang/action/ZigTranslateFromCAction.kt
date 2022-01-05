@@ -13,8 +13,8 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VfsUtil
 import org.ziglang.ZIG_EXTENSION
-import org.ziglang.ZigBundle
-import org.ziglang.executeCommand
+import org.ziglang.i18n.ZigBundle
+import org.ziglang.util.executeCommand
 import org.ziglang.icons.ZigIcons
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings

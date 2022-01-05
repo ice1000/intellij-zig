@@ -5,7 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.platform.ProjectGeneratorPeer
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.project.*
 import java.awt.event.ItemListener
 

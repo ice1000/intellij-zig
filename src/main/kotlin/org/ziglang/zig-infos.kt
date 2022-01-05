@@ -1,20 +1,14 @@
 package org.ziglang
 
-import com.intellij.AbstractBundle
-import com.intellij.codeInsight.template.TemplateContextType
-import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.ResolveState
 import com.intellij.psi.scope.PsiScopeProcessor
-import org.jetbrains.annotations.NonNls
-import org.jetbrains.annotations.PropertyKey
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.icons.ZigIcons
 import org.ziglang.psi.ZigGlobalVarDeclaration
-import java.util.*
 
 object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
     override fun getIcon() = ZigIcons.ZIG_FILE
@@ -35,28 +29,5 @@ class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLan
                 place
             )
     }
-}
-
-class ZigContext : TemplateContextType(ZIG_CONTEXT_ID, ZIG_NAME) {
-    override fun isInContext(file: PsiFile, offset: Int) = file.fileType == ZigFileType
-}
-
-class ZigLiveTemplateProvider : DefaultLiveTemplatesProvider {
-    private companion object DefaultHolder {
-        private val DEFAULT = arrayOf("liveTemplates/Zig")
-    }
-
-    override fun getDefaultLiveTemplateFiles() = DEFAULT
-    override fun getHiddenLiveTemplateFiles(): Array<String>? = null
-}
-
-object ZigBundle {
-    @NonNls
-    private const val BUNDLE = "org.ziglang.zig-bundle"
-    private val bundle: ResourceBundle by lazy { ResourceBundle.getBundle(BUNDLE) }
-
-    @JvmStatic
-    fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
-        AbstractBundle.message(bundle, key, *params)
 }
 

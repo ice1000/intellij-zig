@@ -4,34 +4,27 @@ import com.google.common.io.Files
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.LazyRunConfigurationProducer
 import com.intellij.execution.configurations.ConfigurationFactory
-import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import org.ziglang.ZigFileType
 import org.ziglang.project.validateZigExe
-import org.ziglang.trimPath
+import org.ziglang.util.trimPath
 
 class ZigRunConfigurationProducer : LazyRunConfigurationProducer<ZigRunConfiguration>() {
     override fun isConfigurationFromContext(configuration: ZigRunConfiguration, context: ConfigurationContext) =
-        configuration.targetFile == CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)?.run { path.trimPath() }
+        configuration.targetFile == VIRTUAL_FILE.getData(context.dataContext)?.run { path.trimPath() }
 
-    private fun validate(configuration: ZigRunConfiguration, context: ConfigurationContext) =
-        CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)?.fileType == ZigFileType
-                && validateZigExe(configuration.exePath)
+    private fun validate(configuration: ZigRunConfiguration, ctx: ConfigurationContext) =
+        VIRTUAL_FILE.getData(ctx.dataContext)?.fileType == ZigFileType && validateZigExe(configuration.exePath)
 
-    override fun setupConfigurationFromContext(
-        configuration: ZigRunConfiguration, context: ConfigurationContext, sourceElement: Ref<PsiElement>
-    ): Boolean {
-        CommonDataKeys.VIRTUAL_FILE.getData(context.dataContext)
-            ?.path
-            .orEmpty()
-            .trimPath()
-            .let {
-                configuration.targetFile = it
-                configuration.name = Files.getNameWithoutExtension(configuration.targetFile)
-            }
+    override fun setupConfigurationFromContext(cfg: ZigRunConfiguration, ctx: ConfigurationContext, e: Ref<PsiElement>): Boolean {
+        VIRTUAL_FILE.getData(ctx.dataContext)?.path.orEmpty().trimPath().let {
+            cfg.targetFile = it
+            cfg.name = Files.getNameWithoutExtension(cfg.targetFile)
+        }
 
-        return validate(configuration, context)
+        return validate(cfg, ctx)
     }
 
     override fun getConfigurationFactory(): ConfigurationFactory = ZigRunConfigurationType.configurationFactories[0]

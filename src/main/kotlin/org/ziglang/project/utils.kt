@@ -14,8 +14,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.fields.ExtendableTextComponent
 import com.intellij.ui.components.fields.ExtendableTextField
 import com.intellij.ui.components.labels.LinkLabel
-import org.ziglang.ZigBundle
-import org.ziglang.executeCommand
+import org.ziglang.i18n.ZigBundle
+import org.ziglang.util.executeCommand
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.swing.JTextField

@@ -5,8 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.ui.Messages.showDialog
 import com.petebevin.markdown.MarkdownProcessor
 import org.ziglang.icons.ZigIcons
-import org.ziglang.ZigBundle
-import org.ziglang.executeCommand
+import org.ziglang.i18n.ZigBundle
+import org.ziglang.util.executeCommand
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
 

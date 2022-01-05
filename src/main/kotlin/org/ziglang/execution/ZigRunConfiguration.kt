@@ -11,7 +11,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import org.jdom.Element
-import org.ziglang.ZigBundle
+import org.ziglang.i18n.ZigBundle
 import org.ziglang.icons.ZigIcons
 import org.ziglang.project.zigSettings
 

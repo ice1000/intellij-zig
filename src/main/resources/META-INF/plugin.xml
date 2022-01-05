@@ -11,30 +11,40 @@
         <internalFileTemplate name="Zig Exe"/>
         <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ZigDark.xml"/>
         <additionalTextAttributes scheme="Default" file="/colorSchemes/Zig.xml"/>
-        <colorSettingsPage implementation="org.ziglang.ZigColorSettingsPage"/>
+        <colorSettingsPage implementation="org.ziglang.highlight.ZigColorSettingsPage"/>
         <errorHandler implementation="org.ziglang.error.GitHubErrorReporter"/>
         <sdkType implementation="org.ziglang.project.ZigSdkType"/>
-        <fileType name="Zig" implementationClass="org.ziglang.ZigFileType" fieldName="INSTANCE" language="Zig" extensions="zig"/>
-        <liveTemplateContext implementation="org.ziglang.ZigContext"/>
-        <defaultLiveTemplatesProvider implementation="org.ziglang.ZigLiveTemplateProvider"/>
+        <fileType name="Zig" implementationClass="org.ziglang.ZigFileType" fieldName="INSTANCE" language="Zig"
+                  extensions="zig"/>
+
+        <!-- Live templates -->
+        <liveTemplateContext implementation="org.ziglang.templates.ZigLiveTemplateContext"/>
+        <defaultLiveTemplates file="/liveTemplates/Zig.xml"/>
+
         <directoryProjectGenerator implementation="org.ziglang.project.ZigProjectGenerator"/>
         <runConfigurationProducer implementation="org.ziglang.execution.ZigRunConfigurationProducer"/>
         <configurationType implementation="org.ziglang.execution.ZigRunConfigurationType"/>
         <consoleFilterProvider implementation="org.ziglang.execution.ZigConsoleFilterProvider"/>
         <breadcrumbsInfoProvider implementation="org.ziglang.editing.ZigBreadcrumbsProvider"/>
         <lang.findUsagesProvider language="Zig" implementationClass="org.ziglang.editing.ZigFindUsagesProvider"/>
-        <lang.elementManipulator implementationClass="org.ziglang.psi.ZigStringManipulator" forClass="org.ziglang.psi.ZigString"/>
+        <lang.elementManipulator implementationClass="org.ziglang.psi.ZigStringManipulator"
+                                 forClass="org.ziglang.psi.ZigString"/>
         <projectConfigurable groupId="language" instance="org.ziglang.project.ui.ZigConfigurableImpl"/>
-        <projectService serviceInterface="org.ziglang.project.ZigProjectService" serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
-        <applicationService serviceInterface="org.ziglang.project.ZigGlobalSettingsService" serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
-        <lang.refactoringSupport language="Zig" implementationClass="org.ziglang.editing.ZigRefactoringSupportProvider"/>
+        <projectService serviceInterface="org.ziglang.project.ZigProjectService"
+                        serviceImplementation="org.ziglang.project.ZigProjectServiceImpl"/>
+        <applicationService serviceInterface="org.ziglang.project.ZigGlobalSettingsService"
+                            serviceImplementation="org.ziglang.project.ZigGlobalSettingsServiceImpl"/>
+        <lang.refactoringSupport language="Zig"
+                                 implementationClass="org.ziglang.editing.ZigRefactoringSupportProvider"/>
         <completion.contributor language="Zig" implementationClass="org.ziglang.editing.ZigCompletionContributor"/>
         <spellchecker.support language="Zig" implementationClass="org.ziglang.editing.ZigSpellcheckerStrategy"/>
         <annotator language="Zig" implementationClass="org.ziglang.editing.ZigAnnotator"/>
-        
+
+        <runLineMarkerContributor language="Zig" implementationClass="org.ziglang.execution.ZigRunLineMarkerContributor"/>
+
         <lang.braceMatcher language="Zig" implementationClass="org.ziglang.editing.ZigBraceMatcher"/>
         <lang.commenter language="Zig" implementationClass="org.ziglang.editing.ZigCommenter"/>
-        <lang.syntaxHighlighterFactory language="Zig" implementationClass="org.ziglang.ZigSyntaxHighlighterFactory"/>
+        <lang.syntaxHighlighterFactory language="Zig" implementationClass="org.ziglang.highlight.ZigSyntaxHighlighterFactory"/>
         <lang.parserDefinition language="Zig" implementationClass="org.ziglang.ZigParserDefinition"/>
         <lang.foldingBuilder language="Zig" implementationClass="org.ziglang.editing.ZigFolderBuilder"/>
         <lang.psiStructureViewFactory language="Zig" implementationClass="org.ziglang.editing.ZigStructureViewFactory"/>

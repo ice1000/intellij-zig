@@ -5,12 +5,12 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import org.ziglang.ZigBundle
-import org.ziglang.ZigSyntaxHighlighter
+import org.ziglang.i18n.ZigBundle
+import org.ziglang.highlight.ZigSyntaxHighlighter
 import org.ziglang.builtinFunctions
 import org.ziglang.psi.*
 import org.ziglang.psi.impl.firstExprOrNull
-import org.ziglang.subRange
+import org.ziglang.util.subRange
 import java.util.regex.Pattern
 import kotlin.math.min
 
