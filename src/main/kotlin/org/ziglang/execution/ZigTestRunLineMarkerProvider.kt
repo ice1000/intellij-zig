@@ -30,13 +30,17 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.util.execution.ParametersListUtil
 import icons.ZigIcons
+import org.ziglang.project.ZigProjectService
+import org.ziglang.project.zigPath
 import org.ziglang.psi.ZigTestDeclaration
+import java.io.File
 import javax.swing.Icon
 
 class ZigTestRunLineMarkerProvider : RunLineMarkerProvider() {
 
     companion object {
         val testFailures = mutableMapOf<String, String>()
+
         //val runIcon = IconLoader.getIcon("/runConfigurations/testState/run.svg", AllIcons::class.java)
         val redRunIcon = IconLoader.getIcon("/runConfigurations/testState/red2.svg", AllIcons::class.java)
     }
@@ -91,7 +95,8 @@ class ZigTestRunLineMarkerProvider : RunLineMarkerProvider() {
         val testedVirtualFile = testDeclaration.containingFile.virtualFile
         val workDir = project.guessProjectDir()!!
         val relativePath = VfsUtil.getRelativePath(testedVirtualFile, workDir)
-        return "zig test --test-filter \"${testName}\" $relativePath"
+        val zigExePath = testDeclaration.project.getService(ZigProjectService::class.java).settings.exePath
+        return zigExePath + " test --test-filter \"${testName}\" $relativePath"
     }
 
     private fun runCommand(project: Project, workDirectory: VirtualFile, testedVirtualFile: VirtualFile, commandString: String, executor: Executor, dataContext: DataContext) {
@@ -146,5 +151,13 @@ class ZigTestRunLineMarkerProvider : RunLineMarkerProvider() {
 class RunZigTestProfile(commandLine: GeneralCommandLine, originalCommand: String) : RunAnythingRunProfile(commandLine, originalCommand) {
     override fun getIcon(): Icon {
         return ZigIcons.ZIG_BIG_ICON
+    }
+
+    override fun getName(): String {
+        return if (originalCommand.contains("zig test ")) {
+            originalCommand.substring(originalCommand.indexOf("zig test "))
+        } else {
+            originalCommand
+        }
     }
 }
