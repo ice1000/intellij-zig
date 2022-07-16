@@ -38,10 +38,6 @@ class ZigCommandLineState(
 			buildParams += exePath
 			buildParams += "build-exe"
 			buildParams += targetFile
-			buildParams += ZIG_INSTALL_PREFIX
-			buildParams += installPath
-			buildParams += "--output"
-			buildParams += outputFile
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 
 			when (releaseMode) {
