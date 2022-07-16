@@ -116,6 +116,7 @@ CHAR_LITERAL={INCOMPLETE_CHAR}'
 \} { return ZigTypes.RIGHT_BRACE; }
 \[ { return ZigTypes.LEFT_BRACKET; }
 \] { return ZigTypes.RIGHT_BRACKET; }
+_ { return ZigTypes.UNDER_LINE; }
 
 \.\.\. { return ZigTypes.RANGE_SYM; }
 \.\. { return ZigTypes.SLICE_SYM; }
