@@ -9,7 +9,7 @@
 - LineMark icon for main function: run main method from mark icon
 - LineMark icon for test functions: run Zig tests from test mark icon
 - Adopt IntelliJ Platform Plugin Template structure
-- Compatible with 2022.*
+- Compatible with 203 - 2022.2
 - Zig 0.4+ syntax support: anonymous List Literals  `.{1, 2}`
 
 ## [0.1.2]
