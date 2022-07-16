@@ -116,7 +116,7 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 	override fun createTemplateConfiguration(project: Project) = ZigRunConfiguration(project, this).apply {
 		project.baseDir.run {
 			workingDir = path
-			outputDir = Paths.get(canonicalPath, "out").toString()
+			outputDir = Paths.get(canonicalPath!!).toString()
 		}
 	}
 }
