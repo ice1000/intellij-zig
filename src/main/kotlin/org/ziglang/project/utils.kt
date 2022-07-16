@@ -21,7 +21,7 @@ val zigPath: String by lazy {
 	PathEnvironmentVariableUtil.findInPath("zig")?.absolutePath
 			?: when {
 				SystemInfo.isWindows -> "C://Program Files/"
-				SystemInfo.isMac -> "C://Program Files/" // TODO
+				SystemInfo.isMac -> "/usr/local/bin"
 				else -> "/usr/bin/zig"
 			}
 }
@@ -37,8 +37,9 @@ fun findOrCreate(baseDir: VirtualFile, dir: String, module: Module) =
 fun validateZigExe(exePath: String) = Files.exists(Paths.get(exePath))
 
 // https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
-fun validateZigLib(libPath: String) = sequenceOf("zig.zig", "index.zig", "std.zig").any { file ->
-	Files.exists(Paths.get(libPath, "lib", "zig", "std", file))
+fun validateZigLib(installPath: String) = sequenceOf("zig.zig", "index.zig", "std.zig").any { file ->
+	Files.exists(Paths.get(installPath, "lib", "zig", "std", file))
+            || Files.exists(Paths.get(installPath, "lib", "std", file))
 }
 
 fun validateZigSDK(sdkHome: String) = Files.exists(Paths.get(sdkHome, "bin", "zig")) ||
