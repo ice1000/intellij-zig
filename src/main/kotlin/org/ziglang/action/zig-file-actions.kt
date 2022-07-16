@@ -100,7 +100,7 @@ class ZigBuildAction : ZigAction(
 					}
 
 				}
-		ProgramRunnerUtil.executeConfiguration(configuration, executor)
+		ProgramRunnerUtil.executeConfiguration(configuration, executor!!)
 	}
 }
 
@@ -116,10 +116,10 @@ class NewZigFile : CreateFileFromTemplateAction(
 				}
 	}
 
-	override fun getActionName(dir: PsiDirectory, name: String, templateName: String) =
+    override fun getActionName(dir: PsiDirectory, name: String, templateName: String) =
 			ZigBundle.message("zig.actions.new-file.title")
 
-	override fun buildDialog(project: Project?, dir: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {
+	override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
 		builder
 				.setTitle(ZigBundle.message("zig.actions.new-file.title"))
 				.setValidator(ZigNameValidator)
