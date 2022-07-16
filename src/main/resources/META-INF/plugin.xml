@@ -80,7 +80,7 @@
 				class="org.ziglang.action.ZigBuildAction"
 				id="Zig.Build"
 				icon="AllIcons.Actions.Compile"
-				use-shortcut-of="CompileDirty">
+				use-shortcut-of="CompareDirs">
 			<add-to-group
 					group-id="ToolbarRunGroup"
 					relative-to-action="RunConfiguration"
