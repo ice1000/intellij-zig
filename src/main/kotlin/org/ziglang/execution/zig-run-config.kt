@@ -19,6 +19,7 @@ import org.jdom.Element
 import org.ziglang.*
 import org.ziglang.project.validateZigExe
 import org.ziglang.project.zigSettings
+import java.io.File
 import java.nio.file.Paths
 import com.google.common.io.Files as GoogleFiles
 
@@ -32,7 +33,7 @@ class ZigRunConfiguration(project: Project, factory: ConfigurationFactory) :
 	var installPath: String
 	var outputDir = ""
 	var releaseMode = "debug"
-  var coloredMode = "auto"
+    var coloredMode = "auto"
 
 	var static = false
 	var strip = false
@@ -142,7 +143,7 @@ class ZigRunConfigurationProducer :
 				.trimPath()
 				.let {
 					configuration.targetFile = it
-					configuration.name = GoogleFiles.getNameWithoutExtension(configuration.targetFile)
+					configuration.name = File(configuration.targetFile).nameWithoutExtension
 				}
 		return validate(configuration, context)
 	}
