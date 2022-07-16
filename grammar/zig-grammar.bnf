@@ -294,6 +294,7 @@ private primary ::=
  | blockExpr
  | symbol
  | macroExpr
+ | anonymousListLiterals
  | arrayExpr
  | fnProto
  | asmExpr
@@ -384,6 +385,8 @@ arrayExpr ::=
  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr {
 	extends=expr
 }
+
+anonymousListLiterals ::= DOT_SYM LEFT_BRACE expr? RIGHT_BRACE
 
 macroExpr ::= AT_SYM BUILTIN_FUNCTION fnCallSuffix { pin=1 }
 groupedExpr ::= LEFT_PAREN expr RIGHT_PAREN
