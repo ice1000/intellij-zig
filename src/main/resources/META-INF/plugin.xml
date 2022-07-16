@@ -2,8 +2,7 @@
 	<name>Zig</name>
 	<vendor email="ice1000kotlin@foxmail.com" url="https://ziglang.org/">ice1000</vendor>
 
-	<idea-version since-build="173.0"/>
-
+    <depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
