@@ -1,169 +1,146 @@
-import org.jetbrains.grammarkit.tasks.GenerateLexer
-import org.jetbrains.grammarkit.tasks.GenerateParser
-import org.jetbrains.intellij.tasks.PatchPluginXmlTask
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val commitHash by lazy {
-	val output: String
-	val process: Process = Runtime.getRuntime().exec("git rev-parse --short HEAD")
-	process.waitFor()
-	output = process.inputStream.use {
-		it.bufferedReader().use {
-			it.readText()
-		}
-	}
-	process.destroy()
-	output.trim()
-}
+fun properties(key: String) = project.findProperty(key).toString()
 
-val isCI = !System.getenv("CI").isNullOrBlank()
-
-val pluginComingVersion = "0.1.3"
-val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
-val packageName = "org.ziglang"
-
-group = packageName
-version = pluginVersion
 plugins {
-    java
-    id("org.jetbrains.intellij") version "0.4.8"
-    id("org.jetbrains.grammarkit") version "2019.1"
-    kotlin("jvm") version "1.3.30"
+    // Java support
+    id("java")
+    // Kotlin support
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    // Gradle IntelliJ Plugin
+    id("org.jetbrains.intellij") version "1.7.0"
+    // Gradle Changelog Plugin
+    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.grammarkit") version "2021.2.2"
 }
 
-fun fromToolbox(root: String, ide: String) = file(root)
-	.resolve(ide)
-	.takeIf { it.exists() }
-	?.resolve("ch-0")
-	?.listFiles()
-	.orEmpty()
-	.filterNotNull()
-	.filter { it.isDirectory }
-	.maxBy {
-		val (major, minor, patch) = it.name.split('.')
-		String.format("%5s%5s%5s", major, minor, patch)
-	}
-	?.also { println("Picked: $it") }
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
-allprojects {
-	apply { plugin("org.jetbrains.grammarkit") }
-
-	intellij {
-		updateSinceUntilBuild = false
-		instrumentCode = true
-		val user = System.getProperty("user.name")
-		val os = System.getProperty("os.name")
-		val root = when {
-			os.startsWith("Windows") -> "C:\\Users\\$user\\AppData\\Local\\JetBrains\\Toolbox\\apps"
-			os == "Linux" -> "/home/$user/.local/share/JetBrains/Toolbox/apps"
-			else -> return@intellij
-		}
-		val intellijPath = sequenceOf("IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
-			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
-		intellijPath?.absolutePath?.let { localPath = it }
-		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
-			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
-		pycharmPath?.absolutePath?.let { alternativeIdePath = it }
-
-	}
-}
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks.withType<PatchPluginXmlTask> {
-	changeNotes(file("res/META-INF/change-notes.html").readText())
-	pluginDescription(file("res/META-INF/description.html").readText())
-	version(pluginVersion)
-	pluginId(packageName)
-	println(pluginId)
-}
-
-sourceSets {
-	main {
-		withConvention(KotlinSourceSet::class) {
-			listOf(java, kotlin).forEach { it.srcDirs("src", "gen") }
-		}
-		resources.srcDir("res")
-	}
-
-	test {
-		withConvention(KotlinSourceSet::class) {
-			listOf(java, kotlin).forEach { it.srcDirs("test") }
-		}
-		resources.srcDir("testData")
-	}
-}
-
+// Configure project's dependencies
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
+
+// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+intellij {
+    pluginName.set(properties("pluginName"))
+    version.set(properties("platformVersion"))
+    type.set(properties("platformType"))
+
+    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+}
+
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    version.set(properties("pluginVersion"))
+    groups.set(emptyList())
+}
+
 
 dependencies {
-	compile(kotlin("stdlib-jdk8"))
-	compile("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
-		exclude(module = "gson")
-	}
-	testCompile(kotlin("test-junit"))
-	testCompile("junit", "junit", "4.12")
+    implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") {
+        exclude(group = "com.google.code.gson", module = "gson")
+    }
 }
 
-task("displayCommitHash") {
-	group = "help"
-	description = "Display the newest commit hash"
-	doFirst {
-		println("Commit hash: $commitHash")
-	}
-}
+sourceSets["main"].java.srcDirs("src/main/gen")
 
-task("isCI") {
-	group = "help"
-	description = "Check if it's running in a continuous-integration"
-	doFirst {
-		println(if (isCI) "Yes, I'm on a CI." else "No, I'm not on CI.")
-	}
-}
+tasks {
+    generateLexer {
+        // source flex file
+        source.set("grammar/zig-lexer.flex")
 
-val genParser = task<GenerateParser>("genParser") {
-	group = tasks["init"].group
-	description = "Generate the Parser and PsiElement classes"
-	source = "grammar/zig-grammar.bnf"
-	targetRoot = "gen/"
-	pathToParser = "org/ziglang/ZigParser.java"
-	pathToPsiRoot = "org/ziglang/psi"
-	purgeOldFiles = true
-}
+        // target directory for lexer
+        targetDir.set("src/main/gen/org/ziglang")
 
-val genLexer = task<GenerateLexer>("genLexer") {
-	group = genParser.group
-	description = "Generate the Lexer"
-	source = "grammar/zig-lexer.flex"
-	targetDir = "gen/org/ziglang"
-	targetClass = "ZigLexer"
-	purgeOldFiles = true
-}
+        // target classname, target file will be targetDir/targetClass.java
+        targetClass.set("ZigLexer")
 
-val cleanGenerated = task("cleanGenerated") {
-	group = tasks["clean"].group
-	description = "Remove all generated codes"
-	doFirst {
-		delete("gen")
-	}
-}
+        // if set, plugin will remove a lexer output file before generating new one. Default: false
+        purgeOldFiles.set(true)
+    }
 
-tasks.withType<KotlinCompile> {
-	dependsOn(genParser)
-	dependsOn(genLexer)
-	kotlinOptions {
-		jvmTarget = "1.8"
-		languageVersion = "1.3"
-		apiVersion = "1.3"
-	}
-}
+    generateParser {
+        // source bnf file
+        source.set("grammar/zig-grammar.bnf")
 
-tasks.withType<Delete> {
-	dependsOn(cleanGenerated)
+        // optional, task-specific root for the generated files. Default: none
+        targetRoot.set("src/main/gen/")
+
+        // path to a parser file, relative to the targetRoot
+        pathToParser.set("org/ziglang/ZigParser.java")
+
+        // path to a directory with generated psi files, relative to the targetRoot
+        pathToPsiRoot.set("org/ziglang/psi")
+
+        // if set, the plugin will remove a parser output file and psi output directory before generating new ones. Default: false
+        purgeOldFiles.set(true)
+    }
+    // Set the JVM compatibility versions
+    properties("javaVersion").let {
+        withType<JavaCompile> {
+            sourceCompatibility = it
+            targetCompatibility = it
+        }
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = it
+        }
+    }
+
+    wrapper {
+        gradleVersion = properties("gradleVersion")
+    }
+
+    patchPluginXml {
+        version.set(properties("pluginVersion"))
+        sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
+
+        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+        pluginDescription.set(
+            projectDir.resolve("README.md").readText().lines().run {
+                val start = "<!-- Plugin description -->"
+                val end = "<!-- Plugin description end -->"
+
+                if (!containsAll(listOf(start, end))) {
+                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                }
+                subList(indexOf(start) + 1, indexOf(end))
+            }.joinToString("\n").run { markdownToHTML(this) }
+        )
+
+        // Get the latest available change notes from the changelog file
+        changeNotes.set(provider {
+            changelog.run {
+                getOrNull(properties("pluginVersion")) ?: getLatest()
+            }.toHTML()
+        })
+    }
+
+    // Configure UI tests plugin
+    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
+    runIdeForUiTests {
+        systemProperty("robot-server.port", "8082")
+        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+        systemProperty("jb.consents.confirmation.enabled", "false")
+    }
+
+    signPlugin {
+        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+        privateKey.set(System.getenv("PRIVATE_KEY"))
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+    }
+
+    publishPlugin {
+        dependsOn("patchChangelog")
+        token.set(System.getenv("PUBLISH_TOKEN"))
+        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+    }
 }
