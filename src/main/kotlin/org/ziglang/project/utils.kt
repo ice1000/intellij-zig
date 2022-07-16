@@ -20,7 +20,7 @@ val zigPath: String by lazy {
     PathEnvironmentVariableUtil.findInPath("zig")?.absolutePath
         ?: when {
             SystemInfo.isWindows -> "C://Program Files/"
-            SystemInfo.isMac -> "/usr/local/bin"
+            SystemInfo.isMac -> "/usr/local/bin/zig"
             else -> "/usr/bin/zig"
         }
 }
