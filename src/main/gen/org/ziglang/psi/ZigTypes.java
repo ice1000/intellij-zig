@@ -12,6 +12,7 @@ public interface ZigTypes {
 
   IElementType ADDITION_EXPR = new ZigElementType("ADDITION_EXPR");
   IElementType ADDITION_OPERATOR = new ZigElementType("ADDITION_OPERATOR");
+  IElementType ANONYMOUS_LIST_LITERALS = new ZigElementType("ANONYMOUS_LIST_LITERALS");
   IElementType ARRAY_ACCESS_SUFFIX = new ZigElementType("ARRAY_ACCESS_SUFFIX");
   IElementType ARRAY_EXPR = new ZigElementType("ARRAY_EXPR");
   IElementType ASM_CLOBBERS = new ZigElementType("ASM_CLOBBERS");
@@ -210,6 +211,7 @@ public interface ZigTypes {
   IElementType TRUE_KEYWORD = new ZigTokenType("TRUE_KEYWORD");
   IElementType TRY_KEYWORD = new ZigTokenType("TRY_KEYWORD");
   IElementType UNDEFINED_KEYWORD = new ZigTokenType("UNDEFINED_KEYWORD");
+  IElementType UNDER_LINE = new ZigTokenType("UNDER_LINE");
   IElementType UNEQUAL_SYM = new ZigTokenType("UNEQUAL_SYM");
   IElementType UNION_KEYWORD = new ZigTokenType("UNION_KEYWORD");
   IElementType UNREACHABLE_KEYWORD = new ZigTokenType("UNREACHABLE_KEYWORD");
@@ -227,6 +229,9 @@ public interface ZigTypes {
       }
       else if (type == ADDITION_OPERATOR) {
         return new ZigAdditionOperatorImpl(node);
+      }
+      else if (type == ANONYMOUS_LIST_LITERALS) {
+        return new ZigAnonymousListLiteralsImpl(node);
       }
       else if (type == ARRAY_ACCESS_SUFFIX) {
         return new ZigArrayAccessSuffixImpl(node);

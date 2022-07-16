@@ -36,17 +36,17 @@ public class ZigParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ADDITION_EXPR, ARRAY_EXPR, ASM_EXPR, ASSIGN_EXPR,
-      ASYNC_EXPR, AWAIT_EXPR, BINARY_AND_EXPR, BINARY_OR_EXPR,
-      BINARY_XOR_EXPR, BIT_SHIFT_EXPR, BLOCK_EXPR, BOOLEAN,
-      BOOL_AND_EXPR, BOOL_OR_EXPR, BREAK_EXPR, CANCEL_EXPR,
-      CHAR, COMPARISON_EXPR, CONTAINER_EXPR, CONTINUE_EXPR,
-      CURLY_SUFFIX_EXPR, ERROR_SET_EXPR, EXPR, FLOAT,
-      FN_PROTO, GROUPED_EXPR, INTEGER, KEYWORD_LITERAL,
-      MACRO_EXPR, MULTIPLY_EXPR, NULL, OR_ELSE_EXPR,
-      PREFIX_OP_EXPR, RESUME_EXPR, RETURN_EXPR, STRING,
-      SUFFIX_OP_EXPR, SYMBOL, TRY_EXPR, TYPE_EXPR,
-      UNWRAP_EXPR),
+    create_token_set_(ADDITION_EXPR, ANONYMOUS_LIST_LITERALS, ARRAY_EXPR, ASM_EXPR,
+      ASSIGN_EXPR, ASYNC_EXPR, AWAIT_EXPR, BINARY_AND_EXPR,
+      BINARY_OR_EXPR, BINARY_XOR_EXPR, BIT_SHIFT_EXPR, BLOCK_EXPR,
+      BOOLEAN, BOOL_AND_EXPR, BOOL_OR_EXPR, BREAK_EXPR,
+      CANCEL_EXPR, CHAR, COMPARISON_EXPR, CONTAINER_EXPR,
+      CONTINUE_EXPR, CURLY_SUFFIX_EXPR, ERROR_SET_EXPR, EXPR,
+      FLOAT, FN_PROTO, GROUPED_EXPR, INTEGER,
+      KEYWORD_LITERAL, MACRO_EXPR, MULTIPLY_EXPR, NULL,
+      OR_ELSE_EXPR, PREFIX_OP_EXPR, RESUME_EXPR, RETURN_EXPR,
+      STRING, SUFFIX_OP_EXPR, SYMBOL, TRY_EXPR,
+      TYPE_EXPR, UNWRAP_EXPR),
   };
 
   /* ********************************************************** */
@@ -2500,9 +2500,9 @@ public class ZigParser implements PsiParser, LightPsiParser {
   // 22: ATOM(asyncExpr)
   // 23: ATOM(integer) ATOM(float) ATOM(string) ATOM(char)
   //    ATOM(keywordLiteral) ATOM(boolean) ATOM(null) ATOM(blockExpr)
-  //    ATOM(symbol) ATOM(macroExpr) ATOM(arrayExpr) ATOM(fnProto)
-  //    PREFIX(asmExpr) ATOM(containerExpr) ATOM(continueExpr) ATOM(errorSetExpr)
-  //    PREFIX(groupedExpr)
+  //    ATOM(symbol) ATOM(macroExpr) ATOM(anonymousListLiterals) ATOM(arrayExpr)
+  //    ATOM(fnProto) PREFIX(asmExpr) ATOM(containerExpr) ATOM(continueExpr)
+  //    ATOM(errorSetExpr) PREFIX(groupedExpr)
   public static boolean expr(PsiBuilder builder_, int level_, int priority_) {
     if (!recursion_guard_(builder_, level_, "expr")) return false;
     addVariant(builder_, "<expr>");
@@ -2526,6 +2526,7 @@ public class ZigParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = blockExpr(builder_, level_ + 1);
     if (!result_) result_ = symbol(builder_, level_ + 1);
     if (!result_) result_ = macroExpr(builder_, level_ + 1);
+    if (!result_) result_ = anonymousListLiterals(builder_, level_ + 1);
     if (!result_) result_ = arrayExpr(builder_, level_ + 1);
     if (!result_) result_ = fnProto(builder_, level_ + 1);
     if (!result_) result_ = asmExpr(builder_, level_ + 1);
@@ -2924,7 +2925,49 @@ public class ZigParser implements PsiParser, LightPsiParser {
     return result_ || pinned_;
   }
 
-  // LEFT_BRACKET expr? RIGHT_BRACKET
+  // DOT_SYM LEFT_BRACE (expr COMMA_SYM?)* RIGHT_BRACE
+  public static boolean anonymousListLiterals(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "anonymousListLiterals")) return false;
+    if (!nextTokenIsSmart(builder_, DOT_SYM)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeTokensSmart(builder_, 0, DOT_SYM, LEFT_BRACE);
+    result_ = result_ && anonymousListLiterals_2(builder_, level_ + 1);
+    result_ = result_ && consumeToken(builder_, RIGHT_BRACE);
+    exit_section_(builder_, marker_, ANONYMOUS_LIST_LITERALS, result_);
+    return result_;
+  }
+
+  // (expr COMMA_SYM?)*
+  private static boolean anonymousListLiterals_2(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "anonymousListLiterals_2")) return false;
+    while (true) {
+      int pos_ = current_position_(builder_);
+      if (!anonymousListLiterals_2_0(builder_, level_ + 1)) break;
+      if (!empty_element_parsed_guard_(builder_, "anonymousListLiterals_2", pos_)) break;
+    }
+    return true;
+  }
+
+  // expr COMMA_SYM?
+  private static boolean anonymousListLiterals_2_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "anonymousListLiterals_2_0")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = expr(builder_, level_ + 1, -1);
+    result_ = result_ && anonymousListLiterals_2_0_1(builder_, level_ + 1);
+    exit_section_(builder_, marker_, null, result_);
+    return result_;
+  }
+
+  // COMMA_SYM?
+  private static boolean anonymousListLiterals_2_0_1(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "anonymousListLiterals_2_0_1")) return false;
+    consumeTokenSmart(builder_, COMMA_SYM);
+    return true;
+  }
+
+  // LEFT_BRACKET ( UNDER_LINE | expr )? RIGHT_BRACKET
   //  (ALIGN_KEYWORD LEFT_PAREN expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN)?
   //  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr
   public static boolean arrayExpr(PsiBuilder builder_, int level_) {
@@ -2943,11 +2986,20 @@ public class ZigParser implements PsiParser, LightPsiParser {
     return result_;
   }
 
-  // expr?
+  // ( UNDER_LINE | expr )?
   private static boolean arrayExpr_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "arrayExpr_1")) return false;
-    expr(builder_, level_ + 1, -1);
+    arrayExpr_1_0(builder_, level_ + 1);
     return true;
+  }
+
+  // UNDER_LINE | expr
+  private static boolean arrayExpr_1_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "arrayExpr_1_0")) return false;
+    boolean result_;
+    result_ = consumeTokenSmart(builder_, UNDER_LINE);
+    if (!result_) result_ = expr(builder_, level_ + 1, -1);
+    return result_;
   }
 
   // (ALIGN_KEYWORD LEFT_PAREN expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN)?

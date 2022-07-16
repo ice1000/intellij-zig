@@ -18,6 +18,10 @@ public class ZigVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAnonymousListLiterals(@NotNull ZigAnonymousListLiterals o) {
+    visitExpr(o);
+  }
+
   public void visitArrayAccessSuffix(@NotNull ZigArrayAccessSuffix o) {
     visitPsiElement(o);
   }
