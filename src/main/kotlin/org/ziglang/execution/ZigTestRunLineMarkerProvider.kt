@@ -31,9 +31,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.util.execution.ParametersListUtil
 import icons.ZigIcons
 import org.ziglang.project.ZigProjectService
-import org.ziglang.project.zigPath
 import org.ziglang.psi.ZigTestDeclaration
-import java.io.File
 import javax.swing.Icon
 
 class ZigTestRunLineMarkerProvider : RunLineMarkerProvider() {
@@ -156,6 +154,8 @@ class RunZigTestProfile(commandLine: GeneralCommandLine, originalCommand: String
     override fun getName(): String {
         return if (originalCommand.contains("zig test ")) {
             originalCommand.substring(originalCommand.indexOf("zig test "))
+        } else if (originalCommand.contains("zig.exe test ")) {
+            originalCommand.substring(originalCommand.indexOf("zig.exe test "))
         } else {
             originalCommand
         }
