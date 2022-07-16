@@ -17,12 +17,16 @@ import java.nio.file.Paths
 import javax.swing.JComboBox
 
 val zigPath: String by lazy {
-    PathEnvironmentVariableUtil.findInPath("zig")?.absolutePath
-        ?: when {
-            SystemInfo.isWindows -> "C://Program Files/"
+    val zigExecPath = PathEnvironmentVariableUtil.findInPath("zig")?.absolutePath
+    if (zigExecPath != null && (zigExecPath.endsWith("zig") || zigExecPath.endsWith("zig.exe"))) {
+        zigExecPath
+    } else {
+        when {
+            SystemInfo.isWindows -> "C://Program Files/zig/zig.exe"
             SystemInfo.isMac -> "/usr/local/bin/zig"
             else -> "/usr/bin/zig"
         }
+    }
 }
 
 fun versionOf(path: String) = executeCommand(arrayOf(path, "version"))
