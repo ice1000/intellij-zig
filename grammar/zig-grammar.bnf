@@ -380,13 +380,15 @@ asmExpr ::=
  ASM_KEYWORD VOLATILE_KEYWORD?
  LEFT_PAREN string asmOutput? RIGHT_PAREN
 arrayExpr ::=
- LEFT_BRACKET expr? RIGHT_BRACKET
+ LEFT_BRACKET ( UNDER_LINE | expr )? RIGHT_BRACKET
  (ALIGN_KEYWORD LEFT_PAREN expr (COLON_SYM integer COLON_SYM integer)? RIGHT_PAREN)?
  CONST_KEYWORD? VOLATILE_KEYWORD? typeExpr {
 	extends=expr
 }
 
-anonymousListLiterals ::= DOT_SYM LEFT_BRACE expr? RIGHT_BRACE
+anonymousListLiterals ::= DOT_SYM LEFT_BRACE (expr COMMA_SYM?)* RIGHT_BRACE {
+   extends=expr
+}
 
 macroExpr ::= AT_SYM BUILTIN_FUNCTION fnCallSuffix { pin=1 }
 groupedExpr ::= LEFT_PAREN expr RIGHT_PAREN
