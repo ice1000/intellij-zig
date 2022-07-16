@@ -120,6 +120,10 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 			outputDir = Paths.get(canonicalPath!!).toString()
 		}
 	}
+
+    override fun getId(): String {
+        return name
+    }
 }
 
 class ZigRunConfigurationProducer :
