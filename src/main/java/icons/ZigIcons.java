@@ -18,4 +18,6 @@ public interface ZigIcons {
 	@NotNull Icon ZIG_FILE = IconLoader.getIcon("/icons/zig_file.png");
 	@NotNull Icon ZIG_VAR = IconLoader.getIcon("/icons/zig_variable.png");
 	@NotNull Icon ZIG_FUN = IconLoader.getIcon("/icons/zig_function.png");
+
+	@NotNull Icon ZIG_TEST_MARK = IconLoader.getIcon("/icons/zig_test_mark.svg");
 }
