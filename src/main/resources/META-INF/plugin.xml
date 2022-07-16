@@ -64,6 +64,8 @@
 		<lang.psiStructureViewFactory
 				language="Zig"
 				implementationClass="org.ziglang.editing.ZigStructureViewFactory"/>
+        <codeInsight.lineMarkerProvider language="Zig" implementationClass="org.ziglang.execution.ZigTestRunLineMarkerProvider"/>
+        <runLineMarkerContributor language="Zig" implementationClass="org.ziglang.execution.ZigRunMainLineMarkerProvider"/>
 	</extensions>
 
 	<project-components>
