@@ -1,5 +1,5 @@
-import org.jetbrains.grammarkit.tasks.GenerateLexer
-import org.jetbrains.grammarkit.tasks.GenerateParser
+import org.jetbrains.grammarkit.tasks.GenerateLexerTask
+import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.intellij.tasks.PatchPluginXmlTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -50,8 +50,8 @@ allprojects {
 	apply { plugin("org.jetbrains.grammarkit") }
 
 	intellij {
-		updateSinceUntilBuild = false
-		instrumentCode = true
+		updateSinceUntilBuild.set(false)
+		instrumentCode.set(true)
 		val user = System.getProperty("user.name")
 		val os = System.getProperty("os.name")
 		val root = when {
@@ -61,31 +61,25 @@ allprojects {
 		}
 		val intellijPath = sequenceOf("IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
 			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
-		intellijPath?.absolutePath?.let { localPath = it }
+		intellijPath?.absolutePath?.let { localPath.set(it) }
 		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C-JDK11", "IDEA-C", "IDEA-JDK11", "IDEA-U")
 			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
-		pycharmPath?.absolutePath?.let { alternativeIdePath = it }
-
+//		pycharmPath?.absolutePath?.let { alternativeIdePath = it }
 	}
-}
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_1_11
-	targetCompatibility = JavaVersion.VERSION_1_11
 }
 
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
 	jvmToolchain {
-		languageVersion.set(JavaLanguageVersion.of(11))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
 tasks.withType<PatchPluginXmlTask> {
-	changeNotes(file("res/META-INF/change-notes.html").readText())
-	pluginDescription(file("res/META-INF/description.html").readText())
-	version(pluginVersion)
-	pluginId(packageName)
+	changeNotes.set(file("res/META-INF/change-notes.html").readText())
+	pluginDescription.set(file("res/META-INF/description.html").readText())
+	version.set(pluginVersion)
+	pluginId.set(packageName)
 	println(pluginId)
 }
 
@@ -110,12 +104,12 @@ repositories {
 }
 
 dependencies {
-	compile(kotlin("stdlib-jdk11"))
-	compile("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
+/*    compile(kotlin("stdlib-jdk11")) */
+	compileOnly("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
 		exclude(module = "gson")
 	}
-	testCompile(kotlin("test-junit"))
-	testCompile("junit", "junit", "4.13.2")
+	testImplementation(kotlin("test"))
+	testImplementation(kotlin("test-junit"))
 }
 
 task("displayCommitHash") {
@@ -134,23 +128,23 @@ task("isCI") {
 	}
 }
 
-val genParser = task<GenerateParser>("genParser") {
+val genParser = task<GenerateParserTask>("genParser") {
 	group = tasks["init"].group
 	description = "Generate the Parser and PsiElement classes"
-	source = "grammar/zig-grammar.bnf"
-	targetRoot = "gen/"
-	pathToParser = "org/ziglang/ZigParser.java"
-	pathToPsiRoot = "org/ziglang/psi"
-	purgeOldFiles = true
+	source.set("grammar/zig-grammar.bnf")
+	targetRoot.set("gen/")
+	pathToParser.set("org/ziglang/ZigParser.java")
+	pathToPsiRoot.set("org/ziglang/psi")
+	purgeOldFiles.set(true)
 }
 
-val genLexer = task<GenerateLexer>("genLexer") {
+val genLexer = task<GenerateLexerTask>("genLexer") {
 	group = genParser.group
 	description = "Generate the Lexer"
-	source = "grammar/zig-lexer.flex"
-	targetDir = "gen/org/ziglang"
-	targetClass = "ZigLexer"
-	purgeOldFiles = true
+	source.set("grammar/zig-lexer.flex")
+	targetDir.set("gen/org/ziglang")
+	targetClass.set("ZigLexer")
+	purgeOldFiles.set(true)
 }
 
 val cleanGenerated = task("cleanGenerated") {

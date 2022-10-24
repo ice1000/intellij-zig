@@ -73,7 +73,7 @@ class ZigFolderBuilder : FoldingBuilderEx(), DumbAware {
 			.psiTraverser(root)
 			.filter { it is ZigBlock || it is ZigErrorSetExpr }
 			.map { ZigFoldingDescriptor(it, if (it is ZigErrorSetExpr) "error …" else "{…}") }
-			.toTypedArray()
+			.toList().toTypedArray()
 
 	override fun isCollapsedByDefault(node: ASTNode) = true
 	override fun getPlaceholderText(node: ASTNode) = "…"

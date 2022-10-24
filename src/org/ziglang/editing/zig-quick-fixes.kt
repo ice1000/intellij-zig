@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.util.FileContentUtil
+import com.intellij.util.FileContentUtilCore
 import org.ziglang.ZigBundle
 
 class ZigRemoveElementIntention(
@@ -20,7 +20,7 @@ class ZigRemoveElementIntention(
 		if (element.isValid) ApplicationManager.getApplication().runWriteAction {
 			val virtualFile = element.containingFile.virtualFile
 			element.delete()
-			FileContentUtil.reparseFiles(virtualFile)
+			FileContentUtilCore.reparseFiles(virtualFile)
 		}
 	}
 }

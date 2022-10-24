@@ -1,9 +1,9 @@
 package org.ziglang.psi
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 
-class ZigResolvingTest : LightCodeInsightFixtureTestCase() {
+class ZigResolvingTest : BasePlatformTestCase() {
 	override fun getTestDataPath() = "testData/resolving"
 
 	fun testSimple() {

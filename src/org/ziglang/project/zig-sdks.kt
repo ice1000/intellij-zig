@@ -14,8 +14,8 @@ class ZigSdkType : SdkType(ZigBundle.message("zig.name")) {
 	override fun getPresentableName() = ZigBundle.message("zig.sdk.name")
 	override fun getIcon() = ZigIcons.ZIG_BIG_ICON
 	override fun getIconForAddAction() = ZigIcons.ZIG_ADD_SDK_ICON
-	override fun isValidSdkHome(sdkHome: String?) = validateZigSDK(sdkHome.orEmpty())
-	override fun suggestSdkName(s: String?, p1: String?) = ZigBundle.message("zig.sdk.name")
+	override fun isValidSdkHome(sdkHome: String) = validateZigSDK(sdkHome.orEmpty())
+	override fun suggestSdkName(s: String?, p1: String) = ZigBundle.message("zig.sdk.name")
 	override fun suggestHomePath() = Paths.get(zigPath).parent?.parent?.toString()
 	override fun getDownloadSdkUrl() = ZIG_WEBSITE
 	override fun createAdditionalDataConfigurable(md: SdkModel, m: SdkModificator): AdditionalDataConfigurable? = null
