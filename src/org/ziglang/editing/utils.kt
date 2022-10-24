@@ -23,6 +23,5 @@ val PsiElement.treeViewTokens
 			this is ZigUseDeclaration ||
 			this is ZigIfExprOrBlock ||
 			this is ZigIfErrorBlock ||
-			this is ZigIfExprOrBlock ||
 			this is ZigTestBlock ||
 			this is ZigTestExprOrBlock
