@@ -26,10 +26,10 @@ val packageName = "org.ziglang"
 group = packageName
 version = pluginVersion
 plugins {
-    java
-    id("org.jetbrains.intellij") version "0.4.8"
-    id("org.jetbrains.grammarkit") version "2019.1"
-    kotlin("jvm") version "1.3.30"
+	id("java")
+	id("org.jetbrains.intellij") version "1.9.0"
+	id("org.jetbrains.grammarkit") version "2021.2.2"
+	kotlin("jvm") version "1.7.20"
 }
 
 fun fromToolbox(root: String, ide: String) = file(root)
@@ -70,8 +70,15 @@ allprojects {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+	sourceCompatibility = JavaVersion.VERSION_1_11
+	targetCompatibility = JavaVersion.VERSION_1_11
+}
+
+// Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
+kotlin {
+	jvmToolchain {
+		languageVersion.set(JavaLanguageVersion.of(11))
+	}
 }
 
 tasks.withType<PatchPluginXmlTask> {
@@ -103,12 +110,12 @@ repositories {
 }
 
 dependencies {
-	compile(kotlin("stdlib-jdk8"))
+	compile(kotlin("stdlib-jdk11"))
 	compile("org.eclipse.mylyn.github", "org.eclipse.egit.github.core", "2.1.5") {
 		exclude(module = "gson")
 	}
 	testCompile(kotlin("test-junit"))
-	testCompile("junit", "junit", "4.12")
+	testCompile("junit", "junit", "4.13.2")
 }
 
 task("displayCommitHash") {
@@ -157,11 +164,6 @@ val cleanGenerated = task("cleanGenerated") {
 tasks.withType<KotlinCompile> {
 	dependsOn(genParser)
 	dependsOn(genLexer)
-	kotlinOptions {
-		jvmTarget = "1.8"
-		languageVersion = "1.3"
-		apiVersion = "1.3"
-	}
 }
 
 tasks.withType<Delete> {
