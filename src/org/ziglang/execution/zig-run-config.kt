@@ -119,6 +119,8 @@ class ZigRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory
 			outputDir = Paths.get(canonicalPath, "out").toString()
 		}
 	}
+
+	override fun getId() = ZIG_RUN_CONFIG_ID
 }
 
 class ZigRunConfigurationProducer :
