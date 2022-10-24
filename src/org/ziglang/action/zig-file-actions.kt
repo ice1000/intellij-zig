@@ -88,7 +88,7 @@ class ZigBuildAction : ZigAction(
 		val configuration = RunManager
 				.getInstance(project)
 				.let {
-					it.createRunConfiguration(
+					it.createConfiguration(
 							"build${Files.getNameWithoutExtension(path)}",
 							ZigRunConfigurationType.configurationFactories[0]
 					).apply {
