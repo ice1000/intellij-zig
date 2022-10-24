@@ -40,7 +40,7 @@ fun fromToolbox(root: String, ide: String) = file(root)
 	.orEmpty()
 	.filterNotNull()
 	.filter { it.isDirectory }
-	.maxBy {
+	.maxByOrNull {
 		val (major, minor, patch) = it.name.split('.')
 		String.format("%5s%5s%5s", major, minor, patch)
 	}
