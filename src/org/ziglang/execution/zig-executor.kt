@@ -13,6 +13,7 @@ import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.psi.search.ExecutionSearchScopes
 import org.ziglang.ZIG_INSTALL_PREFIX
 import java.nio.file.Paths
 
@@ -23,7 +24,7 @@ class ZigCommandLineState(
 	private val consoleBuilder = TextConsoleBuilderFactory
 			.getInstance()
 			.createBuilder(env.project,
-					SearchScopeProvider.createSearchScope(env.project, env.runProfile))
+					ExecutionSearchScopes.executionScope(env.project, env.runProfile))
 
 	override fun execute(executor: Executor, runner: ProgramRunner<*>): ExecutionResult {
 		ApplicationManager.getApplication().runWriteAction {
