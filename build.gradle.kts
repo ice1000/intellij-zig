@@ -50,7 +50,9 @@ allprojects {
 	apply { plugin("org.jetbrains.grammarkit") }
 
 	intellij {
-		updateSinceUntilBuild.set(false)
+		version.set("2022.2.3")
+		type.set("IC")
+//		updateSinceUntilBuild.set(false)
 		instrumentCode.set(true)
 		val user = System.getProperty("user.name")
 		val os = System.getProperty("os.name")
