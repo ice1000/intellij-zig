@@ -80,7 +80,7 @@ private object AnonymousFeedback {
 	 * @return The report info that is then used in [GitHubErrorReporter] to show the user a balloon with the link
 	 * of the created issue.
 	 */
-	internal fun sendFeedback(environmentDetails: MutableMap<String, String>): SubmittedReportInfo {
+	fun sendFeedback(environmentDetails: MutableMap<String, String>): SubmittedReportInfo {
 		val logger = Logger.getInstance(javaClass.name)
 		try {
 			val resource: URL? = javaClass.classLoader.getResource(tokenFile)
@@ -253,7 +253,7 @@ private object ErrorReportBundle {
 	private val bundle: ResourceBundle by lazy { ResourceBundle.getBundle(BUNDLE) }
 
 	@JvmStatic
-	internal fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
+	fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
 			CommonBundle.message(bundle, key, *params)
 }
 
