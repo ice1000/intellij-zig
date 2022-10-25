@@ -26,7 +26,7 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 	override fun createStep(
 			projectGenerator: DirectoryProjectGenerator<ZigSettings>,
 			callback: AbstractNewProjectStep.AbstractCallback<ZigSettings>) =
-			ProjectSettingsStepBase(projectGenerator, AbstractNewProjectStep.AbstractCallback<ZigSettings>())
+			ProjectSettingsStepBase(projectGenerator, AbstractNewProjectStep.AbstractCallback())
 
 	override fun getLogo() = ZigIcons.ZIG_BIG_ICON
 	override fun getName() = ZigBundle.message("zig.name")
