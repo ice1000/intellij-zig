@@ -35,7 +35,7 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 	override fun generateProject(project: Project, baseDir: VirtualFile, settings: ZigSettings, module: Module) {
 		(project.zigSettings as ZigProjectServiceImpl).loadState(settings)
 		ApplicationManager.getApplication().runWriteAction {
-			val modifiableModel: ModifiableRootModel = ModifiableModelsProvider.SERVICE.getInstance().getModuleModifiableModel(module)
+			val modifiableModel: ModifiableRootModel = ModifiableModelsProvider.getInstance().getModuleModifiableModel(module)
 			module.rootManager.modifiableModel.apply {
 				inheritSdk()
 				contentEntries.firstOrNull()?.apply {
@@ -45,7 +45,7 @@ class ZigProjectGenerator : DirectoryProjectGeneratorBase<ZigSettings>(),
 				}
 				commit()
 			}
-			ModifiableModelsProvider.SERVICE.getInstance().commitModuleModifiableModel(modifiableModel)
+			ModifiableModelsProvider.getInstance().commitModuleModifiableModel(modifiableModel)
 			project.forCLion()
 		}
 	}
