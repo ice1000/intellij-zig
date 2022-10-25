@@ -38,8 +38,7 @@ class ZigCommandLineState(
 			buildParams += exePath
 			buildParams += "build-exe"
 			buildParams += targetFile
-			buildParams += "--output"
-			buildParams += outputFile
+			buildParams += "-femit-bin=" + outputFile
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)
 
 			when (releaseMode) {
