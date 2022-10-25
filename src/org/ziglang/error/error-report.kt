@@ -117,7 +117,7 @@ private object AnonymousFeedback {
 	private fun findFirstDuplicate(uniqueTitle: String, service: IssueService, repo: RepositoryId): Issue? {
 		val searchParameters = HashMap<String, String>(2)
 		searchParameters[IssueService.FILTER_STATE] = IssueService.STATE_OPEN
-		return service.pageIssues(repo, searchParameters).flatMap { it }.firstOrNull { it.title == uniqueTitle }
+		return service.pageIssues(repo, searchParameters).flatten().firstOrNull { it.title == uniqueTitle }
 	}
 
 	private fun createNewGibHubIssue(details: MutableMap<String, String>) = Issue().apply {
