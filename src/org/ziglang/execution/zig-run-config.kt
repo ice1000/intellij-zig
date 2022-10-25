@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package org.ziglang.execution
 
 import com.intellij.execution.Executor
