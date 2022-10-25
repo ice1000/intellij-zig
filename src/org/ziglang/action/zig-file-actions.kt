@@ -45,8 +45,6 @@ class ZigTranslateFromCAction : AnAction(
 					zigSettings.exePath,
 					"translate-c",
 					cFile.path,
-					ZIG_INSTALL_PREFIX,
-					zigSettings.installPath
 			), timeLimit = 10000L)
 		})
 		ApplicationManager.getApplication().runWriteAction {

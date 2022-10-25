@@ -14,7 +14,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.psi.search.ExecutionSearchScopes
-import org.ziglang.ZIG_INSTALL_PREFIX
 import java.nio.file.Paths
 
 class ZigCommandLineState(
@@ -39,8 +38,6 @@ class ZigCommandLineState(
 			buildParams += exePath
 			buildParams += "build-exe"
 			buildParams += targetFile
-			buildParams += ZIG_INSTALL_PREFIX
-			buildParams += installPath
 			buildParams += "--output"
 			buildParams += outputFile
 			buildParams += additionalOptions.split(' ', '\n').filter(String::isNotBlank)

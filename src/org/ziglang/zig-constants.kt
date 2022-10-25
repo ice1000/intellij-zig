@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NonNls
 
 @NonNls const val ZIG_COMMENT_START = "//"
 
-@NonNls const val ZIG_INSTALL_PREFIX = "--zig-install-prefix"
-
 @JvmField val builtinFunctions = listOf(
 		"addWithOverflow",
 		"ArgType",
