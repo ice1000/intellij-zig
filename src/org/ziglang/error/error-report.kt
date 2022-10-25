@@ -21,7 +21,7 @@
 
 package org.ziglang.error
 
-import com.intellij.CommonBundle
+import com.intellij.AbstractBundle
 import com.intellij.diagnostic.AbstractMessage
 import com.intellij.diagnostic.DiagnosticBundle
 import com.intellij.diagnostic.ReportMessages
@@ -259,7 +259,7 @@ private object ErrorReportBundle {
 
 	@JvmStatic
 	fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
-			CommonBundle.message(bundle, key, *params)
+		AbstractBundle.message(bundle, key, *params)
 }
 
 private class AnonymousFeedbackTask(

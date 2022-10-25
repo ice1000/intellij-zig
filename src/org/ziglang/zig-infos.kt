@@ -1,6 +1,6 @@
 package org.ziglang
 
-import com.intellij.CommonBundle
+import com.intellij.AbstractBundle
 import com.intellij.codeInsight.template.TemplateContextType
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.extapi.psi.PsiFileBase
@@ -59,6 +59,6 @@ object ZigBundle {
 
 	@JvmStatic
 	fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
-			CommonBundle.message(bundle, key, *params)
+		AbstractBundle.message(bundle, key, *params)
 }
 
