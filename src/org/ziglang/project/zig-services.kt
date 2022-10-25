@@ -1,5 +1,6 @@
 package org.ziglang.project
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -30,10 +31,10 @@ class ZigGlobalSettings(
 
 val Project.zigSettings: ZigProjectService get() = zigSettingsNullable!!
 val Project.zigSettingsNullable: ZigProjectService?
-	get() = ServiceManager.getService(this, ZigProjectService::class.java)
+	get() = this.getService(ZigProjectService::class.java)
 
 val zigGlobalSettings: ZigGlobalSettingsService
-	get() = ServiceManager.getService(ZigGlobalSettingsService::class.java)
+	get() = ApplicationManager.getApplication().getService(ZigGlobalSettingsService::class.java)
 
 @State(
 		name = "ZigProjectSettings",
