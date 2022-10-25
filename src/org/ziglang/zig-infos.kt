@@ -17,7 +17,7 @@ import org.ziglang.psi.ZigGlobalVarDeclaration
 import org.ziglang.psi.ZigLocalVariableDeclaration
 import java.util.*
 
-object ZigFileType : LanguageFileType(ZigLanguage.INSTANCE) {
+object ZigFileType : LanguageFileType(ZigLanguage) {
 	override fun getIcon() = ZigIcons.ZIG_FILE
 	override fun getName() = ZIG_NAME
 	override fun getDefaultExtension() = ZIG_EXTENSION
@@ -30,7 +30,7 @@ class ZigFileTypeFactory : FileTypeFactory() {
 	}
 }
 
-class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLanguage.INSTANCE) {
+class ZigFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ZigLanguage) {
 	override fun getFileType() = ZigFileType
 	override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean =
 			children.all {

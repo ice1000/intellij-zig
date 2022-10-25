@@ -25,11 +25,11 @@ class ZigParserDefinition : ParserDefinition {
 			ParserDefinition.SpaceRequirements.MAY
 
 	private companion object FileHolder {
-		private val FILE = IFileElementType(ZigLanguage.INSTANCE)
+		private val FILE = IFileElementType(ZigLanguage)
 	}
 }
 
-class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INSTANCE) {
+class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage) {
 	companion object TokenHolder {
 		@JvmField val LINE_COMMENT = ZigTokenType("comment")
 		@JvmField val COMMENTS = TokenSet.create(LINE_COMMENT)
@@ -38,10 +38,10 @@ class ZigTokenType(debugName: String) : IElementType(debugName, ZigLanguage.INST
 
 		fun fromText(string: String, project: Project) = PsiFileFactory
 				.getInstance(project)
-				.createFileFromText(ZigLanguage.INSTANCE, string)
+				.createFileFromText(ZigLanguage, string)
 				.firstChild
 				.let { (it as? PsiErrorElement)?.firstChild ?: it }
 	}
 }
 
-class ZigElementType(debugName: String) : IElementType(debugName, ZigLanguage.INSTANCE)
+class ZigElementType(debugName: String) : IElementType(debugName, ZigLanguage)

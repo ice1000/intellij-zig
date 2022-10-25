@@ -85,7 +85,7 @@ fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.
 
 class ZigBreadcrumbsProvider : BreadcrumbsProvider {
 	private fun ZigFnProto.text() = name?.let { "$it()" }
-	override fun getLanguages() = arrayOf(ZigLanguage.INSTANCE)
+	override fun getLanguages() = arrayOf(ZigLanguage)
 	override fun getElementInfo(element: PsiElement) = cutText(when (element) {
 		is ZigFnDeclaration -> element.fnProto.text()
 		is ZigExternDeclaration -> PsiTreeUtil.findChildOfType(element, ZigFnProto::class.java)?.text()
