@@ -53,7 +53,6 @@ allprojects {
 	apply { plugin("org.jetbrains.grammarkit") }
 
 	intellij {
-		version.set("2022.2.3")
 		type.set("IC")
 //		updateSinceUntilBuild.set(false)
 		instrumentCode.set(true)
@@ -67,9 +66,11 @@ allprojects {
 		}
 		val intellijPath = sequenceOf("IDEA-C", "IDEA-U")
 			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
-		intellijPath?.absolutePath?.let { localPath.set(it) }
-		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C", "IDEA-U")
-			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
+		intellijPath?.absolutePath?.let { localPath.set(it) } ?: run {
+			version.set("2022.2.3")
+		}
+//		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C", "IDEA-U")
+//			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
 //		pycharmPath?.absolutePath?.let { alternativeIdePath = it }
 	}
 }
