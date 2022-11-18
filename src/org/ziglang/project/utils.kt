@@ -36,9 +36,11 @@ fun findOrCreate(baseDir: VirtualFile, dir: String, module: Module) =
 
 fun validateZigExe(exePath: String) = Files.exists(Paths.get(exePath))
 
-// https://github.com/zig-lang/zig/blob/7350181a4a778f9d03186e5123beffdf80f58606/src/main.cpp#L140-L173
+// https://github.com/ziglang/zig/blob/78f26b970e1c5c288e45d0edd2ab2f229e6fe924/src/introspect.zig#L8-L34
 fun validateZigLib(libPath: String) = sequenceOf("zig.zig", "index.zig", "std.zig").any { file ->
 	Files.exists(Paths.get(libPath, "lib", "zig", "std", file))
+} || sequenceOf("zig.zig", "index.zig", "std.zig").any { file ->
+        Files.exists(Paths.get(libPath, "lib", "std", file))
 }
 
 fun validateZigSDK(sdkHome: String) = Files.exists(Paths.get(sdkHome, "bin", "zig")) ||
