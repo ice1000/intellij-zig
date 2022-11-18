@@ -8,7 +8,7 @@ This is a **work in progress**, some features are implemented partially, there m
 
 CI|Status
 :---:|:---:
-CircleCI (newest with tests, linux)|[![CircleCI](https://circleci.com/gh/ice1000/zig-intellij.svg?style=svg)](https://circleci.com/gh/ice1000/zig-intellij)
+CircleCI (newest with tests, linux)|[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ice1000/intellij-zig/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ice1000/intellij-zig/tree/master)
 
 ## Screenshots
 
