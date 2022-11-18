@@ -19,7 +19,7 @@ val commitHash by lazy {
 
 val isCI = !System.getenv("CI").isNullOrBlank()
 
-val pluginComingVersion = "0.1.3"
+val pluginComingVersion = "0.1.4"
 val pluginVersion = if (isCI) "$pluginComingVersion-$commitHash" else pluginComingVersion
 val packageName = "org.ziglang"
 
@@ -27,8 +27,8 @@ group = packageName
 version = pluginVersion
 plugins {
 	id("java")
-	id("org.jetbrains.intellij") version "1.9.0"
-	id("org.jetbrains.grammarkit") version "2021.2.2"
+	id("org.jetbrains.intellij") version "1.10.0"
+	id("org.jetbrains.grammarkit") version "2022.3"
 	kotlin("jvm") version "1.7.20"
 }
 
