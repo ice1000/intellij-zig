@@ -6,8 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:17-jdk
+      - image: cimg/openjdk:19.0.1
     working_directory: ~/repo
 
     environment:
