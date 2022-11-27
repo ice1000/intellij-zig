@@ -55,7 +55,7 @@ variableDeclaration ::=
 	mixin='org.ziglang.psi.impl.ZigVariableDeclarationMixin'
 }
 
-containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)? COMMA_SYM
+containerField ::= symbol (COLON_SYM primary)? (EQ_SYM expr)?
 containerMember ::=
    containerField
  | fnDeclaration
@@ -257,8 +257,11 @@ whileExprOrBlock ::=
   (COLON_SYM LEFT_PAREN expr RIGHT_PAREN)?
    exprOrBlock
 
+tupleExpr ::= DOT_SYM LEFT_BRACE ((symbol|expr) (COMMA_SYM (symbol|expr))*)? RIGHT_BRACE
+
 expr ::=
    tryExpr
+ | tupleExpr
  | returnExpr
  | breakExpr
  | assignExpr
@@ -414,5 +417,4 @@ containerExpr ::=
  | UNION_KEYWORD (ENUM_KEYWORD groupedExpr? | groupedExpr)?
  | ENUM_KEYWORD groupedExpr?
  )
- LEFT_BRACE containerMember* RIGHT_BRACE
-
+ LEFT_BRACE (containerMember (COMMA_SYM containerMember)*)? RIGHT_BRACE
