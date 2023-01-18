@@ -27,7 +27,7 @@ group = packageName
 version = pluginVersion
 plugins {
 	id("java")
-	id("org.jetbrains.intellij") version "1.10.0"
+	id("org.jetbrains.intellij") version "1.12.0"
 	id("org.jetbrains.grammarkit") version "2021.2.2"
 	kotlin("jvm") version "1.7.20"
 }
@@ -43,6 +43,7 @@ fun fromToolbox(root: String, ide: String) = file(root)
 	.map { sequenceOf(*it) }
 	.flatten()
 	.filter { it.isDirectory }
+	.filterNot { it.name.endsWith(".plugins") }
 	.maxByOrNull {
 		val (major, minor, patch) = it.name.split('.')
 		String.format("%5s%5s%5s", major, minor, patch)
@@ -67,7 +68,7 @@ allprojects {
 		val intellijPath = sequenceOf("IDEA-C", "IDEA-U")
 			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
 		intellijPath?.absolutePath?.let { localPath.set(it) } ?: run {
-			version.set("2022.2.3")
+			version.set("2022.3")
 		}
 //		val pycharmPath = sequenceOf("PyCharm-C", "IDEA-C", "IDEA-U")
 //			.mapNotNull { fromToolbox(root, it) }.firstOrNull()
