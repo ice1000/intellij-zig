@@ -1,6 +1,7 @@
 # Zig plugin for the IntelliJ Platform
 
-This is a **work in progress**, some features are implemented partially, there may be performance and stability problems.
+~~This is a **work in progress**, some features are implemented partially, there may be performance and stability problems.~~
+This project is looking for new maintainers.
 
 [![](https://tinyurl.com/y9e4n2zh)](https://github.com/ice1000/julia-intellij)
 [![downloads](https://img.shields.io/jetbrains/plugin/d/10560-zig.svg)](https://plugins.jetbrains.com/plugin/10560-zig)
